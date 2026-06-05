@@ -5,12 +5,7 @@
 // SUPABASE_URL/KEY are set. Swap the mock snapshot for a licensed property
 // provider (Regrid/Rentcast/ATTOM) in /api/property/resolve later.
 
-const CITY_INDEX = {
-  "san francisco": 1.25, burlingame: 1.2, hillsborough: 1.25, millbrae: 1.18,
-  "san mateo": 1.15, "redwood city": 1.15, "palo alto": 1.3, "san carlos": 1.15,
-  "south san francisco": 1.1, "san bruno": 1.08, "daly city": 1.08, pacifica: 1.05,
-  "san jose": 1.05, hayward: 1.0,
-};
+import { resolveProperty, CITY_INDEX } from "../_lib/property.js";
 
 function json(o, s = 200) {
   return new Response(JSON.stringify(o), {
@@ -29,51 +24,7 @@ export function onRequestOptions() {
   });
 }
 
-// deterministic pseudo-random from a string (stable per address)
-function hash(str) {
-  let h = 2166136261;
-  for (let i = 0; i < str.length; i++) {
-    h ^= str.charCodeAt(i);
-    h = Math.imul(h, 16777619);
-  }
-  return (h >>> 0) / 4294967295;
-}
-const pick = (r, a, b) => Math.round(a + r * (b - a));
-const usd = (n) => Math.round(n);
-
-function parseCity(address) {
-  const m = String(address || "").match(/,\s*([A-Za-z .'-]+?)\s*,?\s*(CA|California)?\s*\d{0,5}\s*$/);
-  let c = m && m[1] ? m[1] : "";
-  if (!c) {
-    const parts = String(address || "").split(",");
-    c = parts.length > 1 ? parts[parts.length - 2] : parts[0] || "";
-  }
-  return c.trim();
-}
-
-// MOCK property snapshot (deterministic). Replace with provider lookup.
-function mockSnapshot(address) {
-  const r = hash(address.toLowerCase());
-  const r2 = hash(address.toLowerCase() + "x");
-  const city = parseCity(address) || "Bay Area";
-  const buildingSqft = pick(r, 1100, 2600);
-  const lotSqft = pick(r2, 3500, 9000);
-  const yearBuilt = pick(hash(address + "y"), 1940, 2005);
-  const idx = CITY_INDEX[city.toLowerCase()] || 1.1;
-  const estValue = usd((900 + r * 700) * 1000 * idx); // ~$0.9M–1.9M * city index
-  return {
-    address,
-    city,
-    jurisdiction: city,
-    zoning: "R-1 (single-family, typical)",
-    lotSqft,
-    buildingSqft,
-    beds: pick(hash(address + "b"), 2, 5),
-    baths: pick(hash(address + "ba"), 1, 3) + (r > 0.5 ? 0.5 : 0),
-    yearBuilt,
-    estValue,
-  };
-}
+const usd = (n) => Math.round(Number(n) || 0);
 
 function yearRisk(year) {
   const items = [];
@@ -127,7 +78,7 @@ function timelines() {
 function roi(s) {
   const idx = CITY_INDEX[s.city.toLowerCase()] || 1.1;
   const projectCost = usd(360 * idx * 700); // ~700sqft ADU
-  const rent = usd((2600 + (idx - 1) * 4000));
+  const rent = usd(s.rentEstimate || (2600 + (idx - 1) * 4000));
   const valueAdd = usd(projectCost * 1.4);
   const afterValue = usd(s.estValue + valueAdd);
   const equity = usd(afterValue - s.estValue - projectCost);
@@ -173,11 +124,11 @@ export async function onRequestPost(context) {
   const address = (body && body.address ? String(body.address) : "").trim();
   if (!address) return json({ error: "no_address" }, 400);
 
-  const snapshot = mockSnapshot(address);
+  const { snapshot, isMock } = await resolveProperty(env, address);
   const risk = yearRisk(snapshot.yearBuilt);
   const pot = potential(snapshot);
   const report = {
-    snapshotIsMock: true,
+    snapshotIsMock: isMock,
     snapshot,
     potential: pot,
     risk,

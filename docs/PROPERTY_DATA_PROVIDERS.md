@@ -70,6 +70,19 @@ With caching, provider cost scales with **unique addresses**, not page views —
 viral report on one home costs **one** call. Add Cloudflare Turnstile + per-IP/day
 caps on `/api/property/resolve` to stop scrapers from running up the bill.
 
+The resolver (`/api/property/resolve`, already built) reads/writes this table
+when `SUPABASE_URL`/`SUPABASE_KEY` are set:
+
+```sql
+create table if not exists pip_property_cache (
+  address_key text primary key,
+  snapshot    jsonb not null,
+  is_mock     boolean not null default false,
+  updated_at  timestamptz not null default now()
+);
+-- service-role only; not exposed to anon.
+```
+
 ---
 
 ## Integration shape (already scaffolded)
