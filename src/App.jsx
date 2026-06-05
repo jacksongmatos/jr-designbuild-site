@@ -18,9 +18,9 @@ const LINKS = {
   erp: "https://erpconstruction-c4enf5hwavayh8e0.centralus-01.azurewebsites.net/",
   financing: "https://www.hfsfinancial.net/promo/67c93a097f42caadb8a6b73c",
   instagram: "https://www.instagram.com/jrhomeremodeling/",
-  houzz: "https://www.houzz.com/pro/webuser-749563960",
-  yelp: "https://www.yelp.com/biz/jr-home-remodeling-and-roofing-daly-city-2",
-  facebook: "https://www.facebook.com/profile.php?id=100074956298502",
+  houzz: "https://www.houzz.com/professionals/general-contractors/jr-home-remodeling-inc-pfvwus-pf~726261874",
+  yelp: "https://www.yelp.com/biz/jr-design-build-san-mateo",
+  facebook: "https://www.facebook.com/people/JR-Home-Remodeling-Inc/100074956298502/",
   email: "mailto:hello@jrdesignbuild.com",
 };
 
