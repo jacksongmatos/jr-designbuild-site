@@ -756,6 +756,7 @@ function ContactForm() {
   const [sent, setSent] = useState(false);
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
   const submit = () => {
+    fetch("/api/lead", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ name: f.name, email: f.email, phone: f.phone, notes: f.msg, source: "Website contact" }) }).catch(() => {});
     const body = encodeURIComponent(`Name: ${f.name}\nEmail: ${f.email}\nPhone: ${f.phone}\n\n${f.msg}`);
     window.location.href = `mailto:hello@jrdesignbuild.com?subject=${encodeURIComponent("New project inquiry — " + (f.name || "Website"))}&body=${body}`;
     setSent(true);

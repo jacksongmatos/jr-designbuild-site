@@ -1,7 +1,8 @@
 // Cloudflare Pages Function — POST /api/estimate
 // Vision-grounded construction estimate for JR Design Build.
-// Requires secret ANTHROPIC_API_KEY. Optional SUPABASE_URL + SUPABASE_KEY
-// to ground the estimate on JR's real past projects (table: projects).
+// Requires secret ANTHROPIC_API_KEY. If SUPABASE_URL + SUPABASE_KEY (service
+// role, server-side only) are set, the estimate is grounded on JR's REAL ERP
+// data: project_type_benchmarks + recent projects.cost by city/scope.
 
 const MODEL = "claude-opus-4-8";
 
@@ -13,7 +14,7 @@ project described. You never chat, never answer off-topic questions, never give
 legal/contractual commitments. If photos are provided, analyze them for scope,
 condition, and red flags (water damage, dated systems, structural concerns).
 
-If JR past comparable projects are provided, calibrate your numbers to them.
+If JR benchmark/past-project data is provided, calibrate your numbers to it.
 Otherwise use typical current Bay Area ranges. Always give a sensible low–high
 range, not a single number, and state your key assumptions.
 
@@ -27,10 +28,7 @@ this shape:
 function json(obj, status = 200) {
   return new Response(JSON.stringify(obj), {
     status,
-    headers: {
-      "content-type": "application/json",
-      "access-control-allow-origin": "*",
-    },
+    headers: { "content-type": "application/json", "access-control-allow-origin": "*" },
   });
 }
 
@@ -43,6 +41,60 @@ export function onRequestOptions() {
       "access-control-allow-headers": "content-type",
     },
   });
+}
+
+// Map the website project type to a free-text scope keyword used in projects.scope
+function scopeKeyword(t) {
+  return (
+    {
+      adu: "adu",
+      kitchen: "kitchen",
+      bathroom: "bath",
+      bath: "bath",
+      addition: "addition",
+      "whole-home remodel": "remodel",
+      whole: "remodel",
+    }[(t || "").toLowerCase()] || ""
+  );
+}
+
+async function buildGrounding(env, projectType, city) {
+  if (!env.SUPABASE_URL || !env.SUPABASE_KEY) return "";
+  const sb = (path) =>
+    fetch(`${env.SUPABASE_URL}/rest/v1/${path}`, {
+      headers: { apikey: env.SUPABASE_KEY, authorization: `Bearer ${env.SUPABASE_KEY}` },
+    })
+      .then((r) => (r.ok ? r.json() : []))
+      .catch(() => []);
+
+  const kw = scopeKeyword(projectType);
+  const [bench, projs] = await Promise.all([
+    sb(
+      "project_type_benchmarks?select=type,scope_min,scope_max,avg_weeks,markup_pct,labor_pct,rough_pct,sample_count",
+    ),
+    sb("projects?select=city,zip,scope,cost&cost=gt.0&order=updated_at.desc&limit=80"),
+  ]);
+
+  const lines = [];
+  if (Array.isArray(bench) && bench.length) {
+    lines.push("JR benchmarks by type (scope $ range, typical weeks, sample size):");
+    for (const b of bench) {
+      lines.push(`- ${b.type}: $${b.scope_min}–$${b.scope_max}, ~${b.avg_weeks}w (n=${b.sample_count})`);
+    }
+  }
+  const matched = (Array.isArray(projs) ? projs : [])
+    .filter((p) => p && p.cost && (!kw || (p.scope || "").toLowerCase().includes(kw)))
+    .slice(0, 12);
+  const sample = matched.length ? matched : (Array.isArray(projs) ? projs.slice(0, 10) : []);
+  if (sample.length) {
+    lines.push("Recent JR projects (real totals — calibrate to these):");
+    for (const p of sample) {
+      lines.push(
+        `- ${p.city || "?"}${p.zip ? " " + p.zip : ""}: $${Math.round(p.cost)} — ${(p.scope || "").slice(0, 70)}`,
+      );
+    }
+  }
+  return lines.join("\n");
 }
 
 export async function onRequestPost(context) {
@@ -59,24 +111,11 @@ export async function onRequestPost(context) {
   const { projectType, finish, city, size, notes } = body || {};
   const images = Array.isArray(body && body.images) ? body.images.slice(0, 6) : [];
 
-  // Optional: ground on real JR projects mirrored into Supabase
-  let comps = [];
-  if (env.SUPABASE_URL && env.SUPABASE_KEY && projectType) {
-    try {
-      const url =
-        `${env.SUPABASE_URL}/rest/v1/projects` +
-        `?select=type,city,sqft,final_cost,finish` +
-        `&type=eq.${encodeURIComponent(projectType)}&limit=8`;
-      const r = await fetch(url, {
-        headers: {
-          apikey: env.SUPABASE_KEY,
-          authorization: `Bearer ${env.SUPABASE_KEY}`,
-        },
-      });
-      if (r.ok) comps = await r.json();
-    } catch {
-      /* ignore — fall back to heuristic */
-    }
+  let grounding = "";
+  try {
+    grounding = await buildGrounding(env, projectType, city);
+  } catch {
+    /* best effort */
   }
 
   const content = [];
@@ -84,11 +123,7 @@ export async function onRequestPost(context) {
     if (im && im.data) {
       content.push({
         type: "image",
-        source: {
-          type: "base64",
-          media_type: im.media_type || "image/jpeg",
-          data: im.data,
-        },
+        source: { type: "base64", media_type: im.media_type || "image/jpeg", data: im.data },
       });
     }
   }
@@ -100,16 +135,7 @@ export async function onRequestPost(context) {
       `City: ${city || "(unspecified)"}\n` +
       `Approx. size: ${size ? size + " sqft" : "(unspecified)"}\n` +
       `Client notes: ${notes || "(none)"}\n\n` +
-      (comps.length
-        ? "JR past comparable projects (ground truth — calibrate to these):\n" +
-          comps
-            .map(
-              (c) =>
-                `- ${c.type}, ${c.city}, ${c.sqft} sqft, $${c.final_cost}, ${c.finish}`,
-            )
-            .join("\n") +
-          "\n\n"
-        : "") +
+      (grounding ? grounding + "\n\n" : "") +
       "Produce one estimate as the required JSON object.",
   });
 
@@ -122,12 +148,7 @@ export async function onRequestPost(context) {
         "anthropic-version": "2023-06-01",
         "content-type": "application/json",
       },
-      body: JSON.stringify({
-        model: MODEL,
-        max_tokens: 1500,
-        system: SYSTEM,
-        messages: [{ role: "user", content }],
-      }),
+      body: JSON.stringify({ model: MODEL, max_tokens: 1500, system: SYSTEM, messages: [{ role: "user", content }] }),
     });
   } catch (e) {
     return json({ error: "network", detail: String(e).slice(0, 300) }, 502);
@@ -153,5 +174,5 @@ export async function onRequestPost(context) {
     return json({ error: "parse", raw: txt.slice(0, 800) }, 502);
   }
 
-  return json({ estimate, grounded: comps.length > 0 }, 200);
+  return json({ estimate, grounded: grounding.length > 0 }, 200);
 }
