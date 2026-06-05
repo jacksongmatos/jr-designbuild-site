@@ -397,7 +397,7 @@ function Home({ go }) {
           <h1 style={S.headline}>
             <span className="rise" style={{ ...S.line }}>Our team.</span>
             <span className="rise" style={{ ...S.line, ...S.lineItalic, animationDelay: ".12s" }}>Your project.</span>
-            <span className="rise liquidText" style={{ ...S.line, animationDelay: ".24s" }}>One vision.</span>
+            <span className="rise liquidText" style={{ ...S.line, animationDelay: ".24s", textShadow: "0 1px 2px #000000aa, 0 2px 26px #c9a25e55, 0 0 50px #c9a25e33" }}>One vision.</span>
           </h1>
           <p style={S.sub}>We don't simply build homes — we restore trust in construction. Real schedules, obsessive craft and Matterport precision, so the build itself becomes something you enjoy.</p>
           <div style={S.ctaRow}>
@@ -1148,7 +1148,10 @@ input::placeholder, textarea::placeholder { color: #ffffff66; }
 input:focus, textarea:focus { border-color: #c9a25e !important; }
 ::-webkit-scrollbar { width: 9px; } ::-webkit-scrollbar-track { background: #0c0a08; } ::-webkit-scrollbar-thumb { background: #c9a25e66; border-radius: 9px; }
 @keyframes shimmer { to { background-position: 200% center; } }
-.liquidText { background-image: linear-gradient(100deg,#e9d4a3,#fff6e6,#ffffff,#f0dcae,#e9d4a3); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: #ecd6a6; animation: riseIn 1.1s cubic-bezier(.2,.8,.2,1) both, shimmer 5s linear infinite; }
+.liquidText { background-image: linear-gradient(100deg,#e9d4a3,#fff6e6,#ffffff,#f0dcae,#e9d4a3); background-size: 200% auto; color: #ecd6a6; animation: riseIn 1.1s cubic-bezier(.2,.8,.2,1) both, shimmer 5s linear infinite; }
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .liquidText { -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+}
 @keyframes riseIn { 0% { opacity: 0; transform: translateY(28px); filter: blur(6px); } 100% { opacity: 1; transform: translateY(0); filter: blur(0); } }
 .rise { animation: riseIn 1.1s cubic-bezier(.2,.8,.2,1) both; }
 @keyframes pageIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
