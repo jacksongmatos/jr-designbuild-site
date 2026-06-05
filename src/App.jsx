@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import ToolsPage from "./tools";
 import AiAssistant from "./ai";
+import ReportPage from "./report";
 
 // ─────────────────────────────────────────────────────────────
 //  JR DESIGN BUILD — full site, built around the brand DNA
@@ -28,6 +29,7 @@ const LINKS = {
 
 const ROUTES = [
   { id: "home", label: "Home" },
+  { id: "report", label: "Report" },
   { id: "dna", label: "Our DNA" },
   { id: "group", label: "JR Group" },
   { id: "portfolio", label: "Portfolio" },
@@ -399,7 +401,8 @@ function Home({ go }) {
           </h1>
           <p style={S.sub}>We don't simply build homes — we restore trust in construction. Real schedules, obsessive craft and Matterport precision, so the build itself becomes something you enjoy.</p>
           <div style={S.ctaRow}>
-            <a onClick={(e) => { e.preventDefault(); go("contact"); }} href="#/contact" style={S.ctaPrimary} className="cta-prim">Start your build →</a>
+            <a onClick={(e) => { e.preventDefault(); go("report"); }} href="#/report" style={S.ctaPrimary} className="cta-prim">Analyze my property →</a>
+            <a onClick={(e) => { e.preventDefault(); go("contact"); }} href="#/contact" style={S.ctaGhost} className="cta-ghost">Start your build</a>
             <a onClick={(e) => { e.preventDefault(); go("portfolio"); }} href="#/portfolio" style={S.ctaGhost} className="cta-ghost">See the work</a>
           </div>
         </div>
@@ -874,8 +877,8 @@ export default function App() {
   useEffect(() => {
     const on = (e) => {
       if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
-      const num = { "1": "home", "2": "dna", "3": "group", "4": "portfolio", "5": "services", "6": "tools", "7": "about", "8": "contact" };
-      const ltr = { h: "home", d: "dna", g: "group", p: "portfolio", s: "services", t: "tools", a: "about", c: "contact" };
+      const num = { "1": "home", "2": "report", "3": "dna", "4": "group", "5": "portfolio", "6": "services", "7": "tools", "8": "about", "9": "contact" };
+      const ltr = { h: "home", r: "report", d: "dna", g: "group", p: "portfolio", s: "services", t: "tools", a: "about", c: "contact" };
       if (e.key === "Escape") setMenu(false);
       else if (num[e.key]) { go(num[e.key]); setMenu(false); }
       else if (ltr[e.key]) { go(ltr[e.key]); setMenu(false); }
@@ -895,7 +898,7 @@ export default function App() {
     return () => clearTimeout(t);
   }, [route]);
 
-  const Page = { home: Home, dna: DnaPage, group: GroupPage, portfolio: Portfolio, services: Services, tools: ToolsPage, about: About, contact: Contact }[route] || Home;
+  const Page = { home: Home, report: ReportPage, dna: DnaPage, group: GroupPage, portfolio: Portfolio, services: Services, tools: ToolsPage, about: About, contact: Contact }[route] || Home;
 
   return (
     <div style={S.root}>
@@ -962,7 +965,7 @@ export default function App() {
         </div>
         <div style={S.footBottom}>
           <span>© {new Date().getFullYear()} JR Design Build Inc · All rights reserved</span>
-          <span style={{ opacity: 0.55 }}>Press 1–8 to navigate</span>
+          <span style={{ opacity: 0.55 }}>Press 1–9 to navigate</span>
         </div>
       </footer>
     </div>
