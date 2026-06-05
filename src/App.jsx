@@ -349,7 +349,7 @@ const SERVICES = [
 ];
 
 const PROJECTS = [
-  { t: "Daly City Full Remodel", tag: "Whole-Home", g: "linear-gradient(135deg,#3a2f1c,#6e4b22)" },
+  { t: "Bay Area Full Remodel", tag: "Whole-Home", g: "linear-gradient(135deg,#3a2f1c,#6e4b22)" },
   { t: "Backyard ADU", tag: "ADU", g: "linear-gradient(135deg,#2a2438,#3a2f4a)" },
   { t: "Chef's Kitchen", tag: "Kitchen", g: "linear-gradient(135deg,#4a3320,#8a6a3a)" },
   { t: "Spa Bath", tag: "Bath", g: "linear-gradient(135deg,#1f2a2a,#3a4a44)" },
@@ -367,9 +367,9 @@ const TIMELINE = [
 
 // Replace with real client testimonials — keep quotes short and specific.
 const TESTIMONIALS = [
-  { q: "They treated our home like their own. Every week we knew exactly what was happening and why.", name: "The Alvarez Family", loc: "Daly City, CA", proj: "Whole-Home Remodel", init: "A" },
-  { q: "The ADU paid for itself faster than we imagined — and the build was genuinely stress-free.", name: "Michael R.", loc: "South San Francisco, CA", proj: "Backyard ADU", init: "M" },
-  { q: "Communication, cleanliness, craft. The final walkthrough felt like a reveal, not a relief.", name: "Priya & Sam", loc: "San Mateo, CA", proj: "Kitchen & Bath", init: "P" },
+  { q: "They treated our home like their own. Every week we knew exactly what was happening and why.", name: "The Alvarez Family", loc: "Bay Area, CA", proj: "Whole-Home Remodel", init: "A" },
+  { q: "The ADU paid for itself faster than we imagined — and the build was genuinely stress-free.", name: "Michael R.", loc: "Bay Area, CA", proj: "Backyard ADU", init: "M" },
+  { q: "Communication, cleanliness, craft. The final walkthrough felt like a reveal, not a relief.", name: "Priya & Sam", loc: "Bay Area, CA", proj: "Kitchen & Bath", init: "P" },
 ];
 
 function Home({ go }) {
@@ -929,7 +929,7 @@ export default function App() {
         <div style={S.footCols}>
           <div>
             <img src={LOGO} alt="JR Design Build" style={{ height: 52, width: "auto", display: "block" }} />
-            <p style={S.footText}>Dare · Nurture · Amaze. General contractor in South San Francisco, CA, restoring trust in construction across the Bay Area.</p>
+            <p style={S.footText}>Dare · Nurture · Amaze. A Bay Area general contractor restoring trust in construction.</p>
             <span style={S.footBadge}>CSLB #1083248 · Licensed &amp; Insured</span>
           </div>
           <div style={S.footLinks}>
