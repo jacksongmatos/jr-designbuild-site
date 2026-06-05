@@ -479,44 +479,40 @@ function AduRoi() {
   );
 }
 
-/* ---------- 3. Permit Timeline Predictor ---------- */
+/* ---------- 3. Permits — real track record (from the JR ERP) ---------- */
+const PERMIT_REAL = [
+  ["City of San José", 118],
+  ["City of Brisbane", 18],
+  ["City of Millbrae", 11],
+];
 function PermitTimeline() {
-  const [city, setCity] = useState("South San Francisco");
-  const [kind, setKind] = useState("adu");
-  const range = PERMITS[city][kind];
-  const kinds = [
-    ["adu", "ADU"],
-    ["remodel", "Remodel"],
-    ["addition", "Addition"],
-  ];
+  const total = PERMIT_REAL.reduce((a, [, n]) => a + n, 0);
+  const max = Math.max(...PERMIT_REAL.map(([, n]) => n));
   return (
     <Tool
       n="03"
-      title="Permit Timeline Predictor"
-      sub="Typical permitting time by city — the part most contractors won't talk about. JR manages the whole submittal."
+      title="Permits — we pull them, you don't chase them"
+      sub="We've filed 147 permits and counting. We manage every submittal and plan-check round and show the status live in your portal — so the timeline stays predictable, not a mystery."
     >
-      <div style={S.grid2}>
-        <Field label="City">
-          <CitySelect value={city} onChange={setCity} />
-        </Field>
-        <Field label="Project">
-          <div style={{ display: "flex", gap: 10 }}>
-            {kinds.map(([k, l]) => (
-              <button key={k} style={S.chip(kind === k)} onClick={() => setKind(k)}>
-                {l}
-              </button>
-            ))}
+      <div style={{ marginTop: 4 }}>
+        {PERMIT_REAL.map(([j, n]) => (
+          <div key={j} style={{ margin: "12px 0" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "#e0d8c8", marginBottom: 6 }}>
+              <span>{j}</span>
+              <span style={{ color: GOLD }}>{n} permits</span>
+            </div>
+            <div style={{ height: 8, background: "#ffffff10", borderRadius: 6, overflow: "hidden" }}>
+              <div style={{ width: (n / max) * 100 + "%", height: "100%", background: GOLD, transition: "width .4s" }} />
+            </div>
           </div>
-        </Field>
+        ))}
       </div>
       <div style={S.result}>
-        <span style={S.label}>{city} — estimated permit window</span>
-        <div style={S.big}>
-          {range[0]}–{range[1]} weeks
-        </div>
-        <p style={{ ...S.sub, marginTop: 14, marginBottom: 0 }}>
-          We track plan-check rounds and city responses in your portal so the timeline stays
-          predictable, not a mystery.
+        <span style={S.label}>Total permits on record</span>
+        <div style={S.big}>{total}</div>
+        <p style={{ ...S.sub, marginTop: 12, marginBottom: 0 }}>
+          Plus active work across 60+ Bay Area cities. Tell us your city and scope in a free
+          consultation and we'll give you the real permitting picture.
         </p>
       </div>
     </Tool>
@@ -714,9 +710,9 @@ function RiskWall() {
 /* ---------- Track record strip ---------- */
 function TrustStrip() {
   const stats = [
-    ["180+", "Projects delivered"],
-    ["20+", "Years building"],
-    ["9", "Bay Area cities served"],
+    ["287", "Projects on record"],
+    ["60+", "Bay Area cities"],
+    ["147", "Permits pulled"],
     ["100%", "Licensed & insured"],
   ];
   return (
