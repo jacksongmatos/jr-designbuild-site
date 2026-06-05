@@ -1148,7 +1148,7 @@ input::placeholder, textarea::placeholder { color: #ffffff66; }
 input:focus, textarea:focus { border-color: #c9a25e !important; }
 ::-webkit-scrollbar { width: 9px; } ::-webkit-scrollbar-track { background: #0c0a08; } ::-webkit-scrollbar-thumb { background: #c9a25e66; border-radius: 9px; }
 @keyframes shimmer { to { background-position: 200% center; } }
-.liquidText { background-image: linear-gradient(100deg,#e9d4a3,#fff6e6,#ffffff,#f0dcae,#e9d4a3); background-size: 200% auto; color: #ecd6a6; animation: riseIn 1.1s cubic-bezier(.2,.8,.2,1) both, shimmer 5s linear infinite; }
+.liquidText { background-image: linear-gradient(100deg,#fff3da,#ffffff,#ffffff,#fff1d6,#fff3da); background-size: 200% auto; color: #fbf4e6; animation: riseIn 1.1s cubic-bezier(.2,.8,.2,1) both, shimmer 5s linear infinite; }
 @supports ((-webkit-background-clip: text) or (background-clip: text)) {
   .liquidText { -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
 }
