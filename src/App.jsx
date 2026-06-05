@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import ToolsPage from "./tools";
+import AiAssistant from "./ai";
 
 // ─────────────────────────────────────────────────────────────
 //  JR DESIGN BUILD — full site, built around the brand DNA
@@ -899,6 +900,7 @@ export default function App() {
     <div style={S.root}>
       <style>{CSS}</style>
       <Cursor />
+      <AiAssistant />
       <BlueprintCanvas />
       <div style={S.scrim} />
       <div style={S.grain} />

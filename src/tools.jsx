@@ -84,6 +84,59 @@ const PERMITS = {
 
 const usd = (n) => "$" + Math.round(n).toLocaleString();
 
+/* Live floor-plan that draws itself to the chosen size (blueprint as utility) */
+function BlueprintPreview({ sqft }) {
+  const area = Math.max(30, Number(sqft) || 0);
+  const w = Math.max(8, Math.round(Math.sqrt(area) * 1.25));
+  const h = Math.max(8, Math.round(area / w));
+  const PAD = 30;
+  const VW = 360;
+  const VH = 220;
+  const scale = Math.min((VW - PAD * 2) / w, (VH - PAD * 2) / h);
+  const rw = w * scale;
+  const rh = h * scale;
+  const x = (VW - rw) / 2;
+  const y = (VH - rh) / 2;
+  return (
+    <div style={{ marginTop: 20 }}>
+      <span style={S.label}>Your space, to scale</span>
+      <svg viewBox={`0 0 ${VW} ${VH}`} width="100%" style={{ maxWidth: VW, display: "block" }} aria-hidden="true">
+        <defs>
+          <pattern id="bpgrid" width="20" height="20" patternUnits="userSpaceOnUse">
+            <path d="M20 0H0V20" fill="none" stroke={GOLD} strokeOpacity="0.08" strokeWidth="1" />
+          </pattern>
+        </defs>
+        <rect width={VW} height={VH} fill="url(#bpgrid)" />
+        <rect
+          x={x} y={y} width={rw} height={rh}
+          fill={GOLD} fillOpacity="0.05" stroke={GOLD} strokeWidth="1.6"
+          style={{ transition: "all .35s cubic-bezier(.16,.84,.44,1)" }}
+        />
+        {/* door swing */}
+        <path
+          d={`M ${x + rw * 0.2} ${y + rh} A ${rh * 0.28} ${rh * 0.28} 0 0 1 ${x + rw * 0.2 + rh * 0.28} ${y + rh - rh * 0.28}`}
+          fill="none" stroke={GOLD} strokeOpacity="0.7" strokeWidth="1"
+        />
+        {/* window */}
+        <line x1={x + rw * 0.55} y1={y} x2={x + rw * 0.85} y2={y} stroke={GOLD} strokeWidth="3" />
+        {/* dimensions */}
+        <text x={x + rw / 2} y={y - 8} textAnchor="middle" fontFamily="Georgia, serif" fontSize="12" fill={GOLD}>
+          {w}'-0"
+        </text>
+        <text
+          x={x - 10} y={y + rh / 2} textAnchor="middle" fontFamily="Georgia, serif" fontSize="12" fill={GOLD}
+          transform={`rotate(-90 ${x - 10} ${y + rh / 2})`}
+        >
+          {h}'-0"
+        </text>
+        <text x={VW / 2} y={VH - 8} textAnchor="middle" fontFamily="'Bodoni Moda', serif" fontStyle="italic" fontSize="13" fill="#d8cfbf">
+          ≈ {area.toLocaleString()} sqft
+        </text>
+      </svg>
+    </div>
+  );
+}
+
 /* ---------- shared styles ---------- */
 const S = {
   page: { position: "relative", zIndex: 5, padding: "150px 6vw 120px" },
@@ -345,9 +398,25 @@ function EstimateBuilder() {
             </div>
           ))}
         </div>
-        <button style={{ ...S.btn, marginTop: 22 }} className="cta-prim" onClick={requestQuote}>
-          Get my exact quote →
-        </button>
+        <BlueprintPreview sqft={size} />
+        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 22 }}>
+          <button style={S.btn} className="cta-prim" onClick={requestQuote}>
+            Get my exact quote →
+          </button>
+          <button
+            style={{ ...S.btn, background: "transparent", color: "#f3e3be", border: "1px solid #c9a25e99" }}
+            className="cta-ghost"
+            onClick={() =>
+              window.dispatchEvent(
+                new CustomEvent("jr:ai", {
+                  detail: { tab: "estimate", projectType: t.label.split(" ")[0], finish, city, size },
+                }),
+              )
+            }
+          >
+            Refine with photos (AI) ✨
+          </button>
+        </div>
       </div>
     </Tool>
   );
@@ -401,6 +470,7 @@ function AduRoi() {
           <div style={S.metricLabel}>10-yr gross</div>
         </div>
       </div>
+      <BlueprintPreview sqft={size} />
       <p style={{ ...S.sub, marginTop: 16, marginBottom: 0 }}>
         Build estimate: <span style={{ color: GOLD }}>{usd(build)}</span>. Pair with HFS
         financing below to fund it.
