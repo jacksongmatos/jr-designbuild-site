@@ -610,13 +610,21 @@ function GroupPage({ go }) {
 }
 
 function Portfolio({ go }) {
+  const [filter, setFilter] = useState("All");
+  const cats = ["All", ...Array.from(new Set(PROJECTS.map((p) => p.tag)))];
+  const shown = filter === "All" ? PROJECTS : PROJECTS.filter((p) => p.tag === filter);
   return (
     <section style={{ ...S.section, paddingTop: 160 }}>
       <h2 style={S.h2}>Selected work</h2>
-      <p style={S.note}>A glimpse of recent Bay Area transformations.</p>
+      <p style={S.note}>Filter to projects like yours — real Bay Area transformations by JR.</p>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 10, justifyContent: "center", marginBottom: 36 }}>
+        {cats.map((c) => (
+          <button key={c} onClick={() => setFilter(c)} style={{ padding: "9px 18px", borderRadius: 30, cursor: "pointer", fontSize: 11, letterSpacing: 2, textTransform: "uppercase", border: "1px solid " + (filter === c ? "#c9a25e" : "#ffffff22"), background: filter === c ? "#c9a25e" : "transparent", color: filter === c ? "#0c0a08" : "#ece6db" }}>{c}</button>
+        ))}
+      </div>
       <div style={S.portGrid}>
-        {PROJECTS.map((p, i) => (
-          <Reveal key={i} delay={(i % 3) * 0.08}>
+        {shown.map((p, i) => (
+          <Reveal key={p.t} delay={(i % 3) * 0.08}>
           <div style={{ ...S.portCard, background: p.g }} className="card">
             <div style={S.cardSheen} className="sheen" />
             <span style={S.portTag}>{p.tag}</span>
