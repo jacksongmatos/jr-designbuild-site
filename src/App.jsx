@@ -954,7 +954,7 @@ export default function App() {
 }
 
 const S = {
-  root: { position: "relative", minHeight: "100vh", overflowX: "hidden", background: "#0c0a08", color: "#ece6db", fontFamily: SANS },
+  root: { position: "relative", minHeight: "100vh", overflowX: "hidden", background: "#0c0a08", color: "#f2ede2", fontFamily: SANS },
   canvas: { position: "fixed", inset: 0, zIndex: 0 },
   dust: { position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 4 },
   blueprint: { position: "fixed", inset: 0, zIndex: 1, width: "100%", height: "100%", pointerEvents: "none", opacity: 0.5 },
@@ -987,7 +987,7 @@ const S = {
   ctaGhost: { border: "1px solid #c9a25e99", color: "#f3e3be", padding: "17px 42px", borderRadius: 2, textDecoration: "none", fontSize: 11, letterSpacing: 2.5, fontWeight: 600, textTransform: "uppercase", background: "#c9a25e1f", backdropFilter: "blur(4px)", cursor: "pointer" },
   scrollCue: { marginTop: 64, display: "flex", alignItems: "center", gap: 14 },
   scrollLine: { display: "block", width: 48, height: 1, background: "linear-gradient(90deg, #c9a25e, transparent)" },
-  scrollWord: { fontSize: 10, letterSpacing: 4, textTransform: "uppercase", color: "#c9a25eaa" },
+  scrollWord: { fontSize: 10, letterSpacing: 4, textTransform: "uppercase", color: "#d8ba7c" },
 
   marqueeWrap: { position: "relative", zIndex: 5, borderTop: "1px solid #c9a25e22", borderBottom: "1px solid #c9a25e22", overflow: "hidden", padding: "22px 0", background: "#0c0a0866", backdropFilter: "blur(8px)" },
   marquee: { whiteSpace: "nowrap", fontFamily: DISPLAY, fontSize: 22, fontStyle: "italic", color: "#ebe0ca", display: "inline-block", letterSpacing: 1, textShadow: "0 1px 2px #000" },
@@ -1011,7 +1011,7 @@ const S = {
   dnaLetter: { fontFamily: DISPLAY, fontSize: 72, fontStyle: "italic", color: GOLD, lineHeight: 1 },
   dnaWord: { fontFamily: DISPLAY, fontSize: 22, letterSpacing: 6, color: "#fff", margin: "10px 0 14px" },
   dnaSubtitle: { fontFamily: DISPLAY, fontSize: 18, fontStyle: "italic", color: "#f0e6d6", marginBottom: 14, lineHeight: 1.3 },
-  dnaTeaser: { fontSize: 13, lineHeight: 1.7, color: "#cfc6b6" },
+  dnaTeaser: { fontSize: 13, lineHeight: 1.7, color: "#e0d8c8" },
 
   dnaStack: { maxWidth: 1000, margin: "0 auto", display: "flex", flexDirection: "column", gap: 1, background: "#c9a25e14", border: "1px solid #c9a25e1f" },
   dnaBlock: { display: "grid", gridTemplateColumns: "260px 1fr", gap: 40, padding: "56px 44px", background: "#0c0a08f2", backdropFilter: "blur(10px)", transition: "background .4s" },
@@ -1108,11 +1108,11 @@ const S = {
   footCols: { display: "grid", gridTemplateColumns: "2fr 1fr 1fr", gap: 40, maxWidth: 1120, margin: "0 auto 50px" },
   footText: { fontSize: 14, lineHeight: 1.7, color: "#e2dacb", marginTop: 16, maxWidth: 320 },
   footBadge: { display: "inline-block", marginTop: 18, fontSize: 11, letterSpacing: 1.5, color: GOLD, border: "1px solid #c9a25e44", padding: "6px 12px", borderRadius: 2 },
-  footColLabel: { fontSize: 10, letterSpacing: 2.5, textTransform: "uppercase", color: "#8a8276", marginBottom: 4 },
+  footColLabel: { fontSize: 10, letterSpacing: 2.5, textTransform: "uppercase", color: "#b8b0a1", marginBottom: 4 },
   footLinks: { display: "flex", flexDirection: "column", gap: 13 },
   footLink: { color: "#ece4d6", textDecoration: "none", fontSize: 14, letterSpacing: 0.5 },
   footEmail: { color: GOLD, textDecoration: "none", fontSize: 14, letterSpacing: 0.5, fontWeight: 600 },
-  footBottom: { display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12, maxWidth: 1120, margin: "0 auto", paddingTop: 28, borderTop: "1px solid #c9a25e1f", fontSize: 12, color: "#9a9286", letterSpacing: 1 },
+  footBottom: { display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12, maxWidth: 1120, margin: "0 auto", paddingTop: 28, borderTop: "1px solid #c9a25e1f", fontSize: 12, color: "#bcb4a6", letterSpacing: 1 },
 };
 
 const CSS = `
@@ -1129,7 +1129,7 @@ input::placeholder, textarea::placeholder { color: #ffffff66; }
 input:focus, textarea:focus { border-color: #c9a25e !important; }
 ::-webkit-scrollbar { width: 9px; } ::-webkit-scrollbar-track { background: #0c0a08; } ::-webkit-scrollbar-thumb { background: #c9a25e66; border-radius: 9px; }
 @keyframes shimmer { to { background-position: 200% center; } }
-.liquidText { background-image: linear-gradient(100deg,#caa463,#f0dcae,#fff6e6,#e9d4a3,#caa463); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; animation: riseIn 1.1s cubic-bezier(.2,.8,.2,1) both, shimmer 5s linear infinite; }
+.liquidText { background-image: linear-gradient(100deg,#e9d4a3,#fff6e6,#ffffff,#f0dcae,#e9d4a3); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: #ecd6a6; animation: riseIn 1.1s cubic-bezier(.2,.8,.2,1) both, shimmer 5s linear infinite; }
 @keyframes riseIn { 0% { opacity: 0; transform: translateY(28px); filter: blur(6px); } 100% { opacity: 1; transform: translateY(0); filter: blur(0); } }
 .rise { animation: riseIn 1.1s cubic-bezier(.2,.8,.2,1) both; }
 @keyframes pageIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
