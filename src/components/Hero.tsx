@@ -1,8 +1,56 @@
 import { Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
+import { motion, type Variants } from 'framer-motion'
 import LiquidCanvas from './LiquidCanvas'
 import BlueprintCanvas from './BlueprintCanvas'
+import Marquee from './Marquee'
 import { site } from '../data/site'
+
+const EASE = [0.16, 1, 0.3, 1] as const
+
+// per-word reveal
+const lineContainer: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.09, delayChildren: 0.15 } },
+}
+const word: Variants = {
+  hidden: { y: '110%', opacity: 0 },
+  show: { y: '0%', opacity: 1, transition: { duration: 0.8, ease: EASE } },
+}
+
+function AnimatedHeadline() {
+  const line1 = ['Designed', 'and', 'built']
+  const line2 = ['under', 'one', 'roof.']
+
+  return (
+    <motion.h1
+      variants={lineContainer}
+      initial="hidden"
+      animate="show"
+      className="h-display mt-6 max-w-3xl text-5xl sm:text-6xl md:text-7xl"
+    >
+      <span className="block">
+        {line1.map((w, i) => (
+          <span key={i} className="inline-flex overflow-hidden align-bottom">
+            <motion.span variants={word} className="inline-block">
+              {w}
+              {i < line1.length - 1 && ' '}
+            </motion.span>
+          </span>
+        ))}
+      </span>
+      <span className="block text-gold">
+        {line2.map((w, i) => (
+          <span key={i} className="inline-flex overflow-hidden align-bottom">
+            <motion.span variants={word} className="inline-block">
+              {w}
+              {i < line2.length - 1 && ' '}
+            </motion.span>
+          </span>
+        ))}
+      </span>
+    </motion.h1>
+  )
+}
 
 export default function Hero() {
   return (
@@ -10,12 +58,12 @@ export default function Hero() {
       {/* WebGL liquid gold field */}
       <LiquidCanvas className="absolute inset-0 h-full w-full" />
 
-      {/* darkening overlays for legibility */}
-      <div className="absolute inset-0 bg-gradient-to-b from-ink/70 via-ink/40 to-ink" />
-      <div className="absolute inset-0 bg-gradient-to-r from-ink/90 via-transparent to-transparent" />
+      {/* lighter overlays — keep text legible but let the gold flow show */}
+      <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/55 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-t from-ink via-transparent to-ink/30" />
 
-      {/* animated architectural blueprint */}
-      <BlueprintCanvas className="pointer-events-none absolute right-0 top-1/2 hidden h-[120%] w-[60%] -translate-y-1/2 opacity-50 lg:block" />
+      {/* animated architectural blueprint (draws on a loop) */}
+      <BlueprintCanvas className="pointer-events-none absolute right-0 top-1/2 hidden h-[120%] w-[58%] -translate-y-1/2 opacity-60 lg:block" />
 
       <div className="container-luxe relative z-10 py-32">
         <motion.span
@@ -27,20 +75,12 @@ export default function Hero() {
           {site.license} · Los Angeles, CA
         </motion.span>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          className="h-display mt-6 max-w-3xl text-5xl sm:text-6xl md:text-7xl"
-        >
-          Designed and built
-          <span className="block text-gold">under one roof.</span>
-        </motion.h1>
+        <AnimatedHeadline />
 
         <motion.p
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.8, delay: 0.6, ease: EASE }}
           className="mt-7 max-w-xl text-lg leading-relaxed text-bone/80"
         >
           {site.name} is a design-build studio crafting Los Angeles' most
@@ -51,7 +91,7 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.8, delay: 0.72, ease: EASE }}
           className="mt-10 flex flex-wrap items-center gap-4"
         >
           <Link to="/contact" className="btn-gold">
@@ -65,7 +105,7 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.6 }}
+          transition={{ duration: 1, delay: 0.9 }}
           className="mt-14 flex flex-wrap items-center gap-x-8 gap-y-3 text-xs uppercase tracking-luxe text-muted"
         >
           <span>Matterport 3D Tours</span>
@@ -77,7 +117,7 @@ export default function Hero() {
       </div>
 
       {/* scroll cue */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
+      <div className="absolute bottom-20 left-1/2 -translate-x-1/2">
         <motion.div
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
@@ -85,6 +125,11 @@ export default function Hero() {
         >
           <span className="h-2 w-1 rounded-full bg-gold" />
         </motion.div>
+      </div>
+
+      {/* running ticker pinned to the bottom of the hero */}
+      <div className="absolute inset-x-0 bottom-0 z-10 border-t border-white/5 bg-ink/40 py-4 backdrop-blur-sm">
+        <Marquee />
       </div>
     </section>
   )

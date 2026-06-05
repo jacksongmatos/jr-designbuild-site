@@ -21,6 +21,17 @@
     @apply bg-gold/30 text-bone;
   }
 
+  /* Custom cursor: hide the native pointer on hover-capable desktops,
+     where CursorFollower draws the dot + ring instead. */
+  @media (hover: hover) and (pointer: fine) and (min-width: 1024px) {
+    html,
+    body,
+    a,
+    button {
+      cursor: none;
+    }
+  }
+
   /* Custom scrollbar */
   ::-webkit-scrollbar {
     width: 10px;

@@ -1,11 +1,11 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 /**
  * LiquidCanvas
- * A lightweight WebGL fragment-shader background that renders a slow,
- * molten "liquid gold over black" field. Pointer movement gently warps
- * the flow. Degrades gracefully: if WebGL is unavailable the canvas
- * simply stays transparent and the dark hero background shows through.
+ * A WebGL fragment shader that renders flowing "liquid metal" — molten gold
+ * and copper drifting over near-black, with a slow moving specular sheen.
+ * Pointer movement warps the flow. Degrades gracefully: if WebGL is
+ * unavailable (or context creation fails) a CSS gold gradient shows instead.
  */
 
 const VERT = `
@@ -21,7 +21,6 @@ uniform vec2 u_resolution;
 uniform float u_time;
 uniform vec2 u_mouse;
 
-// 2D hash + value noise
 float hash(vec2 p) {
   return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
 }
@@ -40,9 +39,10 @@ float noise(vec2 p) {
 float fbm(vec2 p) {
   float v = 0.0;
   float a = 0.5;
-  for (int i = 0; i < 5; i++) {
+  mat2 rot = mat2(0.8, -0.6, 0.6, 0.8);
+  for (int i = 0; i < 6; i++) {
     v += a * noise(p);
-    p *= 2.02;
+    p = rot * p * 2.02;
     a *= 0.5;
   }
   return v;
@@ -53,32 +53,41 @@ void main() {
   vec2 p = uv;
   p.x *= u_resolution.x / u_resolution.y;
 
-  float t = u_time * 0.06;
-  vec2 m = (u_mouse - 0.5) * 0.6;
+  float t = u_time * 0.09;
+  vec2 m = (u_mouse - 0.5) * 0.7;
 
-  // domain-warped flow
-  vec2 q = vec2(fbm(p + t + m), fbm(p - t * 0.7 - m));
+  // domain warping -> molten flow
+  vec2 q = vec2(fbm(p + t + m), fbm(p - t * 0.6 - m + 5.2));
   vec2 r = vec2(
-    fbm(p + 1.8 * q + vec2(1.7, 9.2) + t * 0.5),
-    fbm(p + 1.8 * q + vec2(8.3, 2.8) - t * 0.5)
+    fbm(p + 2.0 * q + vec2(1.7, 9.2) + t * 0.5),
+    fbm(p + 2.0 * q + vec2(8.3, 2.8) - t * 0.45)
   );
-  float f = fbm(p + 2.2 * r);
+  float f = fbm(p + 2.4 * r);
 
-  // gold palette over near-black
-  vec3 ink = vec3(0.039, 0.039, 0.039);
-  vec3 deep = vec3(0.078, 0.066, 0.035);
-  vec3 gold = vec3(0.788, 0.659, 0.298);
-  vec3 light = vec3(0.886, 0.784, 0.475);
+  // metallic palette: ink -> deep bronze -> copper -> gold -> bright sheen
+  vec3 ink = vec3(0.035, 0.035, 0.038);
+  vec3 bronze = vec3(0.16, 0.10, 0.04);
+  vec3 copper = vec3(0.45, 0.26, 0.10);
+  vec3 gold = vec3(0.79, 0.62, 0.27);
+  vec3 sheen = vec3(0.98, 0.90, 0.66);
 
-  vec3 col = mix(ink, deep, smoothstep(0.0, 0.7, f));
-  col = mix(col, gold, smoothstep(0.55, 0.95, f) * 0.7);
-  col = mix(col, light, smoothstep(0.8, 1.0, f * f) * 0.5);
+  vec3 col = mix(ink, bronze, smoothstep(0.10, 0.55, f));
+  col = mix(col, copper, smoothstep(0.45, 0.72, f));
+  col = mix(col, gold, smoothstep(0.62, 0.88, f));
 
-  // soft vignette so edges fall back into the page
-  float vig = smoothstep(1.25, 0.25, length(uv - 0.5));
+  // moving specular highlight band (liquid-metal glint)
+  float glint = smoothstep(0.86, 1.0, fbm(p * 1.4 + r + t * 1.3));
+  col = mix(col, sheen, glint * 0.8);
+
+  // veins of bright gold tracing the warp
+  float vein = smoothstep(0.55, 0.5, abs(length(r - 0.5) - 0.35));
+  col += gold * vein * 0.25;
+
+  // vignette so edges settle back into the page
+  float vig = smoothstep(1.3, 0.25, length(uv - 0.5));
   col *= vig;
 
-  gl_FragColor = vec4(col, 0.9);
+  gl_FragColor = vec4(col, 1.0);
 }
 `
 
@@ -100,6 +109,7 @@ export default function LiquidCanvas({
   className?: string
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+  const [failed, setFailed] = useState(false)
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -110,22 +120,37 @@ export default function LiquidCanvas({
     ).matches
 
     const gl =
-      (canvas.getContext('webgl', { alpha: true, antialias: true }) as
-        | WebGLRenderingContext
-        | null) ||
+      (canvas.getContext('webgl', {
+        alpha: false,
+        antialias: true,
+        premultipliedAlpha: false,
+      }) as WebGLRenderingContext | null) ||
       (canvas.getContext('experimental-webgl') as WebGLRenderingContext | null)
-    if (!gl) return
+
+    if (!gl) {
+      setFailed(true)
+      return
+    }
 
     const vert = compile(gl, gl.VERTEX_SHADER, VERT)
     const frag = compile(gl, gl.FRAGMENT_SHADER, FRAG)
-    if (!vert || !frag) return
+    if (!vert || !frag) {
+      setFailed(true)
+      return
+    }
 
     const program = gl.createProgram()
-    if (!program) return
+    if (!program) {
+      setFailed(true)
+      return
+    }
     gl.attachShader(program, vert)
     gl.attachShader(program, frag)
     gl.linkProgram(program)
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      setFailed(true)
+      return
+    }
     gl.useProgram(program)
 
     const buffer = gl.createBuffer()
@@ -145,7 +170,6 @@ export default function LiquidCanvas({
 
     const mouse = { x: 0.5, y: 0.5 }
     const target = { x: 0.5, y: 0.5 }
-
     const onPointer = (e: PointerEvent) => {
       const rect = canvas.getBoundingClientRect()
       target.x = (e.clientX - rect.left) / rect.width
@@ -155,10 +179,14 @@ export default function LiquidCanvas({
 
     const dpr = Math.min(window.devicePixelRatio || 1, 2)
     const resize = () => {
-      const w = canvas.clientWidth
-      const h = canvas.clientHeight
-      canvas.width = Math.floor(w * dpr)
-      canvas.height = Math.floor(h * dpr)
+      const w = canvas.clientWidth || canvas.offsetWidth || window.innerWidth
+      const h = canvas.clientHeight || canvas.offsetHeight || window.innerHeight
+      const cw = Math.max(1, Math.floor(w * dpr))
+      const ch = Math.max(1, Math.floor(h * dpr))
+      if (canvas.width !== cw || canvas.height !== ch) {
+        canvas.width = cw
+        canvas.height = ch
+      }
       gl.viewport(0, 0, canvas.width, canvas.height)
     }
     resize()
@@ -167,9 +195,10 @@ export default function LiquidCanvas({
     let raf = 0
     const start = performance.now()
     const render = (now: number) => {
-      mouse.x += (target.x - mouse.x) * 0.05
-      mouse.y += (target.y - mouse.y) * 0.05
-      const time = reduceMotion ? 0 : (now - start) / 1000
+      mouse.x += (target.x - mouse.x) * 0.045
+      mouse.y += (target.y - mouse.y) * 0.045
+      const time = reduceMotion ? 8 : (now - start) / 1000
+      resize()
       gl.uniform2f(uRes, canvas.width, canvas.height)
       gl.uniform1f(uTime, time)
       gl.uniform2f(uMouse, mouse.x, mouse.y)
@@ -177,7 +206,7 @@ export default function LiquidCanvas({
       if (!reduceMotion) raf = requestAnimationFrame(render)
     }
     raf = requestAnimationFrame(render)
-    if (reduceMotion) render(start) // single frame
+    if (reduceMotion) render(start)
 
     return () => {
       cancelAnimationFrame(raf)
@@ -190,12 +219,30 @@ export default function LiquidCanvas({
     }
   }, [])
 
+  // CSS fallback (also the base layer behind the canvas while it boots)
+  if (failed) {
+    return (
+      <div
+        className={className}
+        aria-hidden="true"
+        style={{
+          background:
+            'radial-gradient(120% 90% at 75% 25%, rgba(201,168,76,0.30), rgba(158,130,55,0.10) 45%, #0a0a0a 80%)',
+        }}
+      />
+    )
+  }
+
   return (
     <canvas
       ref={canvasRef}
       className={className}
       aria-hidden="true"
       role="presentation"
+      style={{
+        background:
+          'radial-gradient(120% 90% at 75% 25%, rgba(201,168,76,0.18), #0a0a0a 70%)',
+      }}
     />
   )
 }
