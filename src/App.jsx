@@ -397,7 +397,7 @@ function Home({ go }) {
           <h1 style={S.headline}>
             <span className="rise" style={{ ...S.line }}>Our team.</span>
             <span className="rise" style={{ ...S.line, ...S.lineItalic, animationDelay: ".12s" }}>Your project.</span>
-            <span className="rise liquidText" style={{ ...S.line, animationDelay: ".24s", textShadow: "0 1px 2px #000000aa, 0 2px 26px #c9a25e55, 0 0 50px #c9a25e33" }}>One vision.</span>
+            <span className="rise" style={{ ...S.line, animationDelay: ".24s" }}>One vision.</span>
           </h1>
           <p style={S.sub}>We don't simply build homes — we restore trust in construction. Real schedules, obsessive craft and Matterport precision, so the build itself becomes something you enjoy.</p>
           <div style={S.ctaRow}>
