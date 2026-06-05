@@ -984,7 +984,7 @@ const S = {
   sub: { maxWidth: 540, marginTop: 36, fontSize: 17, lineHeight: 1.85, color: "#f7f1e7", textShadow: "0 1px 2px #000, 0 1px 16px #000000e6", fontWeight: 400 },
   ctaRow: { display: "flex", gap: 16, marginTop: 44, flexWrap: "wrap" },
   ctaPrimary: { background: GOLD, color: "#0c0a08", padding: "17px 42px", borderRadius: 2, textDecoration: "none", fontSize: 11, letterSpacing: 2.5, fontWeight: 600, textTransform: "uppercase", cursor: "pointer" },
-  ctaGhost: { border: "1px solid #c9a25e66", color: "#e9d4a3", padding: "17px 42px", borderRadius: 2, textDecoration: "none", fontSize: 11, letterSpacing: 2.5, textTransform: "uppercase", background: "#c9a25e0d", backdropFilter: "blur(4px)", cursor: "pointer" },
+  ctaGhost: { border: "1px solid #c9a25e99", color: "#f3e3be", padding: "17px 42px", borderRadius: 2, textDecoration: "none", fontSize: 11, letterSpacing: 2.5, fontWeight: 600, textTransform: "uppercase", background: "#c9a25e1f", backdropFilter: "blur(4px)", cursor: "pointer" },
   scrollCue: { marginTop: 64, display: "flex", alignItems: "center", gap: 14 },
   scrollLine: { display: "block", width: 48, height: 1, background: "linear-gradient(90deg, #c9a25e, transparent)" },
   scrollWord: { fontSize: 10, letterSpacing: 4, textTransform: "uppercase", color: "#c9a25eaa" },
@@ -1129,7 +1129,7 @@ input::placeholder, textarea::placeholder { color: #ffffff66; }
 input:focus, textarea:focus { border-color: #c9a25e !important; }
 ::-webkit-scrollbar { width: 9px; } ::-webkit-scrollbar-track { background: #0c0a08; } ::-webkit-scrollbar-thumb { background: #c9a25e66; border-radius: 9px; }
 @keyframes shimmer { to { background-position: 200% center; } }
-.liquidText { background-image: linear-gradient(100deg,#8a6a3a,#e9d4a3,#fff4dd,#c9a25e,#8a6a3a); background-size: 250% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; animation: riseIn 1.1s cubic-bezier(.2,.8,.2,1) both, shimmer 5s linear infinite; text-shadow: none; }
+.liquidText { background-image: linear-gradient(100deg,#caa463,#f0dcae,#fff6e6,#e9d4a3,#caa463); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; animation: riseIn 1.1s cubic-bezier(.2,.8,.2,1) both, shimmer 5s linear infinite; }
 @keyframes riseIn { 0% { opacity: 0; transform: translateY(28px); filter: blur(6px); } 100% { opacity: 1; transform: translateY(0); filter: blur(0); } }
 .rise { animation: riseIn 1.1s cubic-bezier(.2,.8,.2,1) both; }
 @keyframes pageIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
