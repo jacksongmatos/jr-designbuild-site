@@ -16,9 +16,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
-          motion: ['framer-motion'],
-          helmet: ['react-helmet-async'],
+          'react-vendor': ['react', 'react-dom'],
         },
       },
     },

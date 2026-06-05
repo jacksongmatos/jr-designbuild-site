@@ -10,11 +10,8 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
-    "framer-motion": "^11.3.19",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "react-helmet-async": "^2.0.5",
-    "react-router-dom": "^6.26.1"
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@types/node": "^20.19.41",
