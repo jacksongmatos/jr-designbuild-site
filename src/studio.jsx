@@ -113,17 +113,31 @@ export const ROOMS = [
     ],
   },
 
-  /*  ── Example PHOTO room (uncomment & replace with your exported config) ──
+  /*  ── Gray kitchen (pre-marked from your photo) ──────────────────────────
+   *  To activate: save the photo as public/studio/kitchen-gray/base.jpg and
+   *  remove the comment markers around this object. Coords are eyeballed from
+   *  the photo — nudge them in #/studio-editor if any region is slightly off.
   {
-    id: "kitchen-real",
-    name: "My Kitchen",
+    id: "kitchen-gray",
+    name: "Gray Kitchen",
     kind: "photo",
-    base: "/studio/kitchen-real/base.jpg",
-    defaults: { walls: "SW7029", ceiling: "SW7757", floor: "white-oak" },
+    base: "/studio/kitchen-gray/base.jpg",
+    defaults: { walls: "SW7015", cabinets: "peppercorn", backsplash: "subway-white", floor: "natural-oak" },
     regions: [
-      { id: "walls",   label: "Walls",   lib: "SW",     type: "tint",  poly: [[2,18],[60,16],[62,52],[1,55]] },
-      { id: "ceiling", label: "Ceiling", lib: "SW",     type: "tint",  poly: [[0,0],[100,0],[100,15],[0,17]] },
-      { id: "floor",   label: "Flooring",lib: "FLOORS", type: "floor", quad: [[4,70],[96,70],[114,99],[-14,99]] },
+      { id: "walls", label: "Walls", lib: "SW", type: "tint", hotspot: { x: 8, y: 20 },
+        polys: [[[0,0],[22,0],[22,26],[14,44],[0,46]]] },
+      { id: "cabinets", label: "Cabinets", lib: "CABINETS", type: "tint", hotspot: { x: 20, y: 86 },
+        polys: [
+          [[0,64],[42,71],[42,100],[0,100]],          // island front-left
+          [[60,68],[100,63],[100,100],[60,100]],       // right lower bank
+          [[24,9],[43,9],[43,46],[24,46]],             // upper bank, left of hood
+          [[58,6],[78,6],[78,46],[58,46]],             // upper bank, right of hood
+          [[78,2],[92,2],[92,45],[78,45]],             // upper far-right by window
+        ] },
+      { id: "backsplash", label: "Backsplash", lib: "BACKSPLASH", type: "tint", hotspot: { x: 38, y: 54 },
+        polys: [[[24,47],[52,47],[52,62],[24,62]], [[58,47],[77,47],[77,61],[58,61]]] },
+      { id: "floor", label: "Flooring", lib: "FLOORS", type: "floor", hotspot: { x: 55, y: 88 },
+        quad: [[41,71],[60,70],[82,100],[30,100]] },
     ],
   },
   */
@@ -200,7 +214,10 @@ function PhotoScene({ room, v }) {
       <img src={room.base} alt={room.name} style={{ width: "100%", display: "block" }} onLoad={(e) => setSize({ w: e.target.clientWidth, h: e.target.clientHeight })} />
       {room.regions.map((r) => {
         if (r.type === "tint") {
-          return <div key={r.id} style={{ position: "absolute", inset: 0, background: fillOf(r.lib, v[r.id]), mixBlendMode: "multiply", clipPath: clip(r.poly), pointerEvents: "none" }} />;
+          const polys = r.polys || (r.poly ? [r.poly] : []);
+          return polys.map((poly, i) => (
+            <div key={r.id + i} style={{ position: "absolute", inset: 0, background: fillOf(r.lib, v[r.id]), mixBlendMode: "multiply", clipPath: clip(poly), pointerEvents: "none" }} />
+          ));
         }
         if (r.type === "floor" && size) {
           const floor = byId(FLOORS, v[r.id]);
@@ -378,7 +395,8 @@ export default function StudioPage({ go }) {
             <div style={s.sceneBox}>
               {room.kind === "photo" ? <PhotoScene room={room} v={v} /> : <KitchenScene v={v} />}
               {room.regions.map((r) => {
-                const h = r.hotspot || (r.poly ? { x: centroid(r.poly)[0], y: centroid(r.poly)[1] } : r.quad ? { x: centroid(r.quad)[0], y: centroid(r.quad)[1] } : { x: 50, y: 50 });
+                const shape = r.poly || (r.polys && r.polys[0]) || r.quad;
+                const h = r.hotspot || (shape ? { x: centroid(shape)[0], y: centroid(shape)[1] } : { x: 50, y: 50 });
                 return (
                   <button key={r.id} onClick={() => setActive(r.id)} aria-label={r.label} style={{ ...s.hotspot, left: `${h.x}%`, top: `${h.y}%`, ...(active === r.id ? s.hotspotOn : {}) }}>
                     <span style={s.hotspotDot} /><span style={s.hotspotLabel}>{r.label}</span>
