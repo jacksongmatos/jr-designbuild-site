@@ -129,7 +129,7 @@ function BlueprintPreview({ sqft }) {
         >
           {h}'-0"
         </text>
-        <text x={VW / 2} y={VH - 8} textAnchor="middle" fontFamily="'Bodoni Moda', serif" fontStyle="italic" fontSize="13" fill="#d8cfbf">
+        <text x={VW / 2} y={VH - 8} textAnchor="middle" fontFamily="'Bodoni Moda', serif" fontStyle="italic" fontSize="13" fill="#ece5d6">
           ≈ {area.toLocaleString()} sqft
         </text>
       </svg>
@@ -144,7 +144,7 @@ const S = {
   eyebrow: {
     fontSize: 11,
     letterSpacing: 7,
-    color: GOLD,
+    color: "#dcb878",
     textTransform: "uppercase",
     fontWeight: 600,
   },
@@ -161,7 +161,7 @@ const S = {
   disclaimer: {
     marginTop: 18,
     fontSize: 12.5,
-    color: "#c9b48a",
+    color: "#eddcb6",
     border: "1px solid #c9a25e33",
     background: "#c9a25e0d",
     borderRadius: 6,
@@ -183,7 +183,7 @@ const S = {
     fontStyle: "italic",
     fontSize: 26,
     color: GOLD,
-    opacity: 0.6,
+    opacity: 0.92,
   },
   h2: {
     fontFamily: "'Bodoni Moda', serif",
@@ -192,14 +192,14 @@ const S = {
     margin: 0,
     fontWeight: 500,
   },
-  sub: { color: "#d8cfbf", fontSize: 14, lineHeight: 1.6, margin: "6px 0 22px" },
+  sub: { color: "#ece5d6", fontSize: 14, lineHeight: 1.6, margin: "6px 0 22px" },
   grid2: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 },
   label: {
     display: "block",
     fontSize: 10.5,
     letterSpacing: 1.5,
     textTransform: "uppercase",
-    color: "#c9b48a",
+    color: "#eddcb6",
     marginBottom: 8,
   },
   input: {
@@ -234,7 +234,7 @@ const S = {
   big: {
     fontFamily: "'Bodoni Moda', serif",
     fontSize: "clamp(30px,5vw,52px)",
-    color: GOLD,
+    color: "#e3c081",
     lineHeight: 1.05,
   },
   chip: (active) => ({
@@ -249,11 +249,11 @@ const S = {
     transition: "all .25s",
   }),
   metric: { textAlign: "center", padding: "10px 6px" },
-  metricNum: { fontFamily: "'Bodoni Moda', serif", fontSize: 30, color: GOLD },
+  metricNum: { fontFamily: "'Bodoni Moda', serif", fontSize: 30, color: "#e3c081" },
   metricLabel: {
     fontSize: 11,
     letterSpacing: 1,
-    color: "#d8cfbf",
+    color: "#ece5d6",
     textTransform: "uppercase",
     marginTop: 4,
   },
@@ -393,7 +393,7 @@ function EstimateBuilder() {
             ["Finishes & fixtures", est.mid * 0.15],
           ].map(([k, v]) => (
             <div key={k} style={{ padding: "8px 0" }}>
-              <span style={{ color: "#d8cfbf", fontSize: 13 }}>{k}</span>
+              <span style={{ color: "#ece5d6", fontSize: 13 }}>{k}</span>
               <div style={{ color: "#fff", fontSize: 15 }}>{usd(v)}</div>
             </div>
           ))}
@@ -497,7 +497,7 @@ function PermitTimeline() {
       <div style={{ marginTop: 4 }}>
         {PERMIT_REAL.map(([j, n]) => (
           <div key={j} style={{ margin: "12px 0" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "#e0d8c8", marginBottom: 6 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "#ece5d6", marginBottom: 6 }}>
               <span>{j}</span>
               <span style={{ color: GOLD }}>{n} permits</span>
             </div>
@@ -554,7 +554,7 @@ function CostOfWaiting() {
           />
         </Field>
       </div>
-      <label style={{ display: "flex", alignItems: "center", gap: 10, color: "#d8cfbf", fontSize: 14 }}>
+      <label style={{ display: "flex", alignItems: "center", gap: 10, color: "#ece5d6", fontSize: 14 }}>
         <input type="checkbox" checked={adu} onChange={(e) => setAdu(e.target.checked)} style={{ accentColor: GOLD }} />
         This is an ADU (count lost rental income)
       </label>

@@ -1150,11 +1150,11 @@ const S = {
   footCols: { display: "grid", gridTemplateColumns: "2fr 1fr 1fr", gap: 40, maxWidth: 1120, margin: "0 auto 50px" },
   footText: { fontSize: 14, lineHeight: 1.7, color: "#e2dacb", marginTop: 16, maxWidth: 320 },
   footBadge: { display: "inline-block", marginTop: 18, fontSize: 11, letterSpacing: 1.5, color: GOLD, border: "1px solid #c9a25e44", padding: "6px 12px", borderRadius: 2 },
-  footColLabel: { fontSize: 10, letterSpacing: 2.5, textTransform: "uppercase", color: "#b8b0a1", marginBottom: 4 },
+  footColLabel: { fontSize: 10, letterSpacing: 2.5, textTransform: "uppercase", color: "#d8cebd", marginBottom: 4 },
   footLinks: { display: "flex", flexDirection: "column", gap: 13 },
   footLink: { color: "#ece4d6", textDecoration: "none", fontSize: 14, letterSpacing: 0.5 },
   footEmail: { color: GOLD, textDecoration: "none", fontSize: 14, letterSpacing: 0.5, fontWeight: 600 },
-  footBottom: { display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12, maxWidth: 1120, margin: "0 auto", paddingTop: 28, borderTop: "1px solid #c9a25e1f", fontSize: 12, color: "#bcb4a6", letterSpacing: 1 },
+  footBottom: { display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12, maxWidth: 1120, margin: "0 auto", paddingTop: 28, borderTop: "1px solid #c9a25e1f", fontSize: 12, color: "#d8cebd", letterSpacing: 1 },
 };
 
 const CSS = `
