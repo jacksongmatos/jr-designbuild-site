@@ -55,7 +55,18 @@ RenderEngine.apply(baseImage, region, item, opts) -> RenderedLayer
 - [x] **Phase 1 — schema**: tables, RLS, status-guard triggers, view, buckets,
       seeded categories. Applied + advisor-clean (only intentional
       `rls_enabled_no_policy` INFO on the service-role-only tables).
-- [ ] Phase 2 — Pages Functions: catalog read, signed photo upload, submit→lead.
-- [ ] Phase 3 — Studio client UI (upload → mark region → apply material → submit).
-- [ ] Phase 4 — Supplier portal (auth, item upload).
+- [x] **Phase 2 — Pages Functions**: `GET /api/studio/catalog`,
+      `POST /api/studio/upload`, `POST /api/studio/submit`. Service-role,
+      graceful no-op when env unset.
+- [x] **Phase 3 — Studio client UI** (`/studio`, `src/studio-app.jsx`): upload →
+      outline region → apply finish (Overlay2DEngine behind RenderEngine) →
+      manage layers → Request quote → lead. Seeded 15 approved JR catalog items
+      so the catalog is populated out of the box. (Finish-visualizer demo moved
+      to `/studio-demo`; region marker stays at `/studio-editor`.)
+- [ ] Phase 4 — Supplier portal (auth, item upload). Auth method TBD.
 - [ ] Phase 5 — Admin approvals + lead list.
+
+### Env needed for live persistence
+`SUPABASE_URL` + `SUPABASE_KEY` (service role) on Cloudflare Pages. Without them
+the Studio runs in preview mode (visual only; no lead saved). Phase 4 supplier
+auth will also need these.
