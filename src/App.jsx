@@ -1182,7 +1182,7 @@ input:focus, textarea:focus { border-color: #c9a25e !important; }
 @keyframes riseIn { 0% { opacity: 0; transform: translateY(28px); filter: blur(6px); } 100% { opacity: 1; transform: translateY(0); filter: blur(0); } }
 .rise { animation: riseIn 1.1s cubic-bezier(.2,.8,.2,1) both; }
 @keyframes pageIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-.page-in { animation: pageIn .7s cubic-bezier(.16,.84,.44,1) both; }
+.page-in { position: relative; z-index: 4; animation: pageIn .7s cubic-bezier(.16,.84,.44,1) both; }
 .marquee { animation: scroll 26s linear infinite; }
 @keyframes scroll { to { transform: translateX(-50%); } }
 .navlink::after { content: ""; position: absolute; left: 0; bottom: 0; width: 0; height: 1px; background: #c9a25e; transition: width .4s cubic-bezier(.16,.84,.44,1); }
