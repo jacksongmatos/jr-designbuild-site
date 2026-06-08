@@ -3,6 +3,7 @@ import ToolsPage from "./tools";
 import AiAssistant from "./ai";
 import ReportPage from "./report";
 import StudioPage from "./studio";
+import StudioApp from "./studio-app";
 import StudioEditor from "./studio-editor";
 
 // ─────────────────────────────────────────────────────────────
@@ -921,7 +922,7 @@ export default function App() {
     return () => clearTimeout(t);
   }, [route]);
 
-  const Page = { home: Home, report: ReportPage, dna: DnaPage, group: GroupPage, portfolio: Portfolio, services: Services, studio: StudioPage, "studio-editor": StudioEditor, tools: ToolsPage, about: About, contact: Contact }[route] || Home;
+  const Page = { home: Home, report: ReportPage, dna: DnaPage, group: GroupPage, portfolio: Portfolio, services: Services, studio: StudioApp, "studio-demo": StudioPage, "studio-editor": StudioEditor, tools: ToolsPage, about: About, contact: Contact }[route] || Home;
 
   return (
     <div style={S.root}>
