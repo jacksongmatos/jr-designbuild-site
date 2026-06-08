@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import ToolsPage from "./tools";
 import AiAssistant from "./ai";
 import ReportPage from "./report";
+import StudioPage from "./studio";
 
 // ─────────────────────────────────────────────────────────────
 //  JR DESIGN BUILD — full site, built around the brand DNA
@@ -34,6 +35,7 @@ const ROUTES = [
   { id: "group", label: "JR Group" },
   { id: "portfolio", label: "Portfolio" },
   { id: "services", label: "Services" },
+  { id: "studio", label: "Studio" },
   { id: "tools", label: "Plan" },
   { id: "about", label: "About" },
   { id: "contact", label: "Contact" },
@@ -678,6 +680,15 @@ function Services({ go }) {
         <a href={LINKS.financing} target="_blank" rel="noreferrer" style={S.ctaPrimary} className="cta-prim">Explore financing ↗</a>
       </div>
       </Reveal>
+      <Reveal>
+      <div style={S.financeBand}>
+        <div>
+          <h3 style={{ ...S.svcTitle, fontSize: 26 }}>Visualize your finishes first</h3>
+          <p style={S.svcLong}>Try wall colors, cabinets, countertops, flooring and molding in our interactive Design Studio — then send us the look.</p>
+        </div>
+        <a onClick={(e) => { e.preventDefault(); go("studio"); }} href="#/studio" style={S.ctaPrimary} className="cta-prim">Open Design Studio →</a>
+      </div>
+      </Reveal>
       <CtaBand go={go} />
     </section>
   );
@@ -755,7 +766,18 @@ function Contact() {
 }
 
 function ContactForm() {
-  const [f, setF] = useState({ name: "", email: "", phone: "", msg: "" });
+  const [f, setF] = useState(() => {
+    let msg = "";
+    try {
+      const raw = sessionStorage.getItem("jr_studio_look");
+      if (raw) {
+        const look = JSON.parse(raw);
+        msg = "My Design Studio selection:\n" + Object.entries(look).map(([k, v]) => `• ${k}: ${v}`).join("\n") + "\n\n";
+        sessionStorage.removeItem("jr_studio_look");
+      }
+    } catch {}
+    return { name: "", email: "", phone: "", msg };
+  });
   const [sent, setSent] = useState(false);
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
   const submit = () => {
@@ -898,7 +920,7 @@ export default function App() {
     return () => clearTimeout(t);
   }, [route]);
 
-  const Page = { home: Home, report: ReportPage, dna: DnaPage, group: GroupPage, portfolio: Portfolio, services: Services, tools: ToolsPage, about: About, contact: Contact }[route] || Home;
+  const Page = { home: Home, report: ReportPage, dna: DnaPage, group: GroupPage, portfolio: Portfolio, services: Services, studio: StudioPage, tools: ToolsPage, about: About, contact: Contact }[route] || Home;
 
   return (
     <div style={S.root}>
