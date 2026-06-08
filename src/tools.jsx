@@ -120,16 +120,16 @@ function BlueprintPreview({ sqft }) {
         {/* window */}
         <line x1={x + rw * 0.55} y1={y} x2={x + rw * 0.85} y2={y} stroke={GOLD} strokeWidth="3" />
         {/* dimensions */}
-        <text x={x + rw / 2} y={y - 8} textAnchor="middle" fontFamily="Georgia, serif" fontSize="12" fill={GOLD}>
+        <text x={x + rw / 2} y={y - 8} textAnchor="middle" fontFamily="Georgia, serif" fontSize="12" fill="#ffdf9e">
           {w}'-0"
         </text>
         <text
-          x={x - 10} y={y + rh / 2} textAnchor="middle" fontFamily="Georgia, serif" fontSize="12" fill={GOLD}
+          x={x - 10} y={y + rh / 2} textAnchor="middle" fontFamily="Georgia, serif" fontSize="12" fill="#ffdf9e"
           transform={`rotate(-90 ${x - 10} ${y + rh / 2})`}
         >
           {h}'-0"
         </text>
-        <text x={VW / 2} y={VH - 8} textAnchor="middle" fontFamily="'Bodoni Moda', serif" fontStyle="italic" fontSize="13" fill="#ece5d6">
+        <text x={VW / 2} y={VH - 8} textAnchor="middle" fontFamily="'Bodoni Moda', serif" fontStyle="italic" fontSize="13" fill="#ffffff">
           ≈ {area.toLocaleString()} sqft
         </text>
       </svg>
@@ -144,7 +144,7 @@ const S = {
   eyebrow: {
     fontSize: 11,
     letterSpacing: 7,
-    color: "#dcb878",
+    color: "#ffdf9e",
     textTransform: "uppercase",
     fontWeight: 600,
   },
@@ -157,11 +157,11 @@ const S = {
     letterSpacing: -1,
     textShadow: "0 1px 2px #000",
   },
-  lead: { color: "#efe8da", fontSize: 16, lineHeight: 1.7, maxWidth: 640 },
+  lead: { color: "#ffffff", fontSize: 16, lineHeight: 1.7, maxWidth: 640 },
   disclaimer: {
     marginTop: 18,
     fontSize: 12.5,
-    color: "#eddcb6",
+    color: "#ffeccb",
     border: "1px solid #c9a25e33",
     background: "#c9a25e0d",
     borderRadius: 6,
@@ -182,8 +182,8 @@ const S = {
     fontFamily: "'Bodoni Moda', serif",
     fontStyle: "italic",
     fontSize: 26,
-    color: GOLD,
-    opacity: 0.92,
+    color: "#ffdf9e",
+    opacity: 1,
   },
   h2: {
     fontFamily: "'Bodoni Moda', serif",
@@ -192,14 +192,14 @@ const S = {
     margin: 0,
     fontWeight: 500,
   },
-  sub: { color: "#ece5d6", fontSize: 14, lineHeight: 1.6, margin: "6px 0 22px" },
+  sub: { color: "#ffffff", fontSize: 14, lineHeight: 1.6, margin: "6px 0 22px" },
   grid2: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 },
   label: {
     display: "block",
     fontSize: 10.5,
     letterSpacing: 1.5,
     textTransform: "uppercase",
-    color: "#eddcb6",
+    color: "#ffeccb",
     marginBottom: 8,
   },
   input: {
@@ -234,7 +234,7 @@ const S = {
   big: {
     fontFamily: "'Bodoni Moda', serif",
     fontSize: "clamp(30px,5vw,52px)",
-    color: "#e3c081",
+    color: "#ffdf9e",
     lineHeight: 1.05,
   },
   chip: (active) => ({
@@ -249,11 +249,11 @@ const S = {
     transition: "all .25s",
   }),
   metric: { textAlign: "center", padding: "10px 6px" },
-  metricNum: { fontFamily: "'Bodoni Moda', serif", fontSize: 30, color: "#e3c081" },
+  metricNum: { fontFamily: "'Bodoni Moda', serif", fontSize: 30, color: "#ffdf9e" },
   metricLabel: {
     fontSize: 11,
     letterSpacing: 1,
-    color: "#ece5d6",
+    color: "#ffffff",
     textTransform: "uppercase",
     marginTop: 4,
   },
@@ -393,7 +393,7 @@ function EstimateBuilder() {
             ["Finishes & fixtures", est.mid * 0.15],
           ].map(([k, v]) => (
             <div key={k} style={{ padding: "8px 0" }}>
-              <span style={{ color: "#ece5d6", fontSize: 13 }}>{k}</span>
+              <span style={{ color: "#ffffff", fontSize: 13 }}>{k}</span>
               <div style={{ color: "#fff", fontSize: 15 }}>{usd(v)}</div>
             </div>
           ))}
@@ -472,7 +472,7 @@ function AduRoi() {
       </div>
       <BlueprintPreview sqft={size} />
       <p style={{ ...S.sub, marginTop: 16, marginBottom: 0 }}>
-        Build estimate: <span style={{ color: GOLD }}>{usd(build)}</span>. Pair with HFS
+        Build estimate: <span style={{ color: "#ffdf9e" }}>{usd(build)}</span>. Pair with HFS
         financing below to fund it.
       </p>
     </Tool>
@@ -497,9 +497,9 @@ function PermitTimeline() {
       <div style={{ marginTop: 4 }}>
         {PERMIT_REAL.map(([j, n]) => (
           <div key={j} style={{ margin: "12px 0" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "#ece5d6", marginBottom: 6 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, color: "#ffffff", marginBottom: 6 }}>
               <span>{j}</span>
-              <span style={{ color: GOLD }}>{n} permits</span>
+              <span style={{ color: "#ffdf9e" }}>{n} permits</span>
             </div>
             <div style={{ height: 8, background: "#ffffff10", borderRadius: 6, overflow: "hidden" }}>
               <div style={{ width: (n / max) * 100 + "%", height: "100%", background: GOLD, transition: "width .4s" }} />
@@ -554,7 +554,7 @@ function CostOfWaiting() {
           />
         </Field>
       </div>
-      <label style={{ display: "flex", alignItems: "center", gap: 10, color: "#ece5d6", fontSize: 14 }}>
+      <label style={{ display: "flex", alignItems: "center", gap: 10, color: "#ffffff", fontSize: 14 }}>
         <input type="checkbox" checked={adu} onChange={(e) => setAdu(e.target.checked)} style={{ accentColor: GOLD }} />
         This is an ADU (count lost rental income)
       </label>
@@ -569,10 +569,10 @@ function CostOfWaiting() {
         <span style={S.label}>Estimated cost of waiting</span>
         <div style={S.big}>{usd(total)}</div>
         <div style={{ ...S.sub, marginTop: 12 }}>
-          Material & labor drift: <span style={{ color: GOLD }}>{usd(inflation)}</span>
+          Material & labor drift: <span style={{ color: "#ffdf9e" }}>{usd(inflation)}</span>
           {adu && (
             <>
-              {" · "}Lost rent: <span style={{ color: GOLD }}>{usd(lostRent)}</span>
+              {" · "}Lost rent: <span style={{ color: "#ffdf9e" }}>{usd(lostRent)}</span>
             </>
           )}
         </div>
@@ -727,7 +727,7 @@ function TrustStrip() {
       </div>
       <p style={{ ...S.sub, textAlign: "center", margin: "18px 0 0" }}>
         CSLB License #1083248 —{" "}
-        <a href={CSLB_VERIFY} target="_blank" rel="noreferrer" style={{ color: GOLD }} className="navlink">
+        <a href={CSLB_VERIFY} target="_blank" rel="noreferrer" style={{ color: "#ffdf9e" }} className="navlink">
           verify it yourself ↗
         </a>
       </p>
