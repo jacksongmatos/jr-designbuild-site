@@ -58,3 +58,49 @@ export function randomToken(n = 24) {
   crypto.getRandomValues(a);
   return [...a].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
+
+// GoTrue (Supabase Auth) call. apikey = service key works for otp/verify.
+export function auth(env, path, init = {}) {
+  return fetch(`${env.SUPABASE_URL}/auth/v1/${path}`, {
+    ...init,
+    headers: {
+      apikey: env.SUPABASE_KEY,
+      authorization: `Bearer ${env.SUPABASE_KEY}`,
+      "content-type": "application/json",
+      ...(init.headers || {}),
+    },
+  });
+}
+
+// ── Signed session cookie (HMAC) — our own session so we never juggle Supabase
+// token refresh in the browser. Payload: { uid, exp }. ────────────────────────
+const b64u = {
+  enc: (buf) => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""),
+  dec: (s) => Uint8Array.from(atob(s.replace(/-/g, "+").replace(/_/g, "/")), (c) => c.charCodeAt(0)),
+};
+function secret(env) { return env.STUDIO_SESSION_SECRET || env.SUPABASE_KEY || "dev-secret"; }
+async function hmac(env, msg) {
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret(env)), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  return b64u.enc(await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(msg)));
+}
+
+export async function signSession(env, uid, ttlSec = 60 * 60 * 24 * 30) {
+  const payload = b64u.enc(new TextEncoder().encode(JSON.stringify({ uid, exp: Math.floor(Date.now() / 1000) + ttlSec })));
+  return `${payload}.${await hmac(env, payload)}`;
+}
+export async function readSession(env, request) {
+  const cookie = request.headers.get("cookie") || "";
+  const m = cookie.match(/(?:^|;\s*)jr_sup=([^;]+)/);
+  if (!m) return null;
+  const [payload, sig] = decodeURIComponent(m[1]).split(".");
+  if (!payload || !sig || (await hmac(env, payload)) !== sig) return null;
+  try {
+    const data = JSON.parse(new TextDecoder().decode(b64u.dec(payload)));
+    if (!data.exp || data.exp < Math.floor(Date.now() / 1000)) return null;
+    return data; // { uid, exp }
+  } catch { return null; }
+}
+export function sessionCookie(value, maxAge = 60 * 60 * 24 * 30) {
+  const base = `jr_sup=${value}; Path=/; HttpOnly; Secure; SameSite=Lax`;
+  return value ? `${base}; Max-Age=${maxAge}` : `jr_sup=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`;
+}
