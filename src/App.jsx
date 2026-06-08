@@ -6,6 +6,7 @@ import StudioPage from "./studio";
 import StudioApp from "./studio-app";
 import StudioEditor from "./studio-editor";
 import SuppliersPortal from "./suppliers";
+import AdminStudio from "./admin-studio";
 
 // ─────────────────────────────────────────────────────────────
 //  JR DESIGN BUILD — full site, built around the brand DNA
@@ -923,7 +924,7 @@ export default function App() {
     return () => clearTimeout(t);
   }, [route]);
 
-  const Page = { home: Home, report: ReportPage, dna: DnaPage, group: GroupPage, portfolio: Portfolio, services: Services, studio: StudioApp, "studio-demo": StudioPage, "studio-editor": StudioEditor, suppliers: SuppliersPortal, tools: ToolsPage, about: About, contact: Contact }[route] || Home;
+  const Page = { home: Home, report: ReportPage, dna: DnaPage, group: GroupPage, portfolio: Portfolio, services: Services, studio: StudioApp, "studio-demo": StudioPage, "studio-editor": StudioEditor, suppliers: SuppliersPortal, "admin-studio": AdminStudio, tools: ToolsPage, about: About, contact: Contact }[route] || Home;
 
   return (
     <div style={S.root}>

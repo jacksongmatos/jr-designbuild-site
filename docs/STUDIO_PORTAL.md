@@ -63,10 +63,29 @@ RenderEngine.apply(baseImage, region, item, opts) -> RenderedLayer
       manage layers → Request quote → lead. Seeded 15 approved JR catalog items
       so the catalog is populated out of the box. (Finish-visualizer demo moved
       to `/studio-demo`; region marker stays at `/studio-editor`.)
-- [ ] Phase 4 — Supplier portal (auth, item upload). Auth method TBD.
-- [ ] Phase 5 — Admin approvals + lead list.
+- [x] **Phase 4 — Supplier portal** (`/suppliers`): magic-link OTP login
+      (Worker-mediated, signed HttpOnly cookie), profile → approval gate →
+      add items (always land `pending`). Endpoints under
+      `functions/api/studio/supplier/*`.
+- [x] **Phase 5 — Admin** (`/admin-studio`): key-gated approvals for suppliers
+      and items + recent leads. Endpoints under `functions/api/studio/admin/*`.
+      The ERP stays the source of truth for leads (`studio_leads_unified`).
 
-### Env needed for live persistence
-`SUPABASE_URL` + `SUPABASE_KEY` (service role) on Cloudflare Pages. Without them
-the Studio runs in preview mode (visual only; no lead saved). Phase 4 supplier
-auth will also need these.
+### Env / config needed (Cloudflare Pages + Supabase)
+| Var / setting | Enables | Without it |
+|---|---|---|
+| `SUPABASE_URL` + `SUPABASE_KEY` (service role) | All persistence | Studio/portal run in preview (no writes) |
+| `STUDIO_ADMIN_KEY` | Admin login at `/admin-studio` | Admin returns `admin_not_configured` |
+| `STUDIO_SESSION_SECRET` (optional) | Dedicated HMAC for session cookies | Falls back to `SUPABASE_KEY` |
+| Supabase **SMTP** + Magic Link email template containing `{{ .Token }}` | Supplier OTP codes | No login codes are sent |
+
+### Routes
+- `/studio` — client Studio (upload → mark → apply → quote).
+- `/suppliers` — supplier portal (footer link).
+- `/admin-studio` — JR approvals (unlisted; key-gated).
+- `/studio-demo` — finish-visualizer demo. `/studio-editor` — region marker.
+
+### Not tested live
+Supplier auth + admin endpoints are wired to GoTrue/Storage but were not
+exercised against a live project (env unset in this environment). First
+real run: set the env vars above, then sign up a test supplier and approve it.

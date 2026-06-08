@@ -104,3 +104,24 @@ export function sessionCookie(value, maxAge = 60 * 60 * 24 * 30) {
   const base = `jr_sup=${value}; Path=/; HttpOnly; Secure; SameSite=Lax`;
   return value ? `${base}; Max-Age=${maxAge}` : `jr_sup=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`;
 }
+
+// ── Admin session (shared STUDIO_ADMIN_KEY -> signed jr_adm cookie) ───────────
+export async function signAdmin(env, ttlSec = 60 * 60 * 12) {
+  const payload = b64u.enc(new TextEncoder().encode(JSON.stringify({ role: "admin", exp: Math.floor(Date.now() / 1000) + ttlSec })));
+  return `${payload}.${await hmac(env, "adm:" + payload)}`;
+}
+export async function readAdmin(env, request) {
+  const cookie = request.headers.get("cookie") || "";
+  const m = cookie.match(/(?:^|;\s*)jr_adm=([^;]+)/);
+  if (!m) return false;
+  const [payload, sig] = decodeURIComponent(m[1]).split(".");
+  if (!payload || !sig || (await hmac(env, "adm:" + payload)) !== sig) return false;
+  try {
+    const data = JSON.parse(new TextDecoder().decode(b64u.dec(payload)));
+    return data.role === "admin" && data.exp > Math.floor(Date.now() / 1000);
+  } catch { return false; }
+}
+export function adminCookie(value, maxAge = 60 * 60 * 12) {
+  const base = `jr_adm=${value}; Path=/; HttpOnly; Secure; SameSite=Lax`;
+  return value ? `${base}; Max-Age=${maxAge}` : `jr_adm=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0`;
+}
