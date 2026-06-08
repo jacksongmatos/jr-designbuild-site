@@ -1,86 +1,88 @@
 # Design Studio — interactive finish visualizer
 
-Route: `#/studio` (nav: **Studio**). Code: `src/studio.jsx`.
+Route: `#/studio` (nav: **Studio**). Marker tool: `#/studio-editor` (hidden).
+Code: `src/studio.jsx`, `src/studio-editor.jsx`.
 
-The client taps hotspots on a room to repaint surfaces live:
-walls & ceiling (Sherwin-Williams colors), cabinets, countertop, backsplash,
-flooring (wood/tile in perspective) and a crown-molding toggle. The chosen
-combination can be sent to the team — it's stashed in `sessionStorage` under
-`jr_studio_look` and auto-fills the Contact form message.
+The client taps hotspots on a room to repaint surfaces live: walls & ceiling
+(Sherwin-Williams colors), cabinets, countertop, backsplash, flooring (wood/tile
+in perspective) and a crown-molding toggle. The chosen combination is stashed in
+`sessionStorage` (`jr_studio_look`) and auto-fills the Contact form.
 
-Everything is **data-driven**. To extend, edit the arrays at the top of
-`src/studio.jsx`:
+Everything is **data-driven** — edit the arrays at the top of `src/studio.jsx`:
 
 | Array | Drives |
 |-------|--------|
 | `SW` | Sherwin-Williams palette (walls/ceiling). `{ id, name, hex, sw }` |
-| `CABINETS` | Cabinet finishes (`kind: "color" | "wood"`) |
+| `CABINETS` | Cabinet finishes (`kind: "color" \| "wood"`) |
 | `COUNTERS` | Countertop slabs (`base` + optional `vein`) |
-| `BACKSPLASH` | Backsplash (`style: "subway" | "slab"`) |
-| `FLOORS` | Flooring (`kind: "wood" | "tile"`, `base`, `line`) |
-| `ROOMS` | Rooms + each region's hotspot position and swatch library |
+| `BACKSPLASH` | Backsplash (`style: "subway" \| "slab"`) |
+| `FLOORS` | Flooring (`kind: "wood" \| "tile"`, `base`, `line`) |
+| `ROOMS` | Rooms + each region's hotspot/coords and swatch library |
 
-> SW hex values are on-screen approximations; the **SW number is exact** —
-> always confirm against a physical chip.
+> SW hex values are on-screen approximations; the **SW number is exact** — always
+> confirm against a physical chip.
 
-## MVP today
+## Two room kinds
 
-The kitchen renders as a **brand-styled vector scene** (`kind: "vector"`), so
-the whole experience works with zero photography. Adding swatches is a one-line
-edit to the arrays above.
+- **`kind:"vector"`** — the brand-styled SVG kitchen that ships by default.
+  Works with zero photography.
+- **`kind:"photo"`** — your photo + polygon regions. Tint regions recolor with
+  `mix-blend-mode:multiply` (keeps the photo's shadows, so it looks real, not
+  like a sticker). The floor warps a texture onto a 4-corner quad in perspective
+  via a `matrix3d` homography.
 
-## Adding a real PHOTO room (production path)
+## "Does the site detect the regions automatically?"
 
-Same data model, with `kind: "photo"`. Drop assets in
-`public/studio/<room>/` and add a room entry:
+No auto-detection — you **mark** each surface once, which is reliable and takes
+~2 minutes. You don't hand-write coordinates: use the in-browser marker.
+
+### Adding a real photo room (the easy path)
+
+1. Open **`/#/studio-editor`** (the marker — not in the nav).
+2. **Load photo** (stays local in your browser; nothing is uploaded here).
+3. Set a `room id` (e.g. `kitchen-oakland`) and name.
+4. Pick a surface tab (Walls, Ceiling, Cabinets, Countertop, Backsplash) and
+   **click around its corners**. For **Flooring**, click exactly **4 corners**
+   in order: top-left → top-right → bottom-right → bottom-left.
+5. Keep "Preview recolor" on to confirm each region covers the right area.
+6. **Copy config** and paste the object into the `ROOMS` array in
+   `src/studio.jsx`.
+7. Save the photo at `public/studio/<room id>/base.jpg`.
+8. Commit & push — the room shows up in the Studio room switcher with the same
+   hotspot + swatch UX as the demo kitchen.
+
+A region is included once it has 3+ points (the floor needs exactly 4).
+Hotspots default to each region's centroid; add an explicit `hotspot:{x,y}`
+(in % of the image) to fine-tune where the dot sits.
+
+### Example exported config
 
 ```js
 {
   id: "kitchen-oakland",
   name: "Kitchen",
   kind: "photo",
-  base: "/studio/kitchen-oakland/base.jpg",  // the room photo
-  w: 1600, h: 1067,                            // intrinsic px (for hotspot %)
+  base: "/studio/kitchen-oakland/base.jpg",
+  defaults: { walls: "SW7757", ceiling: "SW7757", floor: "white-oak" },
   regions: [
-    // tint = recolor a masked region with multiply blend (keeps shadows)
-    { id: "walls",   label: "Walls",   lib: "SW",       type: "tint",
-      mask: "/studio/kitchen-oakland/mask-walls.png",   hotspot: { x: 18, y: 30 } },
-    { id: "ceiling", label: "Ceiling", lib: "SW",       type: "tint",
-      mask: "/studio/kitchen-oakland/mask-ceiling.png", hotspot: { x: 50, y: 8 } },
-    { id: "cabinets",label: "Cabinets",lib: "CABINETS", type: "tint",
-      mask: "/studio/kitchen-oakland/mask-cabinets.png",hotspot: { x: 35, y: 62 } },
-    // floor = perspective-warp a texture onto the 4 floor corners (% of image)
-    { id: "floor",   label: "Flooring",lib: "FLOORS",   type: "floor",
-      quad: [[2,72],[98,72],[112,99],[-12,99]],         hotspot: { x: 40, y: 88 } },
-    { id: "molding", label: "Crown molding", lib: "TOGGLE", type: "toggle",
-      overlay: "/studio/kitchen-oakland/molding.png",   hotspot: { x: 30, y: 12 } },
+    { id: "ceiling", label: "Ceiling", lib: "SW",     type: "tint",  poly: [[0,1],[100,0],[100,14],[0,16]] },
+    { id: "walls",   label: "Walls",   lib: "SW",     type: "tint",  poly: [[1,16],[100,14],[100,55],[1,58]] },
+    { id: "floor",   label: "Flooring",lib: "FLOORS", type: "floor", quad: [[6,70],[94,70],[114,99],[-14,99]] },
   ],
 }
 ```
 
-### How each asset is produced
+### Crown molding on a photo (optional)
 
-- **base.jpg** — the room photo (1600px wide is plenty; keep it < ~400 KB).
-- **mask-*.png** — a transparent PNG the same size as the photo, painted white
-  over the region (wall/ceiling/cabinets) and transparent everywhere else.
-  Make them in Photoshop (Select > Subject / quick mask) or any segmentation
-  tool. The renderer uses each mask as a CSS `mask-image` and paints the chosen
-  color through it with `mix-blend-mode: multiply`, so shadows and texture from
-  the photo show through — the recolor looks real, not like a sticker.
-- **floor `quad`** — the four floor corners as `[x%, y%]` (top-left, top-right,
-  bottom-right, bottom-left). The renderer computes a `matrix3d` homography and
-  maps the wood/tile texture onto that plane, so planks recede in correct
-  perspective. No mask needed for the floor.
-- **molding.png** — optional transparent overlay of the crown molding, shown
-  when the toggle is on.
+Add a region `{ id:"molding", label:"Crown molding", lib:"TOGGLE", type:"toggle",
+overlay:"/studio/<id>/molding.png", hotspot:{x,y} }` — a transparent PNG of the
+molding shown when the toggle is on. (The marker doesn't generate this overlay;
+it's an optional manual asset.)
 
-### Rendering contract (already wired in `src/studio.jsx`)
+## Rendering contract (already wired)
 
-- `type:"tint"`  → `<div>` with `WebkitMaskImage: url(mask)` + `background: hex`
-  + `mixBlendMode: "multiply"` over the photo.
-- `type:"floor"` → texture `<div>` transformed by `matrix3d(...)` from `quad`.
+- `type:"tint"`  → `<div>` clipped to the polygon, `background:<hex>`,
+  `mix-blend-mode:multiply` over the photo.
+- `type:"floor"` → texture `<div>` transformed by `matrix3d(...)` from the quad.
 - `type:"toggle"`→ overlay `<img>` shown/hidden.
-- `type` omitted → treated as the vector scene path.
-
-Once the assets exist, the photo room shows up in the room switcher with the
-exact same hotspot + swatch UX as the vector kitchen.
+- vector rooms ignore `poly`/`quad` and draw the SVG scene.
