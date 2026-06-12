@@ -545,7 +545,12 @@ function ProjectTimelines() {
           return (
             <div key={i} className="jrtr-tlrow">
               <div className="jrtr-tllabel">
-                <span style={{ color: PAPER, fontSize: 12.5 }}>{t.label}</span>
+                <span style={{ color: PAPER, fontSize: 12.5 }}>
+                  {t.label}
+                  {t.active && (
+                    <span style={{ marginLeft: 8, fontSize: 9, letterSpacing: "0.14em", textTransform: "uppercase", color: GOLD, border: `1px solid ${GOLD}`, borderRadius: 20, padding: "1px 7px", whiteSpace: "nowrap" }}>Active</span>
+                  )}
+                </span>
                 <span style={{ color: MUTED, fontSize: 11, display: "block", marginTop: 2 }}>
                   {t.months} months · {t.milestones} milestones · {t.band}
                 </span>
@@ -566,24 +571,6 @@ function ProjectTimelines() {
                     transition: `width 900ms cubic-bezier(.2,.8,.2,1) ${i * 90}ms`,
                   }}
                 />
-                {t.active && (
-                  <span
-                    style={{
-                      position: "absolute",
-                      left: `calc(${(l + w).toFixed(1)}% + 6px)`,
-                      top: 13,
-                      fontSize: 9.5,
-                      letterSpacing: "0.16em",
-                      color: GOLD,
-                      fontFamily: SANS,
-                      textTransform: "uppercase",
-                      opacity: inView ? 1 : 0,
-                      transition: `opacity 400ms ease ${900 + i * 90}ms`,
-                    }}
-                  >
-                    Active
-                  </span>
-                )}
               </div>
             </div>
           );
@@ -620,18 +607,21 @@ function EstimateFunnel() {
             <div
               style={{
                 width: inView ? `${s.w}%` : "0%",
-                minWidth: 220,
+                minWidth: 200,
+                maxWidth: "100%",
                 background: i === 0 ? GOLD_FAINT : "rgba(201,162,39,0.22)",
                 border: `1px solid ${GOLD}`,
-                padding: "18px 22px",
+                padding: "16px 18px",
                 transition: `width 900ms cubic-bezier(.2,.8,.2,1) ${i * 160}ms`,
-                overflow: "hidden",
-                whiteSpace: "nowrap",
+                display: "flex",
+                flexWrap: "wrap",
+                alignItems: "baseline",
+                gap: "2px 12px",
               }}
             >
-              <span style={{ fontFamily: SERIF, fontSize: "clamp(26px, 3vw, 38px)", color: GOLD, marginRight: 16 }}>{s.n}</span>
-              <span style={{ fontFamily: SANS, fontSize: 13, letterSpacing: "0.1em", textTransform: "uppercase", color: PAPER }}>{s.label}</span>
-              <div style={{ fontFamily: SANS, fontSize: 12, color: MUTED, marginTop: 4 }}>{s.sub}</div>
+              <span style={{ fontFamily: SERIF, fontSize: "clamp(24px, 3vw, 38px)", color: GOLD }}>{s.n}</span>
+              <span style={{ fontFamily: SANS, fontSize: 13, letterSpacing: "0.08em", textTransform: "uppercase", color: PAPER }}>{s.label}</span>
+              <div style={{ flexBasis: "100%", fontFamily: SANS, fontSize: 12, color: MUTED, marginTop: 2 }}>{s.sub}</div>
             </div>
           </div>
         ))}
