@@ -83,6 +83,47 @@ const GROUP = [
   },
 ];
 
+// JR Capital — real estate investment / development track record.
+// City-level addresses are public-facing; figures are real deal numbers.
+const JR_CAPITAL = [
+  {
+    address: "16972 Rolando Avenue", city: "Castro Valley", status: "Refinanced",
+    headline: "$1.28M", headlineLabel: "Appraised value",
+    rows: [
+      ["Acquired", "Dec 2024 · $560k"],
+      ["Financing", "Hard-money · 10% down"],
+      ["Value-add", "+700 sqft added"],
+      ["Refinanced", "Dec 2025"],
+    ],
+  },
+  {
+    address: "833 3rd Lane", city: "South San Francisco", status: "In construction",
+    headline: "$1.5M", headlineLabel: "ARV",
+    rows: [
+      ["Lot purchase", "$350k"],
+      ["Scope", "Ground-up new construction"],
+      ["Timeline", "12 months"],
+    ],
+  },
+  {
+    address: "123 W Park", city: "Martinez", status: "In development",
+    headline: "$1.65M+", headlineLabel: "ARV",
+    rows: [
+      ["Lot purchase", "$250k"],
+      ["Build", "3,000 sqft home + 520 sqft ADU"],
+    ],
+  },
+  {
+    address: "22575 Pearl Avenue", city: "Hayward", status: "On market now",
+    headline: "1,670 sqft", headlineLabel: "After remodel + addition",
+    rows: [
+      ["Acquired", "$665k"],
+      ["Scope", "Full remodel + addition"],
+      ["Status", "Listed for sale"],
+    ],
+  },
+];
+
 function useHashRoute() {
   const get = () => (window.location.hash.replace("#/", "") || "home").split("?")[0];
   const [route, setRoute] = useState(get());
@@ -648,6 +689,46 @@ function GroupPage({ go }) {
           </Reveal>
         ))}
       </div>
+
+      <Reveal>
+      <div style={{ maxWidth: 1200, margin: "90px auto 0" }}>
+        <div style={S.kickerCenter}>JR CAPITAL · INVESTMENT PORTFOLIO</div>
+        <h3 style={{ ...S.h2, fontSize: "clamp(26px,4vw,48px)", marginBottom: 14 }}>Where our capital is working</h3>
+        <p style={{ ...S.sub, margin: "0 auto 44px", maxWidth: 640, textAlign: "center" }}>
+          Real acquisitions, real value-add, real numbers. JR Capital pairs our build team with
+          investor capital to create equity across the Bay Area — from refinanced rehabs to ground-up construction.
+        </p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 18 }}>
+          {JR_CAPITAL.map((p, pi) => (
+            <Reveal key={p.address} delay={pi * 0.06}>
+            <div style={{ background: "#0c0a08", border: "1px solid #c9a25e2e", borderRadius: 10, padding: "24px 22px", height: "100%", display: "flex", flexDirection: "column" }}>
+              <span style={{ alignSelf: "flex-start", fontSize: 10.5, letterSpacing: 1.5, textTransform: "uppercase", color: GOLD, border: "1px solid #c9a25e55", borderRadius: 30, padding: "5px 12px" }}>{p.status}</span>
+              <div style={{ fontFamily: DISPLAY, color: "#fff", fontSize: 21, marginTop: 16, lineHeight: 1.2 }}>{p.address}</div>
+              <div style={{ fontSize: 12.5, letterSpacing: 1, textTransform: "uppercase", color: "#9a9286", marginTop: 4 }}>{p.city}, CA</div>
+              <div style={{ marginTop: 18 }}>
+                <div style={{ fontFamily: DISPLAY, color: GOLD, fontSize: 34, lineHeight: 1 }}>{p.headline}</div>
+                <div style={{ fontSize: 11.5, letterSpacing: 1, textTransform: "uppercase", color: "#cfc6b6", marginTop: 5 }}>{p.headlineLabel}</div>
+              </div>
+              <div style={{ marginTop: 18, borderTop: "1px solid #ffffff12", paddingTop: 10 }}>
+                {p.rows.map(([k, v]) => (
+                  <div key={k} style={{ display: "flex", justifyContent: "space-between", gap: 12, fontSize: 13, padding: "5px 0" }}>
+                    <span style={{ color: "#9a9286" }}>{k}</span>
+                    <span style={{ color: "#ece6db", textAlign: "right" }}>{v}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            </Reveal>
+          ))}
+        </div>
+        <p style={{ ...S.note, textAlign: "center", marginTop: 22 }}>
+          Figures reflect actual deal terms. Past performance does not guarantee future results.
+        </p>
+        <div style={{ textAlign: "center", marginTop: 26 }}>
+          <a onClick={(e) => { e.preventDefault(); go("contact"); }} href="#/contact" style={{ ...S.ctaPrimary, display: "inline-block" }} className="cta-prim">Invest with JR Capital →</a>
+        </div>
+      </div>
+      </Reveal>
 
       <Reveal>
       <div style={S.manifesto}>
