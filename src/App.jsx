@@ -141,6 +141,25 @@ const JR_ACADEMY = [
   { mIdx: 11, m: "Dec", title: "To be announced", desc: "", tba: true },
 ];
 
+// Investor / JR Capital / Builder — three equal partners in every deal.
+const PARTNERSHIP = [
+  {
+    role: "You", sub: "The Investor",
+    brings: ["Capital", "Trust", "Long-term vision"],
+    gains: ["Equity & returns", "Full transparency", "Passive, hands-off role"],
+  },
+  {
+    role: "JR Capital", sub: "The Structure",
+    brings: ["Vetted opportunities", "Deal structuring", "Aligned terms"],
+    gains: ["Shared upside", "Aligned — never extractive", "Skin in the game"],
+  },
+  {
+    role: "JR Design Build", sub: "The Builder",
+    brings: ["Execution & craft", "Cost & schedule control", "533+ projects of proof"],
+    gains: ["Build pipeline", "Performance-based reward", "Reputation on the line"],
+  },
+];
+
 function useHashRoute() {
   const get = () => (window.location.hash.replace("#/", "") || "home").split("?")[0];
   const [route, setRoute] = useState(get());
@@ -708,7 +727,47 @@ function GroupPage({ go }) {
       </div>
 
       <Reveal>
-      <div style={{ maxWidth: 1200, margin: "90px auto 0" }}>
+      <div style={{ maxWidth: 1100, margin: "96px auto 0" }}>
+        <div style={S.kickerCenter}>INVEST IN FUTURE PROJECTS</div>
+        <h3 style={{ ...S.h2, fontSize: "clamp(26px,4vw,48px)", marginBottom: 14 }}>Same page. Same level.</h3>
+        <p style={{ ...S.sub, margin: "0 auto 46px", maxWidth: 680, textAlign: "center" }}>
+          No silent partners, no hidden margins. The investor, JR Capital and the builder sit at the
+          same table — three equal partners aligned on one outcome. Everyone is rewarded together, only when the project performs.
+        </p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 16, alignItems: "stretch" }}>
+          {PARTNERSHIP.map((p, pi) => (
+            <Reveal key={p.role} delay={pi * 0.08}>
+            <div style={{ background: "#0c0a08", border: "1px solid #c9a25e3a", borderRadius: 12, padding: "26px 22px", height: "100%", display: "flex", flexDirection: "column", gap: 14 }}>
+              <div>
+                <div style={{ fontFamily: DISPLAY, color: "#fff", fontSize: 24, lineHeight: 1.1 }}>{p.role}</div>
+                <div style={{ fontSize: 11, letterSpacing: 2, textTransform: "uppercase", color: GOLD, marginTop: 5 }}>{p.sub}</div>
+              </div>
+              <div>
+                <div style={{ fontSize: 10.5, letterSpacing: 1.5, textTransform: "uppercase", color: "#9a9286", marginBottom: 7 }}>Brings</div>
+                {p.brings.map((b) => <div key={b} style={{ color: "#ece6db", fontSize: 13.5, padding: "3px 0" }}>{b}</div>)}
+              </div>
+              <div style={{ borderTop: "1px solid #ffffff12", paddingTop: 12, marginTop: "auto" }}>
+                <div style={{ fontSize: 10.5, letterSpacing: 1.5, textTransform: "uppercase", color: "#9a9286", marginBottom: 7 }}>Gains</div>
+                {p.gains.map((b) => <div key={b} style={{ color: GOLD, fontSize: 13.5, padding: "3px 0" }}>{b}</div>)}
+              </div>
+            </div>
+            </Reveal>
+          ))}
+        </div>
+        <div style={{ marginTop: 16, border: "1px solid #c9a25e3a", borderRadius: 12, background: "linear-gradient(135deg,#1a140b,#0c0a08)", padding: "24px 24px", textAlign: "center" }}>
+          <div style={{ fontSize: 11, letterSpacing: 3, textTransform: "uppercase", color: GOLD }}>One shared outcome</div>
+          <p style={{ color: "#ece6db", fontSize: "clamp(15px,2.2vw,19px)", lineHeight: 1.6, margin: "10px auto 0", maxWidth: 640 }}>
+            The project — built to perform, and structured so capital, strategy and craft are rewarded together, transparently, when it does.
+          </p>
+        </div>
+        <div style={{ textAlign: "center", marginTop: 30 }}>
+          <InvestorInquiry />
+        </div>
+      </div>
+      </Reveal>
+
+      <Reveal>
+      <div style={{ maxWidth: 1200, margin: "96px auto 0" }}>
         <div style={S.kickerCenter}>JR CAPITAL · INVESTMENT PORTFOLIO</div>
         <h3 style={{ ...S.h2, fontSize: "clamp(26px,4vw,48px)", marginBottom: 14 }}>Where our capital is working</h3>
         <p style={{ ...S.sub, margin: "0 auto 44px", maxWidth: 640, textAlign: "center" }}>
