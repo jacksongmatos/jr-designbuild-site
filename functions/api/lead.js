@@ -34,5 +34,16 @@ export async function onRequestPost(context) {
   }
 
   const result = await saveAndNotify(env, b);
+
+  // Temporary GET handler: returns Dialpad user info to find the correct User ID
+  export async function onRequestGet(context) {
+      const { env } = context;
+      if (!env.DIALPAD_API_KEY) return json({ error: 'no key' }, 400);
+      const r = await fetch('https://dialpad.com/api/v2/users/me', {
+            headers: { authorization: `Bearer ${env.DIALPAD_API_KEY}`, accept: 'application/json' },
+      });
+      const data = await r.json();
+      return json({ status: r.status, data });
+  }
   return json(result);
 }
