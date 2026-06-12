@@ -36,15 +36,3 @@ export async function onRequestPost(context) {
   const result = await saveAndNotify(env, b);
   return json(result);
 }
-
-// Temporary diagnostic: GET /api/lead lists Dialpad users so you can find the
-// correct DIALPAD_USER_ID. Remove this once the env var is configured.
-export async function onRequestGet(context) {
-  const { env } = context;
-  if (!env.DIALPAD_API_KEY) return json({ error: "no DIALPAD_API_KEY" }, 400);
-  const r = await fetch("https://dialpad.com/api/v2/users", {
-    headers: { authorization: `Bearer ${env.DIALPAD_API_KEY}`, accept: "application/json" },
-  });
-  const data = await r.json().catch(() => ({}));
-  return json({ status: r.status, data });
-}
