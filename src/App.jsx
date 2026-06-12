@@ -1131,9 +1131,10 @@ function CtaBand({ go }) {
 }
 
 // Draggable before/after slider using real project photos.
-// Drop the two files in /public/portfolio/ (paths below) and they appear here.
-const BA_BEFORE = "/portfolio/hayward-before.webp";
-const BA_AFTER = "/portfolio/hayward-after.webp";
+// Served directly from the JR Supabase "Before and After" bucket (long-lived
+// signed URLs). Swap for /portfolio/*.webp if the files are later committed.
+const BA_BEFORE = "https://mmekvaqcebyufclmivaf.supabase.co/storage/v1/object/sign/Before%20and%20After/Antes.webp?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8yNGRiOGE5YS1iZWQwLTRlNmQtYTZhOC1hNTY1YTRlOGNmZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJCZWZvcmUgYW5kIEFmdGVyL0FudGVzLndlYnAiLCJzY29wZSI6ImRvd25sb2FkIiwiaWF0IjoxNzgxMjU2OTQwLCJleHAiOjMzNTgwNTY5NDB9.FgPynbK9XrGTyZEEQu4eQytt5b8hDBb1sckSk7WR-u4";
+const BA_AFTER = "https://mmekvaqcebyufclmivaf.supabase.co/storage/v1/object/sign/Before%20and%20After/Depois.webp?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8yNGRiOGE5YS1iZWQwLTRlNmQtYTZhOC1hNTY1YTRlOGNmZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJCZWZvcmUgYW5kIEFmdGVyL0RlcG9pcy53ZWJwIiwic2NvcGUiOiJkb3dubG9hZCIsImlhdCI6MTc4MTI1Njk2MCwiZXhwIjozMzU4MDU2OTYwfQ.PKPq98LsFsE-Ly9vGQH4O4yE6nfPXZcyBn7u_nhTvIQ";
 function BeforeAfter() {
   const [pos, setPos] = useState(50);
   const ref = useRef(null);
@@ -1144,11 +1145,11 @@ function BeforeAfter() {
       onClick={(e) => drag(e.clientX)}
       onTouchMove={(e) => drag(e.touches[0].clientX)}>
       <div style={{ ...S.baLayer, background: "#16120d" }}>
-        <img src={BA_BEFORE} alt="22575 Pearl Avenue, Hayward — before the JR remodel" style={{ ...S.baScene, objectFit: "cover" }} draggable={false} />
+        <img src={BA_BEFORE} alt="22575 Pearl Avenue, Hayward — before the JR remodel" style={{ ...S.baScene, objectFit: "cover" }} draggable={false} onError={(e) => { e.currentTarget.style.display = "none"; }} />
         <span style={S.baTag}>Before</span>
       </div>
       <div style={{ ...S.baLayer, clipPath: `inset(0 ${100 - pos}% 0 0)`, background: "#16120d" }}>
-        <img src={BA_AFTER} alt="22575 Pearl Avenue, Hayward — after the JR full remodel and addition" style={{ ...S.baScene, objectFit: "cover" }} draggable={false} />
+        <img src={BA_AFTER} alt="22575 Pearl Avenue, Hayward — after the JR full remodel and addition" style={{ ...S.baScene, objectFit: "cover" }} draggable={false} onError={(e) => { e.currentTarget.style.display = "none"; }} />
         <span style={{ ...S.baTag, background: GOLD, color: "#0c0a08" }}>After</span>
       </div>
       <div style={{ ...S.baHandle, left: `${pos}%` }}><div style={S.baKnob}>⟺</div></div>
