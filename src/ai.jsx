@@ -253,18 +253,64 @@ function EstimateTab({ prefill }) {
   );
 }
 
+const INTAKE_FIELDS = [
+  { key: "name", label: "Nome completo", placeholder: "Ex: João Silva" },
+  { key: "phone", label: "Telefone", placeholder: "(650) 555-1234" },
+  { key: "email", label: "Email", placeholder: "voce@email.com" },
+  { key: "address", label: "Endereço do projeto", placeholder: "Rua, número, cidade" },
+  { key: "scope", label: "Escopo do projeto", placeholder: "Ex: cozinha, banheiro, ADU, ampliação…" },
+];
+
 function ChatTab() {
-  const [msgs, setMsgs] = useState([
-    { role: "assistant", content: "Hi! To get started, I just need four quick things: your full name, phone number, the project address, and what you'd like to do (e.g. kitchen, bathroom, ADU). That way the JR team has your details even if the connection drops — then I'm all yours." },
-  ]);
+  const [phase, setPhase] = useState("form"); // form | chat
+  const [form, setForm] = useState({ name: "", phone: "", email: "", address: "", scope: "" });
+  const [errors, setErrors] = useState({});
+  const [submitting, setSubmitting] = useState(false);
+  const intakeRef = useRef(null);
+
+  const [msgs, setMsgs] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState(null);
   const scroller = useRef(null);
 
+  const setField = (k) => (e) => {
+    setForm((p) => ({ ...p, [k]: e.target.value }));
+    setErrors((p) => ({ ...p, [k]: false }));
+  };
+
   useEffect(() => {
     if (scroller.current) scroller.current.scrollTop = scroller.current.scrollHeight;
   }, [msgs, loading]);
+
+  const startChat = async () => {
+    if (submitting) return;
+    const errs = {};
+    INTAKE_FIELDS.forEach((f) => { if (!form[f.key].trim()) errs[f.key] = true; });
+    setErrors(errs);
+    if (Object.keys(errs).length) return; // no blanks — can't run a proper intake
+
+    setSubmitting(true);
+    // Save the lead + alert the team immediately, so nothing is lost.
+    try {
+      await fetch("/api/lead", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          name: form.name, phone: form.phone, email: form.email,
+          address: form.address, projectType: form.scope, notes: form.scope,
+          source: "Website chat",
+        }),
+      });
+    } catch (_) { /* non-blocking — still proceed to chat */ }
+
+    // Keep the collected details as hidden context for the AI.
+    intakeRef.current = `[Intake já preenchido e salvo — Nome: ${form.name}; Telefone: ${form.phone}; Email: ${form.email}; Endereço: ${form.address}; Projeto: ${form.scope}. Não peça esses dados novamente e não chame submit_lead de novo a menos que algo mude. Apenas ajude com o projeto.]`;
+    const first = form.name.trim().split(/\s+/)[0];
+    setMsgs([{ role: "assistant", content: `Perfeito, ${first}! Recebi seus dados — o time JR já está com tudo e vai entrar em contato em breve. Enquanto isso, posso ajudar com seu projeto (${form.scope}). O que você gostaria de saber?` }]);
+    setPhase("chat");
+    setSubmitting(false);
+  };
 
   const send = async () => {
     const text = input.trim();
@@ -272,10 +318,11 @@ function ChatTab() {
     const next = [...msgs, { role: "user", content: text }];
     setMsgs(next); setInput(""); setLoading(true); setErr(null);
     try {
+      const convo = [{ role: "user", content: intakeRef.current || "" }, ...next];
       const r = await fetch("/api/chat", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ messages: next }),
+        body: JSON.stringify({ messages: convo }),
       });
       const data = await r.json().catch(() => ({}));
       if (!r.ok) { setErr(data.error || "error"); return; }
@@ -289,6 +336,47 @@ function ChatTab() {
 
   if (err) return <Fallback err={err} />;
 
+  // ---- Phase 1: intake form ----
+  if (phase === "form") {
+    const missing = Object.values(errors).some(Boolean);
+    return (
+      <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+        <div style={{ flex: 1, overflowY: "auto", paddingBottom: 8 }}>
+          <p style={{ ...st.note, marginTop: 0, marginBottom: 16, color: "#e7dcc4" }}>
+            Bem-vindo à JR Design Build. Para um atendimento correto, primeiro preciso de alguns dados —
+            assim o time JR já fica com seu contato mesmo se a conexão cair. Depois seguimos no chat.
+          </p>
+          {INTAKE_FIELDS.map((f) => (
+            <div key={f.key}>
+              <span style={st.label}>{f.label}</span>
+              <input
+                style={{ ...st.input, marginBottom: errors[f.key] ? 4 : 12, borderColor: errors[f.key] ? "#cf6a5a" : "#ffffff22" }}
+                placeholder={f.placeholder}
+                value={form[f.key]}
+                onChange={setField(f.key)}
+                onKeyDown={(e) => { if (e.key === "Enter" && f.key === "scope") startChat(); }}
+              />
+              {errors[f.key] && <div style={{ color: "#cf8a5a", fontSize: 11.5, marginBottom: 12 }}>Preencha este campo para continuar.</div>}
+            </div>
+          ))}
+          {missing && (
+            <div style={{ color: "#cf8a5a", fontSize: 12.5, marginBottom: 10 }}>
+              Sem todos os dados não conseguimos fazer um atendimento correto.
+            </div>
+          )}
+        </div>
+        <button
+          style={{ ...st.btn, opacity: submitting ? 0.6 : 1 }}
+          disabled={submitting}
+          onClick={startChat}
+        >
+          {submitting ? "Enviando…" : "Iniciar atendimento →"}
+        </button>
+      </div>
+    );
+  }
+
+  // ---- Phase 2: chat ----
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
       <div ref={scroller} style={{ flex: 1, display: "flex", flexDirection: "column", gap: 10, overflowY: "auto", paddingBottom: 10 }}>
@@ -317,14 +405,14 @@ function cap(s) {
 
 export default function AiAssistant() {
   const [open, setOpen] = useState(false);
-  const [tab, setTab] = useState("estimate");
+  const [tab, setTab] = useState("chat");
   const [prefill, setPrefill] = useState({});
 
   useEffect(() => {
     const onEvt = (e) => {
       const d = (e && e.detail) || {};
       setPrefill(d);
-      setTab(d.tab === "chat" ? "chat" : "estimate");
+      setTab(d.tab === "estimate" ? "estimate" : "chat");
       setOpen(true);
     };
     window.addEventListener("jr:ai", onEvt);
@@ -334,7 +422,7 @@ export default function AiAssistant() {
   if (!open) {
     return (
       <button style={st.fab} onClick={() => setOpen(true)} aria-label="Open AI assistant">
-        <span style={{ fontSize: 15 }}>✨</span> Instant estimate
+        <span style={{ fontSize: 15 }}>✨</span> Talk with JR
       </button>
     );
   }
@@ -343,8 +431,8 @@ export default function AiAssistant() {
     <div style={st.panel} role="dialog" aria-label="JR Design Build AI assistant">
       <div style={st.head}>
         <div style={st.tabs}>
-          <button style={st.tab(tab === "estimate")} onClick={() => setTab("estimate")}>Estimate</button>
-          <button style={st.tab(tab === "chat")} onClick={() => setTab("chat")}>Ask JR</button>
+          <button style={st.tab(tab === "chat")} onClick={() => setTab("chat")}>Talk with JR</button>
+          <button style={st.tab(tab === "estimate")} onClick={() => setTab("estimate")}>Preliminary estimate</button>
         </div>
         <button
           onClick={() => setOpen(false)}
