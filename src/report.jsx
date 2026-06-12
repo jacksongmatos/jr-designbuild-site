@@ -25,9 +25,10 @@ const s = {
   hLabel: { fontSize: 11, letterSpacing: 2, textTransform: "uppercase", color: GOLD, marginBottom: 14 },
   big: { fontFamily: "'Bodoni Moda', serif", fontSize: 30, color: "#fff" },
   note: { fontSize: 12.5, color: "#c9b48a", lineHeight: 1.6 },
-  grid: (n) => ({ display: "grid", gridTemplateColumns: `repeat(${n},1fr)`, gap: 12 }),
-  metric: { textAlign: "center", padding: "8px 4px" },
-  mnum: { fontFamily: "'Bodoni Moda', serif", fontSize: 30, color: GOLD },
+  // Responsive: auto-fit wraps columns on narrow screens instead of clipping.
+  grid: (min) => ({ display: "grid", gridTemplateColumns: `repeat(auto-fit, minmax(${min}, 1fr))`, gap: 12 }),
+  metric: { textAlign: "center", padding: "8px 4px", minWidth: 0 },
+  mnum: { fontFamily: "'Bodoni Moda', serif", fontSize: "clamp(22px, 5.5vw, 30px)", color: GOLD, wordBreak: "break-word" },
   mlab: { fontSize: 11, letterSpacing: 1, color: "#d8cfbf", textTransform: "uppercase", marginTop: 4 },
 };
 
@@ -112,7 +113,7 @@ export default function ReportPage({ go }) {
 
             {/* Scores */}
             <Section label="Property scores">
-              <div style={s.grid(4)}>
+              <div style={s.grid("110px")}>
                 <Ring value={r.scores.health} label="Health" />
                 <Ring value={r.scores.expansion} label="Expansion" />
                 <Ring value={r.scores.investment} label="Investment" />
@@ -122,7 +123,7 @@ export default function ReportPage({ go }) {
 
             {/* Snapshot */}
             <Section label="Snapshot">
-              <div style={s.grid(3)}>
+              <div style={s.grid("130px")}>
                 {[
                   ["Lot size", r.snapshot.lotSqft.toLocaleString() + " sqft"],
                   ["Home size", r.snapshot.buildingSqft.toLocaleString() + " sqft"],
@@ -170,11 +171,13 @@ export default function ReportPage({ go }) {
             {/* Cost */}
             <Section label="Cost intelligence">
               {r.cost.map((c) => (
-                <div key={c.type} style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 1fr", gap: 8, padding: "8px 0", borderTop: "1px solid #ffffff10", fontSize: 14 }}>
-                  <span style={{ color: "#fff" }}>{c.type}</span>
-                  <span style={{ color: "#d8cfbf" }}>Low {usd(c.low)}</span>
-                  <span style={{ color: GOLD }}>Avg {usd(c.avg)}</span>
-                  <span style={{ color: "#d8cfbf" }}>Premium {usd(c.premium)}</span>
+                <div key={c.type} style={{ padding: "10px 0", borderTop: "1px solid #ffffff10", fontSize: 14 }}>
+                  <div style={{ color: "#fff", marginBottom: 5 }}>{c.type}</div>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 16px" }}>
+                    <span style={{ color: "#d8cfbf" }}>Low {usd(c.low)}</span>
+                    <span style={{ color: GOLD }}>Avg {usd(c.avg)}</span>
+                    <span style={{ color: "#d8cfbf" }}>Premium {usd(c.premium)}</span>
+                  </div>
                 </div>
               ))}
             </Section>
@@ -203,7 +206,7 @@ export default function ReportPage({ go }) {
 
             {/* ROI */}
             <Section label="ROI intelligence (ADU scenario)">
-              <div style={s.grid(4)}>
+              <div style={s.grid("150px")}>
                 <div style={s.metric}><div style={s.mnum}>{usd(r.roi.projectCost)}</div><div style={s.mlab}>Project cost</div></div>
                 <div style={s.metric}><div style={s.mnum}>{usd(r.roi.equity)}</div><div style={s.mlab}>Equity created</div></div>
                 <div style={s.metric}><div style={s.mnum}>{usd(r.roi.aduRentMonthly)}/mo</div><div style={s.mlab}>Rent potential</div></div>
