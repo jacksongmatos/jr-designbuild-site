@@ -340,7 +340,7 @@ function BlueprintCanvas() {
     const c = ref.current;
     const x = c.getContext("2d");
     let W, H, DPR, raf;
-    const GOLD = "#d9be8e"; // ~30% lighter gold for the floor-plan animation
+    const GOLD = "#f7efdc"; // maximum-brightness light gold for the floor-plan animation
     const GRID = 46;
     const rnd = (a, b) => a + Math.random() * (b - a);
 
@@ -369,7 +369,7 @@ function BlueprintCanvas() {
     ensure();
 
     const drawGrid = () => {
-      x.save(); x.globalAlpha = 0.04; x.strokeStyle = GOLD; x.lineWidth = 1;
+      x.save(); x.globalAlpha = 0.08; x.strokeStyle = GOLD; x.lineWidth = 1;
       for (let gx = 0; gx <= W; gx += GRID) { x.beginPath(); x.moveTo(gx + 0.5, 0); x.lineTo(gx + 0.5, H); x.stroke(); }
       for (let gy = 0; gy <= H; gy += GRID) { x.beginPath(); x.moveTo(0, gy + 0.5); x.lineTo(W, gy + 0.5); x.stroke(); }
       x.restore();
@@ -395,9 +395,9 @@ function BlueprintCanvas() {
     };
     const drawRoom = (r) => {
       let alpha, p;
-      if (r.phase === "draw") { p = r.e; alpha = 0.8; }
-      else if (r.phase === "hold") { p = 1; alpha = 0.8; }
-      else { p = 1; alpha = 0.8 * (1 - r.e); }
+      if (r.phase === "draw") { p = r.e; alpha = 1; }
+      else if (r.phase === "hold") { p = 1; alpha = 1; }
+      else { p = 1; alpha = 1 * (1 - r.e); }
       if (alpha <= 0) return;
       x.save();
       x.globalAlpha = alpha; x.strokeStyle = GOLD; x.lineWidth = 1.4; x.lineJoin = "round"; x.lineCap = "round";
