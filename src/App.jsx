@@ -1017,9 +1017,9 @@ const S = {
   navLink: { position: "relative", textDecoration: "none", fontSize: 11, letterSpacing: 2.5, textTransform: "uppercase", cursor: "pointer", transition: "color .4s", paddingBottom: 4 },
   burger: { display: "none", background: "none", border: "none", color: "#fff", fontSize: 22, cursor: "pointer" },
 
-  mobileMenu: { position: "fixed", inset: 0, zIndex: 25, background: "radial-gradient(120% 90% at 70% 10%, #1a140b 0%, #0c0a08 60%)", backdropFilter: "blur(16px)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 40 },
-  mobileMenuInner: { display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 18 },
-  mobileLink: { fontFamily: DISPLAY, fontSize: 38, textDecoration: "none", letterSpacing: 1, display: "flex", alignItems: "baseline", gap: 16, opacity: 0 },
+  mobileMenu: { position: "fixed", inset: 0, zIndex: 25, background: "radial-gradient(120% 90% at 70% 10%, #1a140b 0%, #0c0a08 60%)", backdropFilter: "blur(16px)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-start", gap: 30, overflowY: "auto", WebkitOverflowScrolling: "touch", padding: "104px 8vw 132px" },
+  mobileMenuInner: { display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 14 },
+  mobileLink: { fontFamily: DISPLAY, fontSize: "clamp(26px, 7vw, 38px)", textDecoration: "none", letterSpacing: 1, display: "flex", alignItems: "baseline", gap: 16, opacity: 0, lineHeight: 1.1 },
   mobileNum: { fontSize: 13, fontStyle: "italic", color: GOLD, opacity: 0.7, fontFamily: DISPLAY },
   mobileSocial: { display: "flex", gap: 22 },
 
