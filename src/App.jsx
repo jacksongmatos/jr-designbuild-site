@@ -1001,26 +1001,61 @@ function ContactForm() {
         sessionStorage.removeItem("jr_studio_look");
       }
     } catch {}
-    return { name: "", email: "", phone: "", msg };
+    return { name: "", email: "", phone: "", address: "", msg };
   });
-  const [sent, setSent] = useState(false);
-  const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
-  const submit = () => {
-    fetch("/api/lead", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ name: f.name, email: f.email, phone: f.phone, notes: f.msg, source: "Website contact" }) }).catch(() => {});
-    const body = encodeURIComponent(`Name: ${f.name}\nEmail: ${f.email}\nPhone: ${f.phone}\n\n${f.msg}`);
-    window.location.href = `mailto:hello@jrdesignbuild.com?subject=${encodeURIComponent("New project inquiry — " + (f.name || "Website"))}&body=${body}`;
-    setSent(true);
+  const [errors, setErrors] = useState({});
+  const [state, setState] = useState("idle"); // idle | sending | done | error
+  const set = (k) => (e) => { setF({ ...f, [k]: e.target.value }); setErrors((p) => ({ ...p, [k]: false })); };
+  const submit = async () => {
+    if (state === "sending") return;
+    const required = ["name", "email", "phone", "address"];
+    const errs = {};
+    required.forEach((k) => { if (!f[k].trim()) errs[k] = true; });
+    setErrors(errs);
+    if (Object.keys(errs).length) return;
+    setState("sending");
+    try {
+      const r = await fetch("/api/lead", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ name: f.name, email: f.email, phone: f.phone, address: f.address, notes: f.msg, source: "Website contact" }),
+      });
+      if (!r.ok) throw new Error("bad");
+      setState("done");
+    } catch (_) {
+      setState("error");
+    }
   };
+
+  if (state === "done") {
+    return (
+      <div style={S.form}>
+        <p style={{ fontFamily: DISPLAY, fontSize: 26, color: GOLD, margin: "0 0 10px" }}>Thank you{f.name ? `, ${f.name.trim().split(/\s+/)[0]}` : ""}.</p>
+        <p style={{ color: "#e6ddcd", fontSize: 15, lineHeight: 1.6, margin: 0 }}>
+          Your details are in — the JR team will reach out shortly. The first consultation is free, with no pressure.
+        </p>
+      </div>
+    );
+  }
+
+  const errStyle = (k) => ({ ...S.input, ...(errors[k] ? { borderColor: "#cf6a5a" } : {}) });
   return (
     <div style={S.form}>
       <div style={S.formRow}>
-        <input style={S.input} placeholder="Your name" value={f.name} onChange={set("name")} />
-        <input style={S.input} placeholder="Email" value={f.email} onChange={set("email")} />
+        <input style={errStyle("name")} placeholder="Your name" value={f.name} onChange={set("name")} />
+        <input style={errStyle("email")} placeholder="Email" value={f.email} onChange={set("email")} />
       </div>
-      <input style={S.input} placeholder="Phone (optional)" value={f.phone} onChange={set("phone")} />
-      <textarea style={{ ...S.input, minHeight: 120, resize: "vertical" }} placeholder="Tell us about your project — scope, location, timeline…" value={f.msg} onChange={set("msg")} />
-      <button onClick={submit} style={{ ...S.ctaPrimary, border: "none", cursor: "pointer", width: "fit-content" }} className="cta-prim">
-        {sent ? "Opening your email…" : "Send inquiry →"}
+      <input style={errStyle("phone")} placeholder="Phone" value={f.phone} onChange={set("phone")} />
+      <input style={errStyle("address")} placeholder="Project address" value={f.address} onChange={set("address")} />
+      <textarea style={{ ...S.input, minHeight: 120, resize: "vertical" }} placeholder="Tell us about your project — scope, timeline…" value={f.msg} onChange={set("msg")} />
+      {Object.values(errors).some(Boolean) && (
+        <div style={{ color: "#cf8a5a", fontSize: 13, marginTop: -4 }}>Please fill in your name, email, phone and project address.</div>
+      )}
+      {state === "error" && (
+        <div style={{ color: "#cf8a5a", fontSize: 13 }}>Something went wrong — please try again or email hello@jrdesignbuild.com.</div>
+      )}
+      <button onClick={submit} disabled={state === "sending"} style={{ ...S.ctaPrimary, border: "none", cursor: "pointer", width: "fit-content", opacity: state === "sending" ? 0.6 : 1 }} className="cta-prim">
+        {state === "sending" ? "Sending…" : "Send inquiry →"}
       </button>
     </div>
   );
