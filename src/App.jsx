@@ -1130,8 +1130,10 @@ function CtaBand({ go }) {
   );
 }
 
-// Before = raw construction scene (cold, structural). After = finished interior (warm, furnished).
-// To use real photos: replace the <svg> in each side with <img src="..." style={{width:"100%",height:"100%",objectFit:"cover"}} />
+// Draggable before/after slider using real project photos.
+// Drop the two files in /public/portfolio/ (paths below) and they appear here.
+const BA_BEFORE = "/portfolio/hayward-before.jpg";
+const BA_AFTER = "/portfolio/hayward-after.jpg";
 function BeforeAfter() {
   const [pos, setPos] = useState(50);
   const ref = useRef(null);
@@ -1141,46 +1143,12 @@ function BeforeAfter() {
       onMouseMove={(e) => e.buttons === 1 && drag(e.clientX)}
       onClick={(e) => drag(e.clientX)}
       onTouchMove={(e) => drag(e.touches[0].clientX)}>
-      <div style={{ ...S.baLayer, background: "linear-gradient(160deg,#1b1d22,#0f1013)" }}>
-        <svg viewBox="0 0 600 480" preserveAspectRatio="xMidYMid slice" style={S.baScene}>
-          <g fill="none" stroke="#5b6168" strokeWidth="1.4" strokeLinecap="round">
-            <path d="M0 360 L600 360" stroke="#3c4046" strokeWidth="2" />
-            <path d="M90 360 L90 120 M210 360 L210 120 M330 360 L330 120 M450 360 L450 120 M540 360 L540 120" />
-            <path d="M90 120 L540 120 M90 180 L540 180 M90 250 L540 250" strokeWidth="1" opacity="0.7" />
-            <path d="M150 360 L150 250 L270 250 L270 360 M90 250 L150 180 M210 250 L150 180" opacity="0.6" />
-            <path d="M390 120 L450 60 L510 120" />
-            <path d="M40 360 L40 300 L70 300" stroke="#4a4e54" />
-            <circle cx="500" cy="320" r="3" fill="#5b6168" stroke="none" />
-            <path d="M480 340 L520 340 L515 360 L485 360 Z" opacity="0.5" />
-          </g>
-        </svg>
+      <div style={{ ...S.baLayer, background: "#16120d" }}>
+        <img src={BA_BEFORE} alt="22575 Pearl Avenue, Hayward — before the JR remodel" style={{ ...S.baScene, objectFit: "cover" }} draggable={false} />
         <span style={S.baTag}>Before</span>
       </div>
-      <div style={{ ...S.baLayer, clipPath: `inset(0 ${100 - pos}% 0 0)`, background: "linear-gradient(160deg,#2a2012,#16120d)" }}>
-        <svg viewBox="0 0 600 480" preserveAspectRatio="xMidYMid slice" style={S.baScene}>
-          <defs>
-            <linearGradient id="warm" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stopColor="#3a2c16" /><stop offset="1" stopColor="#1c1610" />
-            </linearGradient>
-            <radialGradient id="glow" cx="0.5" cy="0.3" r="0.7">
-              <stop offset="0" stopColor="#c9a25e" stopOpacity="0.35" /><stop offset="1" stopColor="#c9a25e" stopOpacity="0" />
-            </radialGradient>
-          </defs>
-          <rect x="0" y="0" width="600" height="480" fill="url(#warm)" />
-          <rect x="0" y="0" width="600" height="480" fill="url(#glow)" />
-          <g fill="none" stroke="#c9a25e" strokeWidth="1.4" strokeLinecap="round" opacity="0.9">
-            <path d="M0 360 L600 360" strokeWidth="2" />
-            <path d="M120 90 L480 90 L480 150 L120 150 Z" opacity="0.5" />
-            <path d="M150 90 L150 150 M210 90 L210 150 M270 90 L270 150 M330 90 L330 150 M390 90 L390 150 M450 90 L450 150" opacity="0.35" />
-            <rect x="60" y="260" width="180" height="100" rx="6" opacity="0.8" />
-            <path d="M60 300 L240 300" opacity="0.5" />
-            <rect x="380" y="240" width="150" height="120" rx="4" opacity="0.7" />
-            <path d="M455 240 L455 360 M380 300 L530 300" opacity="0.4" />
-            <circle cx="300" cy="150" r="4" fill="#c9a25e" stroke="none" />
-            <path d="M300 154 L300 210" opacity="0.5" />
-            <circle cx="300" cy="225" r="16" opacity="0.6" />
-          </g>
-        </svg>
+      <div style={{ ...S.baLayer, clipPath: `inset(0 ${100 - pos}% 0 0)`, background: "#16120d" }}>
+        <img src={BA_AFTER} alt="22575 Pearl Avenue, Hayward — after the JR full remodel and addition" style={{ ...S.baScene, objectFit: "cover" }} draggable={false} />
         <span style={{ ...S.baTag, background: GOLD, color: "#0c0a08" }}>After</span>
       </div>
       <div style={{ ...S.baHandle, left: `${pos}%` }}><div style={S.baKnob}>⟺</div></div>
