@@ -115,10 +115,11 @@ const JR_CAPITAL = [
   },
   {
     address: "22575 Pearl Avenue", city: "Hayward", status: "On market now",
-    headline: "1,670 sqft", headlineLabel: "After remodel + addition",
+    headline: "$1.05M+", headlineLabel: "Expected ARV",
     rows: [
       ["Acquired", "$665k"],
       ["Scope", "Full remodel + addition"],
+      ["Size now", "1,670 sqft"],
       ["Status", "Listed for sale"],
     ],
   },
@@ -741,7 +742,7 @@ function GroupPage({ go }) {
           Figures reflect actual deal terms. Past performance does not guarantee future results.
         </p>
         <div style={{ textAlign: "center", marginTop: 26 }}>
-          <a onClick={(e) => { e.preventDefault(); go("contact"); }} href="#/contact" style={{ ...S.ctaPrimary, display: "inline-block" }} className="cta-prim">Invest with JR Capital →</a>
+          <InvestorInquiry />
         </div>
       </div>
       </Reveal>
@@ -933,6 +934,72 @@ function ContactForm() {
         {sent ? "Opening your email…" : "Send inquiry →"}
       </button>
     </div>
+  );
+}
+
+function InvestorInquiry() {
+  const [open, setOpen] = useState(false);
+  const [f, setF] = useState({ name: "", email: "", phone: "", amount: "", msg: "" });
+  const [state, setState] = useState("idle"); // idle | invalid | sending | done | error
+  const set = (k) => (e) => setF((p) => ({ ...p, [k]: e.target.value }));
+  const submit = async (e) => {
+    if (e) e.preventDefault();
+    if (!f.name.trim() || (!f.phone.trim() && !f.email.trim())) { setState("invalid"); return; }
+    setState("sending");
+    try {
+      const r = await fetch("/api/lead", {
+        method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          name: f.name, email: f.email, phone: f.phone,
+          source: "JR Capital investor",
+          projectType: "Investor inquiry",
+          notes: [f.amount && `Interest: ${f.amount}`, f.msg].filter(Boolean).join(" — "),
+        }),
+      });
+      if (!r.ok) throw new Error("bad");
+      setState("done");
+    } catch { setState("error"); }
+  };
+  return (
+    <>
+      <button onClick={() => setOpen(true)} style={{ ...S.ctaPrimary, border: "none", cursor: "pointer", display: "inline-block" }} className="cta-prim">
+        I'm interested →
+      </button>
+      {open && (
+        <div role="dialog" aria-modal="true" onClick={() => setOpen(false)}
+          style={{ position: "fixed", inset: 0, zIndex: 90, background: "#000000cc", backdropFilter: "blur(6px)", display: "grid", placeItems: "center", padding: 20 }}>
+          <div onClick={(e) => e.stopPropagation()}
+            style={{ width: "min(460px, 100%)", maxHeight: "90vh", overflowY: "auto", background: "#100d0a", border: "1px solid #c9a25e33", borderRadius: 14, padding: "26px 24px", boxShadow: "0 30px 80px #000000cc", textAlign: "left" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
+              <div>
+                <div style={{ fontSize: 11, letterSpacing: 4, color: GOLD, textTransform: "uppercase", fontWeight: 600 }}>JR Capital</div>
+                <h3 style={{ fontFamily: DISPLAY, color: "#fff", fontSize: 26, margin: "8px 0 0" }}>Investor interest</h3>
+              </div>
+              <button onClick={() => setOpen(false)} aria-label="Close" style={{ background: "none", border: "none", color: "#fff", fontSize: 22, cursor: "pointer", lineHeight: 1 }}>✕</button>
+            </div>
+            {state === "done" ? (
+              <p style={{ color: "#ece6db", fontSize: 15, lineHeight: 1.6, marginTop: 20 }}>
+                Thank you — your interest is in. A JR Capital partner will reach out shortly.
+              </p>
+            ) : (
+              <form onSubmit={submit} style={{ marginTop: 18, display: "flex", flexDirection: "column", gap: 12 }}>
+                <input style={S.input} placeholder="Your name" value={f.name} onChange={set("name")} />
+                <input style={S.input} placeholder="Email" value={f.email} onChange={set("email")} />
+                <input style={S.input} placeholder="Phone" value={f.phone} onChange={set("phone")} />
+                <input style={S.input} placeholder="Amount you'd consider investing (optional)" value={f.amount} onChange={set("amount")} />
+                <textarea style={{ ...S.input, minHeight: 90, resize: "vertical" }} placeholder="Anything you'd like us to know? (optional)" value={f.msg} onChange={set("msg")} />
+                {state === "invalid" && <div style={{ color: "#cf8a5a", fontSize: 12.5 }}>Please add your name and a phone or email.</div>}
+                {state === "error" && <div style={{ color: "#cf8a5a", fontSize: 12.5 }}>Something went wrong — try again or email hello@jrdesignbuild.com.</div>}
+                <button type="submit" disabled={state === "sending"} style={{ ...S.ctaPrimary, border: "none", cursor: "pointer", opacity: state === "sending" ? 0.6 : 1 }} className="cta-prim">
+                  {state === "sending" ? "Sending…" : "Submit interest →"}
+                </button>
+                <p style={{ ...S.note, margin: 0 }}>No commitment. We'll follow up by phone or email.</p>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
