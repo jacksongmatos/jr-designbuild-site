@@ -1132,8 +1132,8 @@ function CtaBand({ go }) {
 
 // Draggable before/after slider using real project photos.
 // Drop the two files in /public/portfolio/ (paths below) and they appear here.
-const BA_BEFORE = "/portfolio/hayward-before.jpg";
-const BA_AFTER = "/portfolio/hayward-after.jpg";
+const BA_BEFORE = "/portfolio/hayward-before.webp";
+const BA_AFTER = "/portfolio/hayward-after.webp";
 function BeforeAfter() {
   const [pos, setPos] = useState(50);
   const ref = useRef(null);
