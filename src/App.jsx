@@ -160,6 +160,18 @@ const PARTNERSHIP = [
   },
 ];
 
+// Trade partners & brands we specify and install.
+const PARTNERS = [
+  { name: "Dodi Custom Cabinets", cat: "Custom cabinetry" },
+  { name: "The Home Depot", cat: "Pro supply partner", brands: "Delta · Hampton Bay & more" },
+  { name: "Schluter Systems", cat: "Tile & waterproofing systems" },
+  { name: "Floor & Decor", cat: "Flooring & tile" },
+  { name: "Laticrete", cat: "Waterproofing & setting materials" },
+  { name: "ZIP System", cat: "Sheathing & weather barrier" },
+  { name: "Sherwin-Williams", cat: "Paint & coatings" },
+  { name: "Daltile", cat: "Tile & stone" },
+];
+
 function useHashRoute() {
   const get = () => (window.location.hash.replace("#/", "") || "home").split("?")[0];
   const [route, setRoute] = useState(get());
@@ -582,6 +594,8 @@ function Home({ go }) {
       </Reveal>
 
       <TrackRecordSection />
+
+      <Partners />
 
       <CtaBand go={go} />
     </>
@@ -1059,6 +1073,32 @@ function InvestorInquiry() {
         </div>
       )}
     </>
+  );
+}
+
+function Partners() {
+  return (
+    <Reveal>
+    <section style={S.section}>
+      <div style={S.kickerCenter}>TRUSTED PARTNERS & BRANDS</div>
+      <h2 style={S.h2}>Built with the best in the trade</h2>
+      <p style={{ ...S.sub, margin: "0 auto 44px", maxWidth: 620, textAlign: "center" }}>
+        We specify and install proven, professional-grade products — and partner directly with the
+        brands behind them, so quality is built in from the studs out.
+      </p>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: 14, maxWidth: 1100, margin: "0 auto" }}>
+        {PARTNERS.map((p, i) => (
+          <Reveal key={p.name} delay={(i % 4) * 0.05}>
+          <div style={{ border: "1px solid #c9a25e2e", borderRadius: 10, padding: "24px 18px", background: "#0c0a08", textAlign: "center", height: "100%" }}>
+            <div style={{ fontFamily: DISPLAY, color: "#fff", fontSize: 20, lineHeight: 1.2 }}>{p.name}</div>
+            <div style={{ fontSize: 10.5, letterSpacing: 1.5, textTransform: "uppercase", color: GOLD, marginTop: 9 }}>{p.cat}</div>
+            {p.brands && <div style={{ fontSize: 12.5, color: "#9a9286", marginTop: 8 }}>{p.brands}</div>}
+          </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+    </Reveal>
   );
 }
 
