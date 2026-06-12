@@ -124,6 +124,22 @@ const JR_CAPITAL = [
   },
 ];
 
+// JR Academy — 2026 events calendar (mIdx is the month index, 0 = January).
+const JR_ACADEMY = [
+  { mIdx: 0, m: "Jan", title: "Vendor Workshop", desc: "Hands-on workshop with our vendors for clients and team." },
+  { mIdx: 1, m: "Feb", title: "James Martin Training", desc: "High-end cabinetry training with James Martin." },
+  { mIdx: 2, m: "Mar", title: "Laticrete Certification", desc: "Bathroom waterproofing training with Laticrete." },
+  { mIdx: 3, m: "Apr", title: "Financing Masterclass", desc: "Wells Fargo & Renovo on mortgages and hard-money lending." },
+  { mIdx: 4, m: "May", title: "Financial Markets Talk", desc: "Gilvan Bueno (CNN) + Silicon Impact on the financial market for Brazilian entrepreneurs." },
+  { mIdx: 5, m: "Jun", title: "GOAT Soccer Cup", desc: "Private press event for the youth soccer championship — 100 kids' teams." },
+  { mIdx: 6, m: "Jul", title: "Multifamily Summit", desc: "Multifamily investment event with Zencoast Capital." },
+  { mIdx: 7, m: "Aug", title: "Technology & Robotics", desc: "Tech and robotics showcase with vendors and Silicon Impact." },
+  { mIdx: 8, m: "Sep", title: "To be announced", desc: "", tba: true },
+  { mIdx: 9, m: "Oct", title: "To be announced", desc: "", tba: true },
+  { mIdx: 10, m: "Nov", title: "To be announced", desc: "", tba: true },
+  { mIdx: 11, m: "Dec", title: "To be announced", desc: "", tba: true },
+];
+
 function useHashRoute() {
   const get = () => (window.location.hash.replace("#/", "") || "home").split("?")[0];
   const [route, setRoute] = useState(get());
@@ -726,6 +742,39 @@ function GroupPage({ go }) {
         </p>
         <div style={{ textAlign: "center", marginTop: 26 }}>
           <a onClick={(e) => { e.preventDefault(); go("contact"); }} href="#/contact" style={{ ...S.ctaPrimary, display: "inline-block" }} className="cta-prim">Invest with JR Capital →</a>
+        </div>
+      </div>
+      </Reveal>
+
+      <Reveal>
+      <div style={{ maxWidth: 1200, margin: "100px auto 0" }}>
+        <div style={S.kickerCenter}>JR ACADEMY · 2026 EVENTS</div>
+        <h3 style={{ ...S.h2, fontSize: "clamp(26px,4vw,48px)", marginBottom: 14 }}>A year of learning, built in</h3>
+        <p style={{ ...S.sub, margin: "0 auto 44px", maxWidth: 640, textAlign: "center" }}>
+          Trainings, certifications and partner events for our clients, team and community —
+          one gathering every month, all year long.
+        </p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 14 }}>
+          {JR_ACADEMY.map((ev, i) => {
+            const now = new Date();
+            const isCurrentYearAhead = now.getFullYear() > 2026;
+            const past = isCurrentYearAhead || ev.mIdx < now.getMonth();
+            const current = !isCurrentYearAhead && ev.mIdx === now.getMonth();
+            const status = ev.tba ? "Upcoming" : current ? "This month" : past ? "Held" : "Scheduled";
+            const accent = ev.tba ? "#ffffff14" : current ? GOLD : "#c9a25e3a";
+            return (
+              <Reveal key={ev.m} delay={(i % 4) * 0.05}>
+              <div style={{ background: ev.tba ? "#0c0a0880" : "#0c0a08", border: `1px solid ${accent}`, borderRadius: 10, padding: "20px 20px", height: "100%", opacity: ev.tba ? 0.6 : 1 }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <span style={{ fontFamily: DISPLAY, color: GOLD, fontSize: 22, letterSpacing: 1 }}>{ev.m}</span>
+                  <span style={{ fontSize: 9.5, letterSpacing: 1.5, textTransform: "uppercase", color: current ? "#0c0a08" : "#9a9286", background: current ? GOLD : "transparent", border: current ? "none" : "1px solid #ffffff1f", borderRadius: 30, padding: "4px 10px" }}>{status}</span>
+                </div>
+                <div style={{ color: "#fff", fontSize: 15.5, fontWeight: 600, marginTop: 14, lineHeight: 1.3 }}>{ev.title}</div>
+                {ev.desc && <p style={{ color: "#b9b1a2", fontSize: 13, lineHeight: 1.55, marginTop: 8, marginBottom: 0 }}>{ev.desc}</p>}
+              </div>
+              </Reveal>
+            );
+          })}
         </div>
       </div>
       </Reveal>
