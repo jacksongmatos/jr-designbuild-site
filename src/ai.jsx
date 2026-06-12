@@ -255,7 +255,7 @@ function EstimateTab({ prefill }) {
 
 function ChatTab() {
   const [msgs, setMsgs] = useState([
-    { role: "assistant", content: "Hi! I'm JR's concierge. First — so we never lose touch, even if the connection drops — could you share your full name (first and last), phone number, and the project address? Once I have those, I'll dive right into your project." },
+    { role: "assistant", content: "Hi! To get started, I just need four quick things: your full name, phone number, the project address, and what you'd like to do (e.g. kitchen, bathroom, ADU). That way the JR team has your details even if the connection drops — then I'm all yours." },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
