@@ -186,6 +186,8 @@ const PARTNERS = [
   { name: "ZIP System", cat: "Sheathing & weather barrier" },
   { name: "Sherwin-Williams", cat: "Paint & coatings" },
   { name: "Daltile", cat: "Tile & stone" },
+  { name: "KZ Kitchen & Bath", cat: "Cabinetry & countertops" },
+  { name: "East Star", cat: "Building materials & finishes" },
 ];
 
 function useHashRoute() {
