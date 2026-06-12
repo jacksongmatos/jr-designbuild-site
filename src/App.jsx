@@ -76,9 +76,25 @@ const GROUP = [
   },
   {
     n: "05", name: "JR Green Build", cat: "Sustainable Construction",
-    mission: "Build the future smarter and more sustainably.",
-    items: ["Sustainable solutions", "Energy efficiency", "Electrification", "High-performance building"],
-    dna: ["Innovate in construction", "Care for the planet", "Smarter, modern homes"],
+    mission: "JR Green Build brings sustainable thinking into modern construction — smarter materials, energy efficiency, electrification-ready homes, responsible waste handling and high-performance building systems.",
+    scopeLabel: "Today, our sustainable practices include",
+    items: [
+      "Construction debris disposal via Blue Line Transfer — recycling & responsible waste handling",
+      "Energy-efficient window & door upgrades",
+      "Improved insulation, sealing & weatherproofing",
+      "ZIP System & high-performance exterior envelope",
+      "Main panel, subpanel, 220V & EV-charger readiness",
+      "Heat pump & mini-split HVAC options",
+      "Low-VOC paint & healthier interior finishes",
+      "Water-efficient plumbing fixture readiness",
+      "Durable materials — fiber-cement siding & advanced waterproofing",
+      "Design-build planning that reduces mistakes, waste & rework",
+    ],
+    dna: [
+      "Innovate in construction — smarter systems, better planning and modern building technology in every project.",
+      "Care for the planet and the people inside the home — responsible waste handling, healthier materials and more efficient homes.",
+      "Deliver smarter, modern homes that feel better, perform better and are ready for the future.",
+    ],
     g: "linear-gradient(135deg,#1e2a1c,#3a4a2c)",
   },
 ];
@@ -720,7 +736,7 @@ function GroupPage({ go }) {
               <p style={S.groupMission}>{c.mission}</p>
               <div style={S.groupCols}>
                 <div>
-                  <div style={S.groupColLabel}>Scope</div>
+                  <div style={S.groupColLabel}>{c.scopeLabel || "Scope"}</div>
                   <ul style={S.groupList}>
                     {c.items.map((it) => <li key={it} style={S.groupLi}>{it}</li>)}
                   </ul>
