@@ -35,14 +35,13 @@ const LINKS = {
 
 const ROUTES = [
   { id: "home", label: "Home" },
-  { id: "report", label: "Report" },
   { id: "dna", label: "Our DNA" },
   { id: "group", label: "JR Group" },
-  { id: "portfolio", label: "Portfolio" },
   { id: "services", label: "Services" },
+  { id: "portfolio", label: "Portfolio" },
+  { id: "report", label: "Report" },
   { id: "studio", label: "Studio" },
   { id: "tools", label: "Plan" },
-  { id: "about", label: "About" },
   { id: "contact", label: "Contact" },
 ];
 
@@ -557,6 +556,51 @@ function DnaPage({ go }) {
       </div>
       </Reveal>
 
+      {/* About — merged into Our DNA */}
+      <Reveal>
+      <div style={{ ...S.aboutWrap, marginTop: 110 }}>
+        <div style={S.kickerCenter}>WHO WE ARE</div>
+        <h3 style={{ ...S.h2, fontSize: "clamp(28px,4.4vw,52px)", marginBottom: 22 }}>About JR Design Build</h3>
+        <p style={S.aboutLead}>Building trust, one home at a time.</p>
+        <p style={S.aboutText}>
+          Your home is more than a project — it's a reflection of your dreams and your hard work.
+          From the first consultation to the final walkthrough, we lead with transparency, communication
+          and quality. As licensed general contractors (CSLB #1083248), we bring innovative tools like
+          Matterport integration for precise measurements and real-time visualization, so your vision is
+          brought to life with accuracy and care.
+        </p>
+        <p style={S.aboutText}>
+          We were built on a simple conviction: the market is full of good salespeople and short on good
+          executors. Sustainable quality comes from the consistent execution of details — and from systems
+          that can grow beyond any single person.
+        </p>
+      </div>
+      </Reveal>
+
+      <h3 style={{ ...S.h2, fontSize: "clamp(26px,4vw,48px)", marginTop: 100 }}>Our evolution</h3>
+      <div style={S.timeline}>
+        {TIMELINE.map(([y, t], i) => (
+          <Reveal key={y} delay={i * 0.1} style={{ flex: "1 1 150px" }}>
+          <div style={S.tlItem}>
+            <div style={S.tlDot} />
+            <div style={S.tlYear}>{y}</div>
+            <div style={S.tlText}>{t}</div>
+          </div>
+          </Reveal>
+        ))}
+      </div>
+
+      <Reveal>
+      <div style={S.statRow}>
+        {[["50+", "Team at peak"], ["20+", "Concurrent projects"], ["#1083248", "CSLB licensed"], ["Bay Area", "Service region"]].map(([a, b]) => (
+          <div key={b} style={S.stat}><div style={S.statNum}><CountUp value={a} /></div><div style={S.statLabel}>{b}</div></div>
+        ))}
+      </div>
+      </Reveal>
+      <div style={{ textAlign: "center", marginTop: 50 }}>
+        <a href={LINKS.erp} target="_blank" rel="noreferrer" style={S.ctaGhost} className="cta-ghost">Client project follow-up portal ↗</a>
+      </div>
+
       <CtaBand go={go} />
     </section>
   );
@@ -701,55 +745,9 @@ function Services({ go }) {
   );
 }
 
-function About({ go }) {
-  return (
-    <section style={{ ...S.section, paddingTop: 160 }}>
-      <h2 style={S.h2}>About JR Design Build</h2>
-      <Reveal>
-      <div style={S.aboutWrap}>
-        <p style={S.aboutLead}>Building trust, one home at a time.</p>
-        <p style={S.aboutText}>
-          Your home is more than a project — it's a reflection of your dreams and your hard work.
-          From the first consultation to the final walkthrough, we lead with transparency, communication
-          and quality. As licensed general contractors (CSLB #1083248), we bring innovative tools like
-          Matterport integration for precise measurements and real-time visualization, so your vision is
-          brought to life with accuracy and care.
-        </p>
-        <p style={S.aboutText}>
-          We were built on a simple conviction: the market is full of good salespeople and short on good
-          executors. Sustainable quality comes from the consistent execution of details — and from systems
-          that can grow beyond any single person.
-        </p>
-      </div>
-      </Reveal>
-
-      <h3 style={{ ...S.h2, fontSize: "clamp(26px,4vw,48px)", marginTop: 100 }}>Our evolution</h3>
-      <div style={S.timeline}>
-        {TIMELINE.map(([y, t], i) => (
-          <Reveal key={y} delay={i * 0.1} style={{ flex: "1 1 150px" }}>
-          <div style={S.tlItem}>
-            <div style={S.tlDot} />
-            <div style={S.tlYear}>{y}</div>
-            <div style={S.tlText}>{t}</div>
-          </div>
-          </Reveal>
-        ))}
-      </div>
-
-      <Reveal>
-      <div style={S.statRow}>
-        {[["50+", "Team at peak"], ["20+", "Concurrent projects"], ["#1083248", "CSLB licensed"], ["Bay Area", "Service region"]].map(([a, b]) => (
-          <div key={b} style={S.stat}><div style={S.statNum}><CountUp value={a} /></div><div style={S.statLabel}>{b}</div></div>
-        ))}
-      </div>
-      </Reveal>
-      <div style={{ textAlign: "center", marginTop: 50 }}>
-        <a href={LINKS.erp} target="_blank" rel="noreferrer" style={S.ctaGhost} className="cta-ghost">Client project follow-up portal ↗</a>
-      </div>
-      <CtaBand go={go} />
-    </section>
-  );
-}
+// "About" content now lives inside DnaPage (one combined "Our DNA" page).
+// The /about route is kept as an alias so existing links keep working.
+const About = DnaPage;
 
 function Contact() {
   return (
@@ -906,8 +904,8 @@ export default function App() {
   useEffect(() => {
     const on = (e) => {
       if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
-      const num = { "1": "home", "2": "report", "3": "dna", "4": "group", "5": "portfolio", "6": "services", "7": "tools", "8": "about", "9": "contact" };
-      const ltr = { h: "home", r: "report", d: "dna", g: "group", p: "portfolio", s: "services", t: "tools", a: "about", c: "contact" };
+      const num = { "1": "home", "2": "dna", "3": "group", "4": "services", "5": "portfolio", "6": "report", "7": "studio", "8": "tools", "9": "contact" };
+      const ltr = { h: "home", d: "dna", g: "group", s: "services", p: "portfolio", r: "report", t: "tools", c: "contact", a: "dna" };
       if (e.key === "Escape") setMenu(false);
       else if (num[e.key]) { go(num[e.key]); setMenu(false); }
       else if (ltr[e.key]) { go(ltr[e.key]); setMenu(false); }
