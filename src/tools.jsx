@@ -511,7 +511,7 @@ function PermitTimeline() {
         <span style={S.label}>Total permits on record</span>
         <div style={S.big}>{total}</div>
         <p style={{ ...S.sub, marginTop: 12, marginBottom: 0 }}>
-          Plus active work across 60+ Bay Area cities. Tell us your city and scope in a free
+          Plus active work across 52 Bay Area cities. Tell us your city and scope in a free
           consultation and we'll give you the real permitting picture.
         </p>
       </div>
@@ -710,8 +710,8 @@ function RiskWall() {
 /* ---------- Track record strip ---------- */
 function TrustStrip() {
   const stats = [
-    ["287", "Projects on record"],
-    ["60+", "Bay Area cities"],
+    ["533", "Projects on record"],
+    ["52", "Bay Area cities"],
     ["147", "Permits pulled"],
     ["100%", "Licensed & insured"],
   ];
