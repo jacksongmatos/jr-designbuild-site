@@ -130,7 +130,9 @@ export async function onRequestPost(context) {
     .filter((m) => m && (m.role === "user" || m.role === "assistant") && m.content)
     .map((m) => ({ role: m.role, content: String(m.content).slice(0, 4000) }))
     .slice(-12);
-  if (!messages.length || messages[0].role !== "user") {
+  // Strip leading assistant turns (the UI prefills a greeting in local state)
+     while (messages.length && messages[0].role !== "user") messages.shift();
+     if (!messages.length || messages[0].role !== "user") {
     return json({ error: "bad_messages" }, 400);
   }
 
