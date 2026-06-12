@@ -1179,13 +1179,13 @@ function BeforeAfter() {
       onMouseMove={(e) => e.buttons === 1 && drag(e.clientX)}
       onClick={(e) => drag(e.clientX)}
       onTouchMove={(e) => drag(e.touches[0].clientX)}>
-      <div style={{ ...S.baLayer, background: "#16120d" }}>
-        <img src={BA_BEFORE} alt="22575 Pearl Avenue, Hayward — before the JR remodel" style={{ ...S.baScene, objectFit: "cover" }} draggable={false} onError={(e) => { e.currentTarget.style.display = "none"; }} />
-        <span style={S.baTag}>Before</span>
-      </div>
-      <div style={{ ...S.baLayer, clipPath: `inset(0 ${100 - pos}% 0 0)`, background: "#16120d" }}>
+      <div style={{ ...S.baLayer, background: "#16120d", justifyContent: "flex-end" }}>
         <img src={BA_AFTER} alt="22575 Pearl Avenue, Hayward — after the JR full remodel and addition" style={{ ...S.baScene, objectFit: "cover" }} draggable={false} onError={(e) => { e.currentTarget.style.display = "none"; }} />
         <span style={{ ...S.baTag, background: GOLD, color: "#0c0a08" }}>After</span>
+      </div>
+      <div style={{ ...S.baLayer, clipPath: `inset(0 ${100 - pos}% 0 0)`, background: "#16120d" }}>
+        <img src={BA_BEFORE} alt="22575 Pearl Avenue, Hayward — before the JR remodel" style={{ ...S.baScene, objectFit: "cover" }} draggable={false} onError={(e) => { e.currentTarget.style.display = "none"; }} />
+        <span style={S.baTag}>Before</span>
       </div>
       <div style={{ ...S.baHandle, left: `${pos}%` }}><div style={S.baKnob}>⟺</div></div>
     </div>
