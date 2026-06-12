@@ -255,7 +255,7 @@ function EstimateTab({ prefill }) {
 
 function ChatTab() {
   const [msgs, setMsgs] = useState([
-    { role: "assistant", content: "Hi! I can help with your remodel, ADU, costs, financing, or booking a consult. What are you planning?" },
+    { role: "assistant", content: "Hi! I'm JR's concierge. Tell me a bit about your project — a remodel, ADU, addition, kitchen or bath — and your name, and I'll get the right person to follow up. What are you planning?" },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);

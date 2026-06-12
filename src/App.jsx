@@ -35,14 +35,13 @@ const LINKS = {
 
 const ROUTES = [
   { id: "home", label: "Home" },
-  { id: "report", label: "Report" },
   { id: "dna", label: "Our DNA" },
   { id: "group", label: "JR Group" },
-  { id: "portfolio", label: "Portfolio" },
   { id: "services", label: "Services" },
+  { id: "portfolio", label: "Portfolio" },
+  { id: "report", label: "Report" },
   { id: "studio", label: "Studio" },
   { id: "tools", label: "Plan" },
-  { id: "about", label: "About" },
   { id: "contact", label: "Contact" },
 ];
 
@@ -77,11 +76,116 @@ const GROUP = [
   },
   {
     n: "05", name: "JR Green Build", cat: "Sustainable Construction",
-    mission: "Build the future smarter and more sustainably.",
-    items: ["Sustainable solutions", "Energy efficiency", "Electrification", "High-performance building"],
-    dna: ["Innovate in construction", "Care for the planet", "Smarter, modern homes"],
+    mission: "JR Green Build brings sustainable thinking into modern construction — smarter materials, energy efficiency, electrification-ready homes, responsible waste handling and high-performance building systems.",
+    scopeLabel: "Today, our sustainable practices include",
+    items: [
+      "Construction debris disposal via Blue Line Transfer — recycling & responsible waste handling",
+      "Energy-efficient window & door upgrades",
+      "Improved insulation, sealing & weatherproofing",
+      "ZIP System & high-performance exterior envelope",
+      "Main panel, subpanel, 220V & EV-charger readiness",
+      "Heat pump & mini-split HVAC options",
+      "Low-VOC paint & healthier interior finishes",
+      "Water-efficient plumbing fixture readiness",
+      "Durable materials — fiber-cement siding & advanced waterproofing",
+      "Design-build planning that reduces mistakes, waste & rework",
+    ],
+    dna: [
+      "Innovate in construction — smarter systems, better planning and modern building technology in every project.",
+      "Care for the planet and the people inside the home — responsible waste handling, healthier materials and more efficient homes.",
+      "Deliver smarter, modern homes that feel better, perform better and are ready for the future.",
+    ],
     g: "linear-gradient(135deg,#1e2a1c,#3a4a2c)",
   },
+];
+
+// JR Capital — real estate investment / development track record.
+// City-level addresses are public-facing; figures are real deal numbers.
+const JR_CAPITAL = [
+  {
+    address: "16972 Rolando Avenue", city: "Castro Valley", status: "Refinanced",
+    headline: "$1.28M", headlineLabel: "Appraised value",
+    rows: [
+      ["Acquired", "Dec 2024 · $560k"],
+      ["Financing", "Hard-money · 10% down"],
+      ["Value-add", "+700 sqft added"],
+      ["Refinanced", "Dec 2025"],
+    ],
+  },
+  {
+    address: "833 3rd Lane", city: "South San Francisco", status: "In construction",
+    headline: "$1.5M", headlineLabel: "ARV",
+    rows: [
+      ["Lot purchase", "$350k"],
+      ["Scope", "Ground-up new construction"],
+      ["Timeline", "12 months"],
+    ],
+  },
+  {
+    address: "123 W Park", city: "Martinez", status: "In development",
+    headline: "$1.65M+", headlineLabel: "ARV",
+    rows: [
+      ["Lot purchase", "$250k"],
+      ["Build", "3,000 sqft home + 520 sqft ADU"],
+    ],
+  },
+  {
+    address: "22575 Pearl Avenue", city: "Hayward", status: "On market now",
+    headline: "$1.05M+", headlineLabel: "Expected ARV",
+    rows: [
+      ["Acquired", "$665k"],
+      ["Scope", "Full remodel + addition"],
+      ["Size now", "1,670 sqft"],
+      ["Status", "Listed for sale"],
+    ],
+  },
+];
+
+// JR Academy — 2026 events calendar (mIdx is the month index, 0 = January).
+const JR_ACADEMY = [
+  { mIdx: 0, m: "Jan", title: "Vendor Workshop", desc: "Hands-on workshop with our vendors for clients and team." },
+  { mIdx: 1, m: "Feb", title: "James Martin Training", desc: "High-end cabinetry training with James Martin." },
+  { mIdx: 2, m: "Mar", title: "Laticrete Certification", desc: "Bathroom waterproofing training with Laticrete." },
+  { mIdx: 3, m: "Apr", title: "Financing Masterclass", desc: "Wells Fargo & Renovo on mortgages and hard-money lending." },
+  { mIdx: 4, m: "May", title: "Financial Markets Talk", desc: "Gilvan Bueno (CNN) + Silicon Impact on the financial market for Brazilian entrepreneurs." },
+  { mIdx: 5, m: "Jun", title: "GOAT Soccer Cup", desc: "Private press event for the youth soccer championship — 100 kids' teams." },
+  { mIdx: 6, m: "Jul", title: "Multifamily Summit", desc: "Multifamily investment event with Zencoast Capital." },
+  { mIdx: 7, m: "Aug", title: "Technology & Robotics", desc: "Tech and robotics showcase with vendors and Silicon Impact." },
+  { mIdx: 8, m: "Sep", title: "To be announced", desc: "", tba: true },
+  { mIdx: 9, m: "Oct", title: "To be announced", desc: "", tba: true },
+  { mIdx: 10, m: "Nov", title: "To be announced", desc: "", tba: true },
+  { mIdx: 11, m: "Dec", title: "To be announced", desc: "", tba: true },
+];
+
+// Investor / JR Capital / Builder — three equal partners in every deal.
+const PARTNERSHIP = [
+  {
+    role: "You", sub: "The Investor",
+    brings: ["Capital", "Trust", "Long-term vision"],
+    gains: ["Equity & returns", "Full transparency", "Passive, hands-off role"],
+  },
+  {
+    role: "JR Capital", sub: "The Structure",
+    brings: ["Vetted opportunities", "Deal structuring", "Aligned terms"],
+    gains: ["Shared upside", "Aligned — never extractive", "Skin in the game"],
+  },
+  {
+    role: "JR Design Build", sub: "The Builder",
+    brings: ["Execution & craft", "Cost & schedule control", "533+ projects of proof"],
+    gains: ["Build pipeline", "Performance-based reward", "Reputation on the line"],
+  },
+];
+
+// Trade partners & brands we specify and install.
+const PARTNERS = [
+  { name: "Dodi Custom Cabinets", cat: "Custom cabinetry" },
+  { name: "The Home Depot", cat: "Pro supply partner", brands: "Delta · Hampton Bay & more" },
+  { name: "Schluter Systems", cat: "Tile & waterproofing systems" },
+  { name: "Floor & Decor", cat: "Flooring & tile" },
+  { name: "Laticrete", cat: "Waterproofing & setting materials" },
+  { name: "ZIP System", cat: "Sheathing & weather barrier" },
+  { name: "Sherwin-Williams", cat: "Paint & coatings" },
+  { name: "Daltile", cat: "Tile & stone" },
 ];
 
 function useHashRoute() {
@@ -507,6 +611,8 @@ function Home({ go }) {
 
       <TrackRecordSection />
 
+      <Partners />
+
       <CtaBand go={go} />
     </>
   );
@@ -557,6 +663,51 @@ function DnaPage({ go }) {
       </div>
       </Reveal>
 
+      {/* About — merged into Our DNA */}
+      <Reveal>
+      <div style={{ ...S.aboutWrap, marginTop: 110 }}>
+        <div style={S.kickerCenter}>WHO WE ARE</div>
+        <h3 style={{ ...S.h2, fontSize: "clamp(28px,4.4vw,52px)", marginBottom: 22 }}>About JR Design Build</h3>
+        <p style={S.aboutLead}>Building trust, one home at a time.</p>
+        <p style={S.aboutText}>
+          Your home is more than a project — it's a reflection of your dreams and your hard work.
+          From the first consultation to the final walkthrough, we lead with transparency, communication
+          and quality. As licensed general contractors (CSLB #1083248), we bring innovative tools like
+          Matterport integration for precise measurements and real-time visualization, so your vision is
+          brought to life with accuracy and care.
+        </p>
+        <p style={S.aboutText}>
+          We were built on a simple conviction: the market is full of good salespeople and short on good
+          executors. Sustainable quality comes from the consistent execution of details — and from systems
+          that can grow beyond any single person.
+        </p>
+      </div>
+      </Reveal>
+
+      <h3 style={{ ...S.h2, fontSize: "clamp(26px,4vw,48px)", marginTop: 100 }}>Our evolution</h3>
+      <div style={S.timeline}>
+        {TIMELINE.map(([y, t], i) => (
+          <Reveal key={y} delay={i * 0.1} style={{ flex: "1 1 150px" }}>
+          <div style={S.tlItem}>
+            <div style={S.tlDot} />
+            <div style={S.tlYear}>{y}</div>
+            <div style={S.tlText}>{t}</div>
+          </div>
+          </Reveal>
+        ))}
+      </div>
+
+      <Reveal>
+      <div style={S.statRow}>
+        {[["50+", "Team at peak"], ["20+", "Concurrent projects"], ["#1083248", "CSLB licensed"], ["Bay Area", "Service region"]].map(([a, b]) => (
+          <div key={b} style={S.stat}><div style={S.statNum}><CountUp value={a} /></div><div style={S.statLabel}>{b}</div></div>
+        ))}
+      </div>
+      </Reveal>
+      <div style={{ textAlign: "center", marginTop: 50 }}>
+        <a href={LINKS.erp} target="_blank" rel="noreferrer" style={S.ctaGhost} className="cta-ghost">Client project follow-up portal ↗</a>
+      </div>
+
       <CtaBand go={go} />
     </section>
   );
@@ -585,7 +736,7 @@ function GroupPage({ go }) {
               <p style={S.groupMission}>{c.mission}</p>
               <div style={S.groupCols}>
                 <div>
-                  <div style={S.groupColLabel}>Scope</div>
+                  <div style={S.groupColLabel}>{c.scopeLabel || "Scope"}</div>
                   <ul style={S.groupList}>
                     {c.items.map((it) => <li key={it} style={S.groupLi}>{it}</li>)}
                   </ul>
@@ -604,6 +755,119 @@ function GroupPage({ go }) {
           </Reveal>
         ))}
       </div>
+
+      <Reveal>
+      <div style={{ maxWidth: 1100, margin: "96px auto 0" }}>
+        <div style={S.kickerCenter}>INVEST IN FUTURE PROJECTS</div>
+        <h3 style={{ ...S.h2, fontSize: "clamp(26px,4vw,48px)", marginBottom: 14 }}>Same page. Same level.</h3>
+        <p style={{ ...S.sub, margin: "0 auto 46px", maxWidth: 680, textAlign: "center" }}>
+          No silent partners, no hidden margins. The investor, JR Capital and the builder sit at the
+          same table — three equal partners aligned on one outcome. Everyone is rewarded together, only when the project performs.
+        </p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 16, alignItems: "stretch" }}>
+          {PARTNERSHIP.map((p, pi) => (
+            <Reveal key={p.role} delay={pi * 0.08}>
+            <div style={{ background: "#0c0a08", border: "1px solid #c9a25e3a", borderRadius: 12, padding: "26px 22px", height: "100%", display: "flex", flexDirection: "column", gap: 14 }}>
+              <div>
+                <div style={{ fontFamily: DISPLAY, color: "#fff", fontSize: 24, lineHeight: 1.1 }}>{p.role}</div>
+                <div style={{ fontSize: 11, letterSpacing: 2, textTransform: "uppercase", color: GOLD, marginTop: 5 }}>{p.sub}</div>
+              </div>
+              <div>
+                <div style={{ fontSize: 10.5, letterSpacing: 1.5, textTransform: "uppercase", color: "#9a9286", marginBottom: 7 }}>Brings</div>
+                {p.brings.map((b) => <div key={b} style={{ color: "#ece6db", fontSize: 13.5, padding: "3px 0" }}>{b}</div>)}
+              </div>
+              <div style={{ borderTop: "1px solid #ffffff12", paddingTop: 12, marginTop: "auto" }}>
+                <div style={{ fontSize: 10.5, letterSpacing: 1.5, textTransform: "uppercase", color: "#9a9286", marginBottom: 7 }}>Gains</div>
+                {p.gains.map((b) => <div key={b} style={{ color: GOLD, fontSize: 13.5, padding: "3px 0" }}>{b}</div>)}
+              </div>
+            </div>
+            </Reveal>
+          ))}
+        </div>
+        <div style={{ marginTop: 16, border: "1px solid #c9a25e3a", borderRadius: 12, background: "linear-gradient(135deg,#1a140b,#0c0a08)", padding: "24px 24px", textAlign: "center" }}>
+          <div style={{ fontSize: 11, letterSpacing: 3, textTransform: "uppercase", color: GOLD }}>One shared outcome</div>
+          <p style={{ color: "#ece6db", fontSize: "clamp(15px,2.2vw,19px)", lineHeight: 1.6, margin: "10px auto 0", maxWidth: 640 }}>
+            The project — built to perform, and structured so capital, strategy and craft are rewarded together, transparently, when it does.
+          </p>
+        </div>
+        <div style={{ textAlign: "center", marginTop: 30 }}>
+          <InvestorInquiry />
+        </div>
+      </div>
+      </Reveal>
+
+      <Reveal>
+      <div style={{ maxWidth: 1200, margin: "96px auto 0" }}>
+        <div style={S.kickerCenter}>JR CAPITAL · INVESTMENT PORTFOLIO</div>
+        <h3 style={{ ...S.h2, fontSize: "clamp(26px,4vw,48px)", marginBottom: 14 }}>Where our capital is working</h3>
+        <p style={{ ...S.sub, margin: "0 auto 44px", maxWidth: 640, textAlign: "center" }}>
+          Real acquisitions, real value-add, real numbers. JR Capital pairs our build team with
+          investor capital to create equity across the Bay Area — from refinanced rehabs to ground-up construction.
+        </p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 18 }}>
+          {JR_CAPITAL.map((p, pi) => (
+            <Reveal key={p.address} delay={pi * 0.06}>
+            <div style={{ background: "#0c0a08", border: "1px solid #c9a25e2e", borderRadius: 10, padding: "24px 22px", height: "100%", display: "flex", flexDirection: "column" }}>
+              <span style={{ alignSelf: "flex-start", fontSize: 10.5, letterSpacing: 1.5, textTransform: "uppercase", color: GOLD, border: "1px solid #c9a25e55", borderRadius: 30, padding: "5px 12px" }}>{p.status}</span>
+              <div style={{ fontFamily: DISPLAY, color: "#fff", fontSize: 21, marginTop: 16, lineHeight: 1.2 }}>{p.address}</div>
+              <div style={{ fontSize: 12.5, letterSpacing: 1, textTransform: "uppercase", color: "#9a9286", marginTop: 4 }}>{p.city}, CA</div>
+              <div style={{ marginTop: 18 }}>
+                <div style={{ fontFamily: DISPLAY, color: GOLD, fontSize: 34, lineHeight: 1 }}>{p.headline}</div>
+                <div style={{ fontSize: 11.5, letterSpacing: 1, textTransform: "uppercase", color: "#cfc6b6", marginTop: 5 }}>{p.headlineLabel}</div>
+              </div>
+              <div style={{ marginTop: 18, borderTop: "1px solid #ffffff12", paddingTop: 10 }}>
+                {p.rows.map(([k, v]) => (
+                  <div key={k} style={{ display: "flex", justifyContent: "space-between", gap: 12, fontSize: 13, padding: "5px 0" }}>
+                    <span style={{ color: "#9a9286" }}>{k}</span>
+                    <span style={{ color: "#ece6db", textAlign: "right" }}>{v}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            </Reveal>
+          ))}
+        </div>
+        <p style={{ ...S.note, textAlign: "center", marginTop: 22 }}>
+          Figures reflect actual deal terms. Past performance does not guarantee future results.
+        </p>
+        <div style={{ textAlign: "center", marginTop: 26 }}>
+          <InvestorInquiry />
+        </div>
+      </div>
+      </Reveal>
+
+      <Reveal>
+      <div style={{ maxWidth: 1200, margin: "100px auto 0" }}>
+        <div style={S.kickerCenter}>JR ACADEMY · 2026 EVENTS</div>
+        <h3 style={{ ...S.h2, fontSize: "clamp(26px,4vw,48px)", marginBottom: 14 }}>A year of learning, built in</h3>
+        <p style={{ ...S.sub, margin: "0 auto 44px", maxWidth: 640, textAlign: "center" }}>
+          Trainings, certifications and partner events for our clients, team and community —
+          one gathering every month, all year long.
+        </p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))", gap: 14 }}>
+          {JR_ACADEMY.map((ev, i) => {
+            const now = new Date();
+            const isCurrentYearAhead = now.getFullYear() > 2026;
+            const past = isCurrentYearAhead || ev.mIdx < now.getMonth();
+            const current = !isCurrentYearAhead && ev.mIdx === now.getMonth();
+            const status = ev.tba ? "Upcoming" : current ? "This month" : past ? "Held" : "Scheduled";
+            const accent = ev.tba ? "#ffffff14" : current ? GOLD : "#c9a25e3a";
+            return (
+              <Reveal key={ev.m} delay={(i % 4) * 0.05}>
+              <div style={{ background: ev.tba ? "#0c0a0880" : "#0c0a08", border: `1px solid ${accent}`, borderRadius: 10, padding: "20px 20px", height: "100%", opacity: ev.tba ? 0.6 : 1 }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                  <span style={{ fontFamily: DISPLAY, color: GOLD, fontSize: 22, letterSpacing: 1 }}>{ev.m}</span>
+                  <span style={{ fontSize: 9.5, letterSpacing: 1.5, textTransform: "uppercase", color: current ? "#0c0a08" : "#9a9286", background: current ? GOLD : "transparent", border: current ? "none" : "1px solid #ffffff1f", borderRadius: 30, padding: "4px 10px" }}>{status}</span>
+                </div>
+                <div style={{ color: "#fff", fontSize: 15.5, fontWeight: 600, marginTop: 14, lineHeight: 1.3 }}>{ev.title}</div>
+                {ev.desc && <p style={{ color: "#b9b1a2", fontSize: 13, lineHeight: 1.55, marginTop: 8, marginBottom: 0 }}>{ev.desc}</p>}
+              </div>
+              </Reveal>
+            );
+          })}
+        </div>
+      </div>
+      </Reveal>
 
       <Reveal>
       <div style={S.manifesto}>
@@ -701,55 +965,9 @@ function Services({ go }) {
   );
 }
 
-function About({ go }) {
-  return (
-    <section style={{ ...S.section, paddingTop: 160 }}>
-      <h2 style={S.h2}>About JR Design Build</h2>
-      <Reveal>
-      <div style={S.aboutWrap}>
-        <p style={S.aboutLead}>Building trust, one home at a time.</p>
-        <p style={S.aboutText}>
-          Your home is more than a project — it's a reflection of your dreams and your hard work.
-          From the first consultation to the final walkthrough, we lead with transparency, communication
-          and quality. As licensed general contractors (CSLB #1083248), we bring innovative tools like
-          Matterport integration for precise measurements and real-time visualization, so your vision is
-          brought to life with accuracy and care.
-        </p>
-        <p style={S.aboutText}>
-          We were built on a simple conviction: the market is full of good salespeople and short on good
-          executors. Sustainable quality comes from the consistent execution of details — and from systems
-          that can grow beyond any single person.
-        </p>
-      </div>
-      </Reveal>
-
-      <h3 style={{ ...S.h2, fontSize: "clamp(26px,4vw,48px)", marginTop: 100 }}>Our evolution</h3>
-      <div style={S.timeline}>
-        {TIMELINE.map(([y, t], i) => (
-          <Reveal key={y} delay={i * 0.1} style={{ flex: "1 1 150px" }}>
-          <div style={S.tlItem}>
-            <div style={S.tlDot} />
-            <div style={S.tlYear}>{y}</div>
-            <div style={S.tlText}>{t}</div>
-          </div>
-          </Reveal>
-        ))}
-      </div>
-
-      <Reveal>
-      <div style={S.statRow}>
-        {[["50+", "Team at peak"], ["20+", "Concurrent projects"], ["#1083248", "CSLB licensed"], ["Bay Area", "Service region"]].map(([a, b]) => (
-          <div key={b} style={S.stat}><div style={S.statNum}><CountUp value={a} /></div><div style={S.statLabel}>{b}</div></div>
-        ))}
-      </div>
-      </Reveal>
-      <div style={{ textAlign: "center", marginTop: 50 }}>
-        <a href={LINKS.erp} target="_blank" rel="noreferrer" style={S.ctaGhost} className="cta-ghost">Client project follow-up portal ↗</a>
-      </div>
-      <CtaBand go={go} />
-    </section>
-  );
-}
+// "About" content now lives inside DnaPage (one combined "Our DNA" page).
+// The /about route is kept as an alias so existing links keep working.
+const About = DnaPage;
 
 function Contact() {
   return (
@@ -805,6 +1023,98 @@ function ContactForm() {
         {sent ? "Opening your email…" : "Send inquiry →"}
       </button>
     </div>
+  );
+}
+
+function InvestorInquiry() {
+  const [open, setOpen] = useState(false);
+  const [f, setF] = useState({ name: "", email: "", phone: "", amount: "", msg: "" });
+  const [state, setState] = useState("idle"); // idle | invalid | sending | done | error
+  const set = (k) => (e) => setF((p) => ({ ...p, [k]: e.target.value }));
+  const submit = async (e) => {
+    if (e) e.preventDefault();
+    if (!f.name.trim() || (!f.phone.trim() && !f.email.trim())) { setState("invalid"); return; }
+    setState("sending");
+    try {
+      const r = await fetch("/api/lead", {
+        method: "POST", headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          name: f.name, email: f.email, phone: f.phone,
+          source: "JR Capital investor",
+          projectType: "Investor inquiry",
+          notes: [f.amount && `Interest: ${f.amount}`, f.msg].filter(Boolean).join(" — "),
+        }),
+      });
+      if (!r.ok) throw new Error("bad");
+      setState("done");
+    } catch { setState("error"); }
+  };
+  return (
+    <>
+      <button onClick={() => setOpen(true)} style={{ ...S.ctaPrimary, border: "none", cursor: "pointer", display: "inline-block" }} className="cta-prim">
+        I'm interested →
+      </button>
+      {open && (
+        <div role="dialog" aria-modal="true" onClick={() => setOpen(false)}
+          style={{ position: "fixed", inset: 0, zIndex: 90, background: "#000000cc", backdropFilter: "blur(6px)", display: "grid", placeItems: "center", padding: 20 }}>
+          <div onClick={(e) => e.stopPropagation()}
+            style={{ width: "min(460px, 100%)", maxHeight: "90vh", overflowY: "auto", background: "#100d0a", border: "1px solid #c9a25e33", borderRadius: 14, padding: "26px 24px", boxShadow: "0 30px 80px #000000cc", textAlign: "left" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12 }}>
+              <div>
+                <div style={{ fontSize: 11, letterSpacing: 4, color: GOLD, textTransform: "uppercase", fontWeight: 600 }}>JR Capital</div>
+                <h3 style={{ fontFamily: DISPLAY, color: "#fff", fontSize: 26, margin: "8px 0 0" }}>Investor interest</h3>
+              </div>
+              <button onClick={() => setOpen(false)} aria-label="Close" style={{ background: "none", border: "none", color: "#fff", fontSize: 22, cursor: "pointer", lineHeight: 1 }}>✕</button>
+            </div>
+            {state === "done" ? (
+              <p style={{ color: "#ece6db", fontSize: 15, lineHeight: 1.6, marginTop: 20 }}>
+                Thank you — your interest is in. A JR Capital partner will reach out shortly.
+              </p>
+            ) : (
+              <form onSubmit={submit} style={{ marginTop: 18, display: "flex", flexDirection: "column", gap: 12 }}>
+                <input style={S.input} placeholder="Your name" value={f.name} onChange={set("name")} />
+                <input style={S.input} placeholder="Email" value={f.email} onChange={set("email")} />
+                <input style={S.input} placeholder="Phone" value={f.phone} onChange={set("phone")} />
+                <input style={S.input} placeholder="Amount you'd consider investing (optional)" value={f.amount} onChange={set("amount")} />
+                <textarea style={{ ...S.input, minHeight: 90, resize: "vertical" }} placeholder="Anything you'd like us to know? (optional)" value={f.msg} onChange={set("msg")} />
+                {state === "invalid" && <div style={{ color: "#cf8a5a", fontSize: 12.5 }}>Please add your name and a phone or email.</div>}
+                {state === "error" && <div style={{ color: "#cf8a5a", fontSize: 12.5 }}>Something went wrong — try again or email hello@jrdesignbuild.com.</div>}
+                <button type="submit" disabled={state === "sending"} style={{ ...S.ctaPrimary, border: "none", cursor: "pointer", opacity: state === "sending" ? 0.6 : 1 }} className="cta-prim">
+                  {state === "sending" ? "Sending…" : "Submit interest →"}
+                </button>
+                <p style={{ ...S.note, margin: 0 }}>No commitment. We'll follow up by phone or email.</p>
+              </form>
+            )}
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+function Partners() {
+  return (
+    <Reveal>
+    <section style={S.section}>
+      <div style={S.kickerCenter}>TRUSTED PARTNERS & BRANDS</div>
+      <h2 style={S.h2}>Built with the best in the trade</h2>
+      <p style={{ ...S.sub, margin: "0 auto 44px", maxWidth: 620, textAlign: "center" }}>
+        We specify and install proven, professional-grade products — and partner directly with the
+        brands behind them, so quality is built in from the studs out.
+      </p>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", gap: 14, maxWidth: 1100, margin: "0 auto" }}>
+        {PARTNERS.map((p, i) => (
+          <Reveal key={p.name} delay={(i % 4) * 0.05}>
+          <div style={{ border: "1px solid #c9a25e2e", borderRadius: 10, padding: "24px 18px", background: "#0c0a08", textAlign: "center", height: "100%" }}>
+            <div style={{ fontFamily: DISPLAY, color: "#fff", fontSize: 20, lineHeight: 1.2 }}>{p.name}</div>
+            <div style={{ fontSize: 10.5, letterSpacing: 1.5, textTransform: "uppercase", color: GOLD, marginTop: 9 }}>{p.cat}</div>
+            {p.brands && <div style={{ fontSize: 12.5, color: "#9a9286", marginTop: 8 }}>{p.brands}</div>}
+          </div>
+          </Reveal>
+        ))}
+      </div>
+    </section>
+    </Reveal>
   );
 }
 
@@ -906,8 +1216,8 @@ export default function App() {
   useEffect(() => {
     const on = (e) => {
       if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
-      const num = { "1": "home", "2": "report", "3": "dna", "4": "group", "5": "portfolio", "6": "services", "7": "tools", "8": "about", "9": "contact" };
-      const ltr = { h: "home", r: "report", d: "dna", g: "group", p: "portfolio", s: "services", t: "tools", a: "about", c: "contact" };
+      const num = { "1": "home", "2": "dna", "3": "group", "4": "services", "5": "portfolio", "6": "report", "7": "studio", "8": "tools", "9": "contact" };
+      const ltr = { h: "home", d: "dna", g: "group", s: "services", p: "portfolio", r: "report", t: "tools", c: "contact", a: "dna" };
       if (e.key === "Escape") setMenu(false);
       else if (num[e.key]) { go(num[e.key]); setMenu(false); }
       else if (ltr[e.key]) { go(ltr[e.key]); setMenu(false); }
@@ -1017,9 +1327,9 @@ const S = {
   navLink: { position: "relative", textDecoration: "none", fontSize: 11, letterSpacing: 2.5, textTransform: "uppercase", cursor: "pointer", transition: "color .4s", paddingBottom: 4 },
   burger: { display: "none", background: "none", border: "none", color: "#fff", fontSize: 22, cursor: "pointer" },
 
-  mobileMenu: { position: "fixed", inset: 0, zIndex: 25, background: "radial-gradient(120% 90% at 70% 10%, #1a140b 0%, #0c0a08 60%)", backdropFilter: "blur(16px)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 40 },
-  mobileMenuInner: { display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 18 },
-  mobileLink: { fontFamily: DISPLAY, fontSize: 38, textDecoration: "none", letterSpacing: 1, display: "flex", alignItems: "baseline", gap: 16, opacity: 0 },
+  mobileMenu: { position: "fixed", inset: 0, zIndex: 25, background: "radial-gradient(120% 90% at 70% 10%, #1a140b 0%, #0c0a08 60%)", backdropFilter: "blur(16px)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-start", gap: 30, overflowY: "auto", WebkitOverflowScrolling: "touch", padding: "104px 8vw 132px" },
+  mobileMenuInner: { display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 14 },
+  mobileLink: { fontFamily: DISPLAY, fontSize: "clamp(26px, 7vw, 38px)", textDecoration: "none", letterSpacing: 1, display: "flex", alignItems: "baseline", gap: 16, opacity: 0, lineHeight: 1.1 },
   mobileNum: { fontSize: 13, fontStyle: "italic", color: GOLD, opacity: 0.7, fontFamily: DISPLAY },
   mobileSocial: { display: "flex", gap: 22 },
 
