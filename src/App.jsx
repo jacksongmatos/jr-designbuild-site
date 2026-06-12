@@ -340,7 +340,7 @@ function BlueprintCanvas() {
     const c = ref.current;
     const x = c.getContext("2d");
     let W, H, DPR, raf;
-    const GOLD = "#c9a25e";
+    const GOLD = "#d9be8e"; // ~30% lighter gold for the floor-plan animation
     const GRID = 46;
     const rnd = (a, b) => a + Math.random() * (b - a);
 
