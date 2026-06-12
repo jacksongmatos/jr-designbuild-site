@@ -112,9 +112,9 @@ function Fallback({ err }) {
       <div style={{ fontSize: 30 }}>✨</div>
       <p style={{ ...st.note, margin: "10px 0 16px" }}>
         {err === "ai_unconfigured"
-          ? "O assistente de IA ainda não foi ativado (falta a chave da API)."
-          : "O assistente de IA está indisponível no momento."}{" "}
-        Enquanto isso, use o estimador instantâneo ou agende sua consulta gratuita.
+          ? "The AI assistant isn't active yet (missing API key)."
+          : "The AI assistant is unavailable right now."}{" "}
+        In the meantime, use the instant estimator or book your free consultation.
       </p>
       <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
         <a href="#/tools" style={st.ghost}>Instant tools</a>
@@ -254,11 +254,11 @@ function EstimateTab({ prefill }) {
 }
 
 const INTAKE_FIELDS = [
-  { key: "name", label: "Nome completo", placeholder: "Ex: João Silva" },
-  { key: "phone", label: "Telefone", placeholder: "(650) 555-1234" },
-  { key: "email", label: "Email", placeholder: "voce@email.com" },
-  { key: "address", label: "Endereço do projeto", placeholder: "Rua, número, cidade" },
-  { key: "scope", label: "Escopo do projeto", placeholder: "Ex: cozinha, banheiro, ADU, ampliação…" },
+  { key: "name", label: "Full name", placeholder: "e.g. John Smith" },
+  { key: "phone", label: "Phone", placeholder: "(650) 555-1234" },
+  { key: "email", label: "Email", placeholder: "you@email.com" },
+  { key: "address", label: "Project address", placeholder: "Street, city" },
+  { key: "scope", label: "Project scope", placeholder: "e.g. kitchen, bathroom, ADU, addition…" },
 ];
 
 function ChatTab() {
@@ -305,9 +305,9 @@ function ChatTab() {
     } catch (_) { /* non-blocking — still proceed to chat */ }
 
     // Keep the collected details as hidden context for the AI.
-    intakeRef.current = `[Intake já preenchido e salvo — Nome: ${form.name}; Telefone: ${form.phone}; Email: ${form.email}; Endereço: ${form.address}; Projeto: ${form.scope}. Não peça esses dados novamente e não chame submit_lead de novo a menos que algo mude. Apenas ajude com o projeto.]`;
+    intakeRef.current = `[Intake already completed and saved — Name: ${form.name}; Phone: ${form.phone}; Email: ${form.email}; Address: ${form.address}; Project: ${form.scope}. Do not ask for these again and do not call submit_lead again unless something changes. Just help with the project.]`;
     const first = form.name.trim().split(/\s+/)[0];
-    setMsgs([{ role: "assistant", content: `Perfeito, ${first}! Recebi seus dados — o time JR já está com tudo e vai entrar em contato em breve. Enquanto isso, posso ajudar com seu projeto (${form.scope}). O que você gostaria de saber?` }]);
+    setMsgs([{ role: "assistant", content: `Perfect, ${first}! I've got your details — the JR team has everything and will reach out shortly. In the meantime, I can help with your ${form.scope} project. What would you like to know?` }]);
     setPhase("chat");
     setSubmitting(false);
   };
@@ -343,8 +343,8 @@ function ChatTab() {
       <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
         <div style={{ flex: 1, overflowY: "auto", paddingBottom: 8 }}>
           <p style={{ ...st.note, marginTop: 0, marginBottom: 16, color: "#e7dcc4" }}>
-            Bem-vindo à JR Design Build. Para um atendimento correto, primeiro preciso de alguns dados —
-            assim o time JR já fica com seu contato mesmo se a conexão cair. Depois seguimos no chat.
+            Welcome to JR Design Build. So we can help you properly, I just need a few details first —
+            that way the JR team has your contact even if the connection drops. Then we'll continue in chat.
           </p>
           {INTAKE_FIELDS.map((f) => (
             <div key={f.key}>
@@ -356,12 +356,12 @@ function ChatTab() {
                 onChange={setField(f.key)}
                 onKeyDown={(e) => { if (e.key === "Enter" && f.key === "scope") startChat(); }}
               />
-              {errors[f.key] && <div style={{ color: "#cf8a5a", fontSize: 11.5, marginBottom: 12 }}>Preencha este campo para continuar.</div>}
+              {errors[f.key] && <div style={{ color: "#cf8a5a", fontSize: 11.5, marginBottom: 12 }}>Please fill in this field to continue.</div>}
             </div>
           ))}
           {missing && (
             <div style={{ color: "#cf8a5a", fontSize: 12.5, marginBottom: 10 }}>
-              Sem todos os dados não conseguimos fazer um atendimento correto.
+              We need all the details to help you properly.
             </div>
           )}
         </div>
@@ -370,7 +370,7 @@ function ChatTab() {
           disabled={submitting}
           onClick={startChat}
         >
-          {submitting ? "Enviando…" : "Iniciar atendimento →"}
+          {submitting ? "Sending…" : "Start →"}
         </button>
       </div>
     );

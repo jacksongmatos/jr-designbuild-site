@@ -29,10 +29,12 @@ export function normalizeLead(b = {}) {
     score: b.score != null ? b.score : null,
     source: b.source || "Website",
     notes: b.notes || null,
+    conversation: Array.isArray(b.conversation) ? b.conversation : null,
   };
 }
 
 // One-line-per-field SMS body. Kept short; Dialpad segments long messages.
+// If a conversation transcript is present, it's appended at the end.
 export function leadToSms(lead) {
   const lines = ["New JR website lead"];
   if (lead.name) lines.push(`Name: ${lead.name}`);
@@ -42,6 +44,24 @@ export function leadToSms(lead) {
   if (lead.projectType) lines.push(`Project: ${lead.projectType}`);
   if (lead.notes) lines.push(`Notes: ${lead.notes}`);
   lines.push(`Source: ${lead.source}`);
+
+  if (Array.isArray(lead.conversation) && lead.conversation.length) {
+    const turns = lead.conversation
+      .filter(
+        (m) =>
+          m &&
+          (m.role === "user" || m.role === "assistant") &&
+          typeof m.content === "string" &&
+          m.content.trim() &&
+          !m.content.trim().startsWith("[") // skip internal context markers
+      )
+      .map((m) => `${m.role === "user" ? "Visitor" : "JR"}: ${m.content.trim()}`);
+    if (turns.length) {
+      lines.push("");
+      lines.push("--- Conversation ---");
+      lines.push(...turns);
+    }
+  }
   return lines.join("\n");
 }
 

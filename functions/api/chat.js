@@ -177,6 +177,7 @@ export async function onRequestPost(context) {
           notes: i.project,
           projectType: i.project,
           source: "Website chat",
+          conversation: messages,
         });
         captured = true;
         results.push({
