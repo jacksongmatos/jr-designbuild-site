@@ -7,6 +7,7 @@ import StudioApp from "./studio-app";
 import StudioEditor from "./studio-editor";
 import SuppliersPortal from "./suppliers";
 import AdminStudio from "./admin-studio";
+import TrackRecordSection from "./TrackRecordSection";
 
 // ─────────────────────────────────────────────────────────────
 //  JR DESIGN BUILD — full site, built around the brand DNA
@@ -503,6 +504,8 @@ function Home({ go }) {
         <BeforeAfter />
       </section>
       </Reveal>
+
+      <TrackRecordSection />
 
       <CtaBand go={go} />
     </>
