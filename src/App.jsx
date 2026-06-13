@@ -58,6 +58,7 @@ const GROUP = [
     items: ["Investor capital", "Joint ventures", "Development", "Project participation", "Investment structures"],
     dna: ["New investment models", "Security & transparency", "Above-market results"],
     g: "linear-gradient(135deg,#2a2438,#3a2f4a)",
+    anchor: "jr-capital",
   },
   {
     n: "03", name: "JR Homestay", cat: "Hospitality",
@@ -72,6 +73,7 @@ const GROUP = [
     items: ["Internal training", "Professional formation", "Leadership development", "Technical skills", "English · plan reading · building code"],
     dna: ["Learn continuously", "Develop people", "Transform careers"],
     g: "linear-gradient(135deg,#4a3320,#8a6a3a)",
+    anchor: "jr-academy",
   },
   {
     n: "05", name: "JR Green Build", cat: "Sustainable Construction",
@@ -849,6 +851,12 @@ function GroupPage({ go }) {
                   ))}
                 </div>
               </div>
+              {c.anchor && (
+                <a href={`#${c.anchor}`} onClick={(e) => { e.preventDefault(); const el = document.getElementById(c.anchor); if (el) el.scrollIntoView({ behavior: "smooth", block: "start" }); }}
+                  style={{ display: "inline-block", marginTop: 24, fontSize: 11.5, letterSpacing: "0.18em", textTransform: "uppercase", color: GOLD, border: `1px solid ${GOLD}66`, borderRadius: 30, padding: "10px 20px", textDecoration: "none", cursor: "pointer" }}>
+                  Learn more ↓
+                </a>
+              )}
             </div>
           </div>
           </Reveal>
@@ -896,7 +904,7 @@ function GroupPage({ go }) {
       </Reveal>
 
       <Reveal>
-      <div style={{ maxWidth: 1200, margin: "96px auto 0" }}>
+      <div id="jr-capital" style={{ maxWidth: 1200, margin: "96px auto 0", scrollMarginTop: 110 }}>
         <div style={S.kickerCenter}>JR CAPITAL · INVESTMENT PORTFOLIO</div>
         <h3 style={{ ...S.h2, fontSize: "clamp(26px,4vw,48px)", marginBottom: 14 }}>Where our capital is working</h3>
         <p style={{ ...S.sub, margin: "0 auto 44px", maxWidth: 640, textAlign: "center" }}>
@@ -936,7 +944,7 @@ function GroupPage({ go }) {
       </Reveal>
 
       <Reveal>
-      <div style={{ maxWidth: 1200, margin: "100px auto 0" }}>
+      <div id="jr-academy" style={{ maxWidth: 1200, margin: "100px auto 0", scrollMarginTop: 110 }}>
         <div style={S.kickerCenter}>JR ACADEMY · 2026 EVENTS</div>
         <h3 style={{ ...S.h2, fontSize: "clamp(26px,4vw,48px)", marginBottom: 14 }}>A year of learning, built in</h3>
         <p style={{ ...S.sub, margin: "0 auto 44px", maxWidth: 640, textAlign: "center" }}>
@@ -964,6 +972,12 @@ function GroupPage({ go }) {
               </Reveal>
             );
           })}
+        </div>
+        <div style={{ marginTop: 22, border: `1px solid ${GOLD}55`, borderRadius: 12, background: "linear-gradient(135deg,#1a140b,#0c0a08)", padding: "20px 24px", textAlign: "center" }}>
+          <span style={{ fontSize: 10.5, letterSpacing: 2, textTransform: "uppercase", color: GOLD }}>Coming soon</span>
+          <p style={{ color: "#ece6db", fontSize: "clamp(15px,2.2vw,19px)", lineHeight: 1.6, margin: "8px auto 0", maxWidth: 640 }}>
+            Contractor training for law, trades, flips and more.
+          </p>
         </div>
       </div>
       </Reveal>
