@@ -234,6 +234,8 @@ function CountUp({ value }) {
     if (!m) { setDisp(value); return; }
     const el = ref.current;
     const pre = m[1], target = parseInt(m[2].replace(/,/g, ""), 10), post = m[3];
+    const group = !pre.includes("#"); // no thousands separators for IDs like #1083248
+    const fmt = (n) => (group ? n.toLocaleString() : String(n));
     if (!el || typeof IntersectionObserver === "undefined") { setDisp(value); return; }
     let started = false;
     const io = new IntersectionObserver((ents) => {
@@ -244,7 +246,7 @@ function CountUp({ value }) {
           const tick = (now) => {
             const p = Math.min(1, (now - t0) / dur);
             const eased = 1 - Math.pow(1 - p, 3);
-            setDisp(pre + Math.round(target * eased).toLocaleString() + post);
+            setDisp(pre + fmt(Math.round(target * eased)) + post);
             if (p < 1) requestAnimationFrame(tick);
           };
           requestAnimationFrame(tick);
