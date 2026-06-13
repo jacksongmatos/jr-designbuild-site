@@ -39,7 +39,6 @@ const ROUTES = [
   { id: "group", label: "JR Group" },
   { id: "services", label: "Services" },
   { id: "portfolio", label: "Portfolio" },
-  { id: "report", label: "Report" },
   { id: "studio", label: "Studio" },
   { id: "tools", label: "Plan" },
   { id: "contact", label: "Contact" },
@@ -1217,6 +1216,16 @@ function BeforeAfter() {
   );
 }
 
+// Plan = the property intelligence Report on top, then the planning tools.
+function PlanPage({ go }) {
+  return (
+    <>
+      <ReportPage go={go} />
+      <ToolsPage go={go} />
+    </>
+  );
+}
+
 export default function App() {
   const [route, go] = useHashRoute();
   const [menu, setMenu] = useState(false);
@@ -1245,8 +1254,8 @@ export default function App() {
   useEffect(() => {
     const on = (e) => {
       if (["INPUT", "TEXTAREA"].includes(e.target.tagName)) return;
-      const num = { "1": "home", "2": "dna", "3": "group", "4": "services", "5": "portfolio", "6": "report", "7": "studio", "8": "tools", "9": "contact" };
-      const ltr = { h: "home", d: "dna", g: "group", s: "services", p: "portfolio", r: "report", t: "tools", c: "contact", a: "dna" };
+      const num = { "1": "home", "2": "dna", "3": "group", "4": "services", "5": "portfolio", "6": "studio", "7": "tools", "8": "contact" };
+      const ltr = { h: "home", d: "dna", g: "group", s: "services", p: "portfolio", t: "tools", c: "contact", a: "dna" };
       if (e.key === "Escape") setMenu(false);
       else if (num[e.key]) { go(num[e.key]); setMenu(false); }
       else if (ltr[e.key]) { go(ltr[e.key]); setMenu(false); }
@@ -1266,7 +1275,7 @@ export default function App() {
     return () => clearTimeout(t);
   }, [route]);
 
-  const Page = { home: Home, report: ReportPage, dna: DnaPage, group: GroupPage, portfolio: Portfolio, services: Services, studio: StudioApp, "studio-demo": StudioPage, "studio-editor": StudioEditor, suppliers: SuppliersPortal, "admin-studio": AdminStudio, tools: ToolsPage, about: About, contact: Contact }[route] || Home;
+  const Page = { home: Home, report: PlanPage, dna: DnaPage, group: GroupPage, portfolio: Portfolio, services: Services, studio: StudioApp, "studio-demo": StudioPage, "studio-editor": StudioEditor, suppliers: SuppliersPortal, "admin-studio": AdminStudio, tools: PlanPage, about: About, contact: Contact }[route] || Home;
 
   return (
     <div style={S.root}>
