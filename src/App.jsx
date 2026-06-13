@@ -485,9 +485,14 @@ const TIMELINE = [
 
 // Replace with real client testimonials — keep quotes short and specific.
 const TESTIMONIALS = [
-  { q: "They treated our home like their own. Every week we knew exactly what was happening and why.", name: "The Alvarez Family", loc: "Bay Area, CA", proj: "Whole-Home Remodel", init: "A" },
-  { q: "The ADU paid for itself faster than we imagined — and the build was genuinely stress-free.", name: "Michael R.", loc: "Bay Area, CA", proj: "Backyard ADU", init: "M" },
-  { q: "Communication, cleanliness, craft. The final walkthrough felt like a reveal, not a relief.", name: "Priya & Sam", loc: "Bay Area, CA", proj: "Kitchen & Bath", init: "P" },
+  { q: "These guys are the real thing. A major remodel in a fancy SF building with lots of HOA rules — done with billing transparency and excellent communication throughout. An honest, hardworking crew who never say no.", name: "Mike H.", loc: "San Francisco, CA", proj: "Major Home Remodel", init: "M" },
+  { q: "JR turned our dream into a gorgeous reality, converting our 4th bedroom into a second bathroom and primary suite. Top-notch work and integrity — on time and on budget despite the rain.", name: "David & Brett", loc: "Pacifica, CA", proj: "Primary Suite Addition", init: "D" },
+  { q: "As real estate investors we've explored dozens of contractors — so grateful to have found JR. They handled design and permits and finished ON TIME, actually a few days early, which is unheard of.", name: "Calvin C.", loc: "Redwood City, CA", proj: "Kitchen Remodel", init: "C" },
+  { q: "They did an excellent job — met the timelines, stayed within budget, and gave excellent design recommendations. We've already started a second project with them. Recommend 100%.", name: "Genie D.", loc: "San Mateo, CA", proj: "Whole-Home Renovation", init: "G" },
+  { q: "Kitchen, subfloor, load-bearing work, electrical, new bathrooms, refinished floors — a full remodel. Responsive and finished on time, which is rare. Even after completion they fixed the little things.", name: "Haley E.", loc: "South San Francisco, CA", proj: "Full Home Remodel", init: "H" },
+  { q: "Great job with both rooms and the price was reasonable. They even did a lot of extra little jobs at no extra cost. Everyone on their team was nice, polite, and professional.", name: "William S.", loc: "San Francisco, CA", proj: "Bathroom + Laundry", init: "W" },
+  { q: "JR's team did a great job fixing up our house prior to selling — interior and exterior painting, two bathrooms, even a leaky window. Quick turnaround and very reasonable prices.", name: "Lu C.", loc: "Millbrae, CA", proj: "Pre-Sale Refresh", init: "L" },
+  { q: "Jackson is a phenomenal human being and exactly the type of person you want to entrust your home remodeling to.", name: "Nicholas G.", loc: "Oakley, CA", proj: "Home Remodel", init: "N" },
 ];
 
 function Home({ go }) {
