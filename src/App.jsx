@@ -919,9 +919,9 @@ function Portfolio({ go }) {
       <div style={S.portGrid}>
         {shown.map((p, i) => (
           <Reveal key={p.t} delay={(i % 3) * 0.08}>
-          <div style={{ ...S.portCard, background: p.g }} className="card">
+          <div style={{ ...S.portCard, background: p.g, ...(p.video ? { gridRow: "span 2", height: "100%" } : {}) }} className="card">
             {p.video ? (
-              <video src={p.video} autoPlay muted loop playsInline style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+              <video src={p.video} autoPlay muted loop playsInline preload="metadata" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
             ) : p.img ? (
               <img src={p.img} alt={p.t} loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} onError={(e) => { e.currentTarget.style.display = "none"; }} />
             ) : null}
@@ -1442,7 +1442,7 @@ const S = {
   manifesto: { maxWidth: 820, margin: "60px auto 0", textAlign: "center" },
   manifestoLine: { fontFamily: DISPLAY, fontSize: "clamp(20px,3vw,30px)", lineHeight: 1.5, color: "#fff", margin: "0 0 18px", fontWeight: 400 },
 
-  portGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gap: 18, maxWidth: 1120, margin: "0 auto" },
+  portGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gridAutoRows: 300, gap: 18, maxWidth: 1120, margin: "0 auto" },
   portCard: { position: "relative", overflow: "hidden", height: 300, borderRadius: 4, display: "flex", flexDirection: "column", justifyContent: "flex-end", padding: 24, border: "1px solid #ffffff14", transition: "transform .5s" },
   portTag: { fontSize: 11, letterSpacing: 2, textTransform: "uppercase", color: GOLD, marginBottom: 8 },
   portTitle: { fontFamily: DISPLAY, fontSize: 26, color: "#fff" },
