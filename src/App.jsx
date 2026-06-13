@@ -587,6 +587,13 @@ function Home({ go }) {
       <section style={S.section}>
         <div style={S.kickerCenter}>WHAT CLIENTS SAY</div>
         <h2 style={S.h2}>Trust, earned.</h2>
+        <div style={{ textAlign: "center", marginBottom: 34 }}>
+          <a href={LINKS.yelp} target="_blank" rel="noreferrer"
+            style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "9px 18px", border: `1px solid ${GOLD}`, borderRadius: 30, color: "#f3e3be", textDecoration: "none", fontSize: 13, letterSpacing: 1 }}>
+            <span style={{ color: GOLD, letterSpacing: 2 }}>★★★★★</span>
+            <span><strong style={{ color: "#fff", fontWeight: 700 }}>5.0</strong> on Yelp ↗</span>
+          </a>
+        </div>
         <div style={S.testGrid}>
           {TESTIMONIALS.map((t, i) => (
             <Reveal key={i} delay={i * 0.08}>
@@ -604,6 +611,9 @@ function Home({ go }) {
             </figure>
             </Reveal>
           ))}
+        </div>
+        <div style={{ textAlign: "center", marginTop: 38 }}>
+          <a href={LINKS.yelp} target="_blank" rel="noreferrer" style={{ ...S.ctaGhost, display: "inline-block" }} className="cta-ghost">Read more on Yelp →</a>
         </div>
       </section>
       </Reveal>
