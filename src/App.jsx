@@ -1003,7 +1003,7 @@ function Portfolio({ go }) {
         {shown.map((p, i) => (
           <Reveal key={p.t} delay={(i % 3) * 0.08}>
           <div
-            style={{ ...S.portCard, background: p.g, ...(p.video ? { gridRow: "span 2", height: "100%" } : {}), ...(p.matterport ? { cursor: "pointer" } : {}) }}
+            style={{ ...S.portCard, background: p.g, ...(p.video ? { aspectRatio: "3 / 4" } : {}), ...(p.matterport ? { cursor: "pointer" } : {}) }}
             className="card"
             onClick={p.matterport ? () => setTour(p.matterport) : undefined}
             role={p.matterport ? "button" : undefined}
@@ -1678,8 +1678,8 @@ const S = {
   manifesto: { maxWidth: 820, margin: "60px auto 0", textAlign: "center" },
   manifestoLine: { fontFamily: DISPLAY, fontSize: "clamp(20px,3vw,30px)", lineHeight: 1.5, color: "#fff", margin: "0 0 18px", fontWeight: 400 },
 
-  portGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(300px,1fr))", gridAutoRows: 300, gap: 18, maxWidth: 1120, margin: "0 auto" },
-  portCard: { position: "relative", overflow: "hidden", height: 300, borderRadius: 4, display: "flex", flexDirection: "column", justifyContent: "flex-end", padding: 24, border: "1px solid #ffffff14", transition: "transform .5s" },
+  portGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,360px))", gap: 18, maxWidth: 1140, margin: "0 auto", justifyContent: "center", alignItems: "start" },
+  portCard: { position: "relative", overflow: "hidden", aspectRatio: "4 / 3", borderRadius: 4, display: "flex", flexDirection: "column", justifyContent: "flex-end", padding: 24, border: "1px solid #ffffff14", transition: "transform .5s" },
   portTag: { fontSize: 11, letterSpacing: 2, textTransform: "uppercase", color: GOLD, marginBottom: 8 },
   portTitle: { fontFamily: DISPLAY, fontSize: 26, color: "#fff" },
 
