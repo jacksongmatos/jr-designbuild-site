@@ -466,7 +466,7 @@ const SERVICES = [
 ];
 
 const PROJECTS = [
-  { t: "Bay Area Full Remodel", tag: "Whole-Home", g: "linear-gradient(135deg,#3a2f1c,#6e4b22)", video: "https://mmekvaqcebyufclmivaf.supabase.co/storage/v1/object/sign/Before%20and%20After/Whole%20House.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8yNGRiOGE5YS1iZWQwLTRlNmQtYTZhOC1hNTY1YTRlOGNmZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJCZWZvcmUgYW5kIEFmdGVyL1dob2xlIEhvdXNlLm1wNCIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODEzMTE3OTUsImV4cCI6MTgxMjg0Nzc5NX0.hboyx2MrWmWPql8LKKSEOpBWLlGDNTNT-x8PNvNvd7Y" },
+  { t: "Bay Area Full Remodel", tag: "Whole-Home", g: "linear-gradient(135deg,#3a2f1c,#6e4b22)", video: "https://mmekvaqcebyufclmivaf.supabase.co/storage/v1/object/sign/Before%20and%20After/Whole%20House.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8yNGRiOGE5YS1iZWQwLTRlNmQtYTZhOC1hNTY1YTRlOGNmZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJCZWZvcmUgYW5kIEFmdGVyL1dob2xlIEhvdXNlLm1wNCIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODEzMTE3OTUsImV4cCI6MTgxMjg0Nzc5NX0.hboyx2MrWmWPql8LKKSEOpBWLlGDNTNT-x8PNvNvd7Y", matterport: "https://my.matterport.com/show/?m=Y41prh65sFF&play=0&qs=1&tiles=1&vr=0&title=0&help=2&tourcta=2&hlr=2&rf-experience=" },
   { t: "Backyard ADU", tag: "ADU", g: "linear-gradient(135deg,#2a2438,#3a2f4a)", img: "https://mmekvaqcebyufclmivaf.supabase.co/storage/v1/object/sign/Before%20and%20After/ADUs.jpeg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8yNGRiOGE5YS1iZWQwLTRlNmQtYTZhOC1hNTY1YTRlOGNmZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJCZWZvcmUgYW5kIEFmdGVyL0FEVXMuanBlZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODEzMTE0ODUsImV4cCI6MTgxMjg0NzQ4NX0.7lXNy5_VH_yZwzDjEPcFFqDEeuY20KYXxnXYylaFLNA" },
   { t: "Chef's Kitchen", tag: "Kitchen", g: "linear-gradient(135deg,#4a3320,#8a6a3a)", img: "https://mmekvaqcebyufclmivaf.supabase.co/storage/v1/object/sign/Before%20and%20After/Kitchen.webp?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8yNGRiOGE5YS1iZWQwLTRlNmQtYTZhOC1hNTY1YTRlOGNmZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJCZWZvcmUgYW5kIEFmdGVyL0tpdGNoZW4ud2VicCIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODEzMTEzNzUsImV4cCI6MTgxMjg0NzM3NX0.WIqtTvrSnoDiQ5txVYdRmfkqQ5zGesfzrv23chHBDmE" },
   { t: "Spa Bath", tag: "Bath", g: "linear-gradient(135deg,#1f2a2a,#3a4a44)", img: "https://mmekvaqcebyufclmivaf.supabase.co/storage/v1/object/sign/Before%20and%20After/Bathroom%20Spa.webp?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8yNGRiOGE5YS1iZWQwLTRlNmQtYTZhOC1hNTY1YTRlOGNmZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJCZWZvcmUgYW5kIEFmdGVyL0JhdGhyb29tIFNwYS53ZWJwIiwic2NvcGUiOiJkb3dubG9hZCIsImlhdCI6MTc4MTMxMTQwOCwiZXhwIjoxODEyODQ3NDA4fQ.6nMBkStiiBmIg7Ft4rhUXxFMM__iVO7zoilSonDnwLk" },
@@ -904,6 +904,7 @@ function GroupPage({ go }) {
 
 function Portfolio({ go }) {
   const [filter, setFilter] = useState("All");
+  const [tour, setTour] = useState(null);
   const cats = ["All", ...Array.from(new Set(PROJECTS.map((p) => p.tag)))];
   const shown = filter === "All" ? PROJECTS : PROJECTS.filter((p) => p.tag === filter);
   return (
@@ -918,7 +919,14 @@ function Portfolio({ go }) {
       <div style={S.portGrid}>
         {shown.map((p, i) => (
           <Reveal key={p.t} delay={(i % 3) * 0.08}>
-          <div style={{ ...S.portCard, background: p.g, ...(p.video ? { gridRow: "span 2", height: "100%" } : {}) }} className="card">
+          <div
+            style={{ ...S.portCard, background: p.g, ...(p.video ? { gridRow: "span 2", height: "100%" } : {}), ...(p.matterport ? { cursor: "pointer" } : {}) }}
+            className="card"
+            onClick={p.matterport ? () => setTour(p.matterport) : undefined}
+            role={p.matterport ? "button" : undefined}
+            tabIndex={p.matterport ? 0 : undefined}
+            onKeyDown={p.matterport ? (e) => { if (e.key === "Enter") setTour(p.matterport); } : undefined}
+          >
             {p.video ? (
               <video src={p.video} autoPlay muted loop playsInline preload="metadata" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
             ) : p.img ? (
@@ -928,6 +936,9 @@ function Portfolio({ go }) {
               <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(12,10,8,0.88), rgba(12,10,8,0.15) 55%, rgba(12,10,8,0.05))" }} />
             )}
             <div style={S.cardSheen} className="sheen" />
+            {p.matterport && (
+              <span style={{ position: "absolute", top: 16, right: 16, zIndex: 1, display: "inline-flex", alignItems: "center", gap: 6, fontSize: 10.5, letterSpacing: 1.5, textTransform: "uppercase", fontWeight: 700, color: "#0c0a08", background: GOLD, borderRadius: 30, padding: "6px 12px" }}>▶ 3D Tour</span>
+            )}
             <span style={{ ...S.portTag, position: "relative", zIndex: 1 }}>{p.tag}</span>
             <span style={{ ...S.portTitle, position: "relative", zIndex: 1 }}>{p.t}</span>
           </div>
@@ -944,6 +955,18 @@ function Portfolio({ go }) {
       </div>
       </Reveal>
       <CtaBand go={go} />
+
+      {tour && (
+        <div onClick={() => setTour(null)} role="dialog" aria-modal="true" aria-label="3D tour"
+          style={{ position: "fixed", inset: 0, zIndex: 95, background: "rgba(8,7,5,0.92)", backdropFilter: "blur(6px)", display: "grid", placeItems: "center", padding: "clamp(12px, 4vw, 44px)" }}>
+          <div onClick={(e) => e.stopPropagation()} style={{ position: "relative", width: "min(1100px, 100%)", aspectRatio: "16 / 9", maxHeight: "85vh" }}>
+            <button onClick={() => setTour(null)} aria-label="Close"
+              style={{ position: "absolute", top: -42, right: 0, background: "none", border: "none", color: "#fff", fontSize: 26, lineHeight: 1, cursor: "pointer" }}>✕</button>
+            <iframe src={tour} title="Matterport 3D tour" allow="xr-spatial-tracking; gyroscope; accelerometer; fullscreen; autoplay" allowFullScreen
+              style={{ width: "100%", height: "100%", border: "1px solid #c9a25e55", borderRadius: 6, background: "#000" }} />
+          </div>
+        </div>
+      )}
     </section>
   );
 }
