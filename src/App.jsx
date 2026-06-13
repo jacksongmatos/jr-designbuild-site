@@ -1251,6 +1251,117 @@ function PlanPage({ go }) {
   );
 }
 
+function PrivacyPage() {
+  const h3 = { fontFamily: DISPLAY, color: "#fff", fontSize: "clamp(18px,2.4vw,24px)", margin: "36px 0 10px" };
+  const p = { color: "#cfc6b6", fontSize: 15, lineHeight: 1.75, margin: "0 0 12px", maxWidth: 760 };
+  const ul = { color: "#cfc6b6", fontSize: 15, lineHeight: 1.7, margin: "0 0 12px", paddingLeft: 20, maxWidth: 760 };
+  const mail = (e) => <a href={`mailto:${e}`} style={{ color: GOLD }}>{e}</a>;
+  return (
+    <section style={{ ...S.section, paddingTop: 160 }}>
+      <div style={{ maxWidth: 820, margin: "0 auto" }}>
+        <div style={S.kickerCenter}>LEGAL</div>
+        <h2 style={{ ...S.h2, textAlign: "left", marginBottom: 8 }}>Privacy Policy</h2>
+        <p style={{ ...p, color: "#9a9286", marginBottom: 28 }}>Last updated March 19, 2025</p>
+
+        <p style={p}>
+          This Privacy Notice for JR Home Remodeling Inc ("we," "us," or "our") describes how and why we might
+          access, collect, store, use, and/or share ("process") your personal information when you use our
+          services ("Services"), including when you visit our website, or engage with us in any sales,
+          marketing, or events.
+        </p>
+        <p style={p}>
+          Questions or concerns? If you do not agree with our policies and practices, please do not use our
+          Services. If you still have questions, contact us at {mail("admin@jrhrr.com")}.
+        </p>
+
+        <h3 style={h3}>Summary of key points</h3>
+        <ul style={ul}>
+          <li>We may process personal information depending on how you interact with us and the Services.</li>
+          <li>We do not process sensitive personal information.</li>
+          <li>We do not collect any information from third parties.</li>
+          <li>We process your information to provide, improve, and administer our Services, communicate with you, for security and fraud prevention, and to comply with the law.</li>
+          <li>We may share information in specific situations and with specific third parties.</li>
+          <li>We have organizational and technical processes in place to protect your personal information.</li>
+          <li>Depending on where you live, applicable privacy law may give you certain rights regarding your personal information.</li>
+        </ul>
+
+        <h3 style={h3}>1. What information do we collect?</h3>
+        <p style={p}>We collect personal information that you voluntarily provide when you express interest in our Services, participate in activities on the Services, or contact us. This includes:</p>
+        <ul style={ul}>
+          <li>Names</li>
+          <li>Email addresses</li>
+          <li>Phone numbers</li>
+          <li>Mailing addresses</li>
+        </ul>
+        <p style={p}>Sensitive information: We do not process sensitive information.</p>
+
+        <h3 style={h3}>2. How do we process your information?</h3>
+        <p style={p}>We process your information to provide, improve, and administer our Services, communicate with you, for security and fraud prevention, and to comply with the law — including to comply with our legal obligations and to respond to legal requests and exercise, establish, or defend our legal rights.</p>
+
+        <h3 style={h3}>3. When and with whom do we share your personal information?</h3>
+        <p style={p}>Business Transfers: We may share or transfer your information in connection with, or during negotiations of, any merger, sale of company assets, financing, or acquisition of all or a portion of our business.</p>
+
+        <h3 style={h3}>4. How long do we keep your information?</h3>
+        <p style={p}>We keep your information for as long as necessary to fulfill the purposes outlined in this Privacy Notice unless otherwise required by law. When we have no ongoing legitimate business need to process it, we will delete or anonymize it.</p>
+
+        <h3 style={h3}>5. How do we keep your information safe?</h3>
+        <p style={p}>We have implemented appropriate and reasonable technical and organizational security measures. However, no electronic transmission over the Internet or information storage technology can be guaranteed to be 100% secure.</p>
+
+        <h3 style={h3}>6. Do we collect information from minors?</h3>
+        <p style={p}>We do not knowingly collect data from or market to children under 18 years of age.</p>
+
+        <h3 style={h3}>7. What are your privacy rights?</h3>
+        <p style={p}>You may review, change, or terminate your account at any time, depending on your country, province, or state of residence. For questions about your privacy rights, email {mail("admin@jrhrr.com")}.</p>
+
+        <h3 style={h3}>8. Controls for do-not-track features</h3>
+        <p style={p}>Most web browsers and some mobile operating systems and applications include a Do-Not-Track ("DNT") feature you can activate to signal your privacy preference.</p>
+
+        <h3 style={h3}>9. Do United States residents have specific privacy rights?</h3>
+        <p style={p}>Residents of certain states may have the right to request access to and receive details about the personal information we maintain about them.</p>
+
+        <h3 style={h3}>10. Other important information</h3>
+        <p style={p}>No mobile information will be shared with third parties/affiliates for marketing/promotional purposes. All the above categories exclude text messaging originator opt-in data and consent; this information will not be shared with any third parties.</p>
+
+        <h3 style={h3}>11. Do we make updates to this notice?</h3>
+        <p style={p}>Yes, we will update this notice as necessary to stay compliant with relevant laws.</p>
+
+        <h3 style={h3}>12. How can you contact us about this notice?</h3>
+        <p style={p}>If you have questions or comments about this notice, email us at {mail("admin@jrhrr.com")} or contact us by post at:</p>
+        <p style={p}>
+          JR Home Remodeling Inc<br />
+          430 N Canal St #17<br />
+          South San Francisco, CA 94080<br />
+          United States
+        </p>
+
+        <h3 style={h3}>13. How can you review, update, or delete the data we collect from you?</h3>
+        <p style={p}>You may have the right to request access to the personal information we collect from you. To request a review, update, or deletion, contact us at {mail("admin@jrhrr.com")}.</p>
+
+        <h2 style={{ ...S.h2, textAlign: "left", fontSize: "clamp(24px,3.4vw,40px)", marginTop: 56, marginBottom: 12 }}>SMS Terms &amp; Conditions</h2>
+        <p style={p}>No mobile information will be shared with third parties/affiliates for marketing/promotional purposes. All the above categories exclude text messaging originator opt-in data and consent; this information will not be shared with any third parties.</p>
+
+        <h3 style={h3}>Product description</h3>
+        <p style={p}>By providing your mobile phone number, you consent to receive SMS messages from JR Home Remodeling Inc. related to order updates, appointment reminders, or account notifications. These messages are not for marketing or promotional purposes.</p>
+
+        <h3 style={h3}>Message frequency</h3>
+        <p style={p}>Message frequency may vary.</p>
+
+        <h3 style={h3}>Message and data rates</h3>
+        <p style={p}>Standard message and data rates may apply depending on your carrier.</p>
+
+        <h3 style={h3}>Opting out</h3>
+        <p style={p}>You may opt out at any time by replying "STOP" to any SMS message you receive from us. After opting out, you will receive a confirmation message, and we will cease sending SMS messages to your number.</p>
+
+        <h3 style={h3}>Help and support</h3>
+        <p style={p}>If you need assistance, reply "HELP" to any SMS message you receive, or contact our customer support team at {mail("admin@jrhrr.com")}.</p>
+
+        <h3 style={h3}>Privacy policy</h3>
+        <p style={p}>Your phone number will be handled in accordance with this Privacy Policy. We do not share SMS opt-in consent with any third parties for solicitation purposes.</p>
+      </div>
+    </section>
+  );
+}
+
 export default function App() {
   const [route, go] = useHashRoute();
   const [menu, setMenu] = useState(false);
@@ -1300,7 +1411,7 @@ export default function App() {
     return () => clearTimeout(t);
   }, [route]);
 
-  const Page = { home: Home, report: PlanPage, dna: DnaPage, group: GroupPage, portfolio: Portfolio, services: Services, studio: StudioApp, "studio-demo": StudioPage, "studio-editor": StudioEditor, suppliers: SuppliersPortal, "admin-studio": AdminStudio, tools: PlanPage, about: About, contact: Contact }[route] || Home;
+  const Page = { home: Home, report: PlanPage, dna: DnaPage, group: GroupPage, portfolio: Portfolio, services: Services, studio: StudioApp, "studio-demo": StudioPage, "studio-editor": StudioEditor, suppliers: SuppliersPortal, "admin-studio": AdminStudio, tools: PlanPage, about: About, privacy: PrivacyPage, contact: Contact }[route] || Home;
 
   return (
     <div style={S.root}>
@@ -1321,6 +1432,8 @@ export default function App() {
             <a key={r.id} href={`#/${r.id}`} onClick={(e) => { e.preventDefault(); go(r.id); }}
               style={{ ...S.navLink, color: route === r.id ? GOLD : "#ece6db" }} className="navlink">{r.label}</a>
           ))}
+          <a href={LINKS.erp} target="_blank" rel="noreferrer"
+            style={{ ...S.navLink, color: GOLD, border: `1px solid ${GOLD}66`, borderRadius: 30, padding: "8px 16px" }} className="navlink">Project Portal ↗</a>
         </div>
         <button style={S.burger} className="burger" onClick={() => setMenu((m) => !m)} aria-label="Menu">{menu ? "✕" : "☰"}</button>
       </nav>
@@ -1335,6 +1448,10 @@ export default function App() {
                 <span style={S.mobileNum}>{String(i + 1).padStart(2, "0")}</span>{r.label}
               </a>
             ))}
+            <a href={LINKS.erp} target="_blank" rel="noreferrer" className="mobile-link"
+              style={{ ...S.mobileLink, color: GOLD, opacity: 1 }}>
+              <span style={S.mobileNum}>↗</span>Project Portal
+            </a>
           </div>
           <div style={S.mobileSocial}>
             <a href={LINKS.instagram} target="_blank" rel="noreferrer" style={S.socialLink}>Instagram</a>
@@ -1367,7 +1484,10 @@ export default function App() {
           </div>
         </div>
         <div style={S.footBottom}>
-          <span>© {new Date().getFullYear()} JR Design Build Inc · All rights reserved</span>
+          <span>
+            © {new Date().getFullYear()} JR Design Build Inc · All rights reserved ·{" "}
+            <a href="#/privacy" onClick={(e) => { e.preventDefault(); go("privacy"); }} style={{ color: "#d8cebd" }} className="footlink">Privacy Policy</a>
+          </span>
           <span style={{ opacity: 0.55 }}>Press 1–9 to navigate</span>
         </div>
       </footer>
