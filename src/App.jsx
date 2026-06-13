@@ -336,6 +336,19 @@ function Dust() {
   return <canvas ref={ref} style={S.dust} aria-hidden="true" />;
 }
 
+// ── Live-tunable background config (controlled from the Contact panel) ──
+const BG_DEFAULTS = { effect: "blueprint", speed: 1, color: "#f0c85a", intensity: 1 };
+const BG = (() => {
+  const cfg = { ...BG_DEFAULTS };
+  try { const s = JSON.parse(localStorage.getItem("jr_bg") || "null"); if (s && typeof s === "object") Object.assign(cfg, s); } catch {}
+  return cfg;
+})();
+function setBG(patch) {
+  Object.assign(BG, patch);
+  try { localStorage.setItem("jr_bg", JSON.stringify(BG)); } catch {}
+  if (typeof window !== "undefined") window.dispatchEvent(new Event("jr:bg"));
+}
+
 // ── Living blueprint overlay (architectural lines drawing themselves) ──
 function BlueprintCanvas() {
   const ref = useRef(null);
@@ -343,7 +356,6 @@ function BlueprintCanvas() {
     const c = ref.current;
     const x = c.getContext("2d");
     let W, H, DPR, raf;
-    const GOLD = "#f0c85a"; // bright, vivid gold for the floor-plan animation
     const GRID = 46;
     const rnd = (a, b) => a + Math.random() * (b - a);
 
@@ -372,7 +384,7 @@ function BlueprintCanvas() {
     ensure();
 
     const drawGrid = () => {
-      x.save(); x.globalAlpha = 0.08; x.strokeStyle = GOLD; x.lineWidth = 1;
+      x.save(); x.globalAlpha = 0.08 * BG.intensity; x.strokeStyle = BG.color; x.lineWidth = 1;
       for (let gx = 0; gx <= W; gx += GRID) { x.beginPath(); x.moveTo(gx + 0.5, 0); x.lineTo(gx + 0.5, H); x.stroke(); }
       for (let gy = 0; gy <= H; gy += GRID) { x.beginPath(); x.moveTo(0, gy + 0.5); x.lineTo(W, gy + 0.5); x.stroke(); }
       x.restore();
@@ -401,9 +413,10 @@ function BlueprintCanvas() {
       if (r.phase === "draw") { p = r.e; alpha = 1; }
       else if (r.phase === "hold") { p = 1; alpha = 1; }
       else { p = 1; alpha = 1 * (1 - r.e); }
+      alpha *= BG.intensity;
       if (alpha <= 0) return;
       x.save();
-      x.globalAlpha = alpha; x.strokeStyle = GOLD; x.lineWidth = 1.4; x.lineJoin = "round"; x.lineCap = "round";
+      x.globalAlpha = alpha; x.strokeStyle = BG.color; x.lineWidth = 1.4; x.lineJoin = "round"; x.lineCap = "round";
       progLine([[r.x, r.y], [r.x + r.w, r.y], [r.x + r.w, r.y + r.h], [r.x, r.y + r.h], [r.x, r.y]], p);
       if (p > 0.55) {
         x.globalAlpha = alpha * 0.9; x.lineWidth = 1;
@@ -427,31 +440,99 @@ function BlueprintCanvas() {
         x.beginPath(); x.moveTo(r.x, r.y + r.h); x.lineTo(r.x, yy + 4); x.moveTo(r.x + r.w, r.y + r.h); x.lineTo(r.x + r.w, yy + 4); x.stroke();
         arrow(r.x, yy, r.x + r.w, yy);
         const feet = (r.w / GRID * 4).toFixed(0);
-        x.fillStyle = GOLD; x.globalAlpha = alpha * 0.85; x.font = "10px Georgia"; x.textAlign = "center";
+        x.fillStyle = BG.color; x.globalAlpha = alpha * 0.85; x.font = "10px Georgia"; x.textAlign = "center";
         x.fillText(feet + "'-0\"", r.x + r.w / 2, yy - 3);
+      }
+      x.restore();
+    };
+
+    // particle field (alternate background effect)
+    let parts = [];
+    const ensureParts = () => { while (parts.length < 90) parts.push({ x: rnd(0, W), y: rnd(0, H), r: rnd(0.6, 2.3), vx: rnd(-10, 10), vy: rnd(-10, 10), a: rnd(0.2, 0.85) }); };
+    const drawParticles = (dt) => {
+      ensureParts();
+      x.save();
+      x.fillStyle = BG.color;
+      for (const pt of parts) {
+        pt.x += pt.vx * dt; pt.y += pt.vy * dt;
+        if (pt.x < 0) pt.x += W; else if (pt.x > W) pt.x -= W;
+        if (pt.y < 0) pt.y += H; else if (pt.y > H) pt.y -= H;
+        x.globalAlpha = pt.a * BG.intensity;
+        x.beginPath(); x.arc(pt.x, pt.y, pt.r, 0, Math.PI * 2); x.fill();
       }
       x.restore();
     };
 
     let last = performance.now();
     const frame = (now) => {
-      const dt = Math.min(0.05, (now - last) / 1000); last = now;
+      const dt = Math.min(0.05, (now - last) / 1000) * BG.speed; last = now;
       x.clearRect(0, 0, W, H);
+      const fx = BG.effect;
+      if (fx === "off") { raf = requestAnimationFrame(frame); return; }
+      if (fx === "particles") { drawParticles(dt); raf = requestAnimationFrame(frame); return; }
       drawGrid();
-      for (const r of rooms) {
-        if (r.phase === "draw") { r.t += dt / r.dur; r.e = Math.min(1, 1 - Math.pow(1 - r.t, 3)); if (r.t >= 1) { r.phase = "hold"; r.t = 0; } }
-        else if (r.phase === "hold") { r.t += dt / r.hold; if (r.t >= 1) { r.phase = "fade"; r.t = 0; } }
-        else { r.t += dt / r.fade; r.e = Math.min(1, r.t); }
-        drawRoom(r);
+      if (fx !== "grid") {
+        for (const r of rooms) {
+          if (r.phase === "draw") { r.t += dt / r.dur; r.e = Math.min(1, 1 - Math.pow(1 - r.t, 3)); if (r.t >= 1) { r.phase = "hold"; r.t = 0; } }
+          else if (r.phase === "hold") { r.t += dt / r.hold; if (r.t >= 1) { r.phase = "fade"; r.t = 0; } }
+          else { r.t += dt / r.fade; r.e = Math.min(1, r.t); }
+          drawRoom(r);
+        }
+        rooms = rooms.filter((r) => !(r.phase === "fade" && r.t >= 1));
+        ensure();
       }
-      rooms = rooms.filter((r) => !(r.phase === "fade" && r.t >= 1));
-      ensure();
       raf = requestAnimationFrame(frame);
     };
     raf = requestAnimationFrame(frame);
     return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", size); };
   }, []);
   return <canvas ref={ref} style={S.blueprint} />;
+}
+
+// Floating control panel for the background animation (lives on Contact).
+function BgControls() {
+  const [open, setOpen] = useState(false);
+  const [, force] = useState(0);
+  const update = (patch) => { setBG(patch); force((n) => n + 1); };
+  const EFFECTS = [["blueprint", "Blueprint"], ["grid", "Grid"], ["particles", "Particles"], ["off", "Off"]];
+  const wrap = { position: "fixed", left: 22, bottom: 22, zIndex: 82, fontFamily: SANS };
+  const label = { display: "block", fontSize: 10, letterSpacing: 1.5, textTransform: "uppercase", color: "#c9b48a", margin: "0 0 6px" };
+  return (
+    <div style={wrap}>
+      {open && (
+        <div style={{ width: 270, background: "#100d0a", border: "1px solid #c9a25e33", borderRadius: 14, padding: 18, boxShadow: "0 24px 70px #000000cc", marginBottom: 10 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 14 }}>
+            <span style={{ fontSize: 11, letterSpacing: 2, textTransform: "uppercase", color: GOLD }}>Background</span>
+            <button onClick={() => setOpen(false)} aria-label="Close" style={{ background: "none", border: "none", color: "#fff", fontSize: 18, cursor: "pointer", lineHeight: 1 }}>✕</button>
+          </div>
+
+          <span style={label}>Effect</span>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6, marginBottom: 14 }}>
+            {EFFECTS.map(([id, name]) => (
+              <button key={id} onClick={() => update({ effect: id })}
+                style={{ padding: "8px 6px", fontSize: 11, letterSpacing: 1, textTransform: "uppercase", cursor: "pointer", borderRadius: 6, border: "1px solid " + (BG.effect === id ? GOLD : "#ffffff22"), background: BG.effect === id ? GOLD : "transparent", color: BG.effect === id ? "#0c0a08" : "#ece6db" }}>{name}</button>
+            ))}
+          </div>
+
+          <span style={label}>Speed — {BG.speed.toFixed(2)}×</span>
+          <input type="range" min={0.1} max={3} step={0.05} value={BG.speed} onChange={(e) => update({ speed: Number(e.target.value) })} style={{ width: "100%", accentColor: GOLD, marginBottom: 14 }} />
+
+          <span style={label}>Line intensity — {Math.round(BG.intensity * 100)}%</span>
+          <input type="range" min={0.1} max={2} step={0.05} value={BG.intensity} onChange={(e) => update({ intensity: Number(e.target.value) })} style={{ width: "100%", accentColor: GOLD, marginBottom: 14 }} />
+
+          <span style={label}>Color</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <input type="color" value={BG.color} onChange={(e) => update({ color: e.target.value })} style={{ width: 44, height: 32, background: "none", border: "1px solid #ffffff22", borderRadius: 6, cursor: "pointer" }} />
+            <button onClick={() => update({ ...BG_DEFAULTS })} style={{ marginLeft: "auto", fontSize: 11, letterSpacing: 1, textTransform: "uppercase", color: "#c9b48a", background: "none", border: "1px solid #ffffff22", borderRadius: 6, padding: "8px 12px", cursor: "pointer" }}>Reset</button>
+          </div>
+        </div>
+      )}
+      <button onClick={() => setOpen((o) => !o)} aria-label="Background controls"
+        style={{ display: "inline-flex", alignItems: "center", gap: 8, background: "#100d0a", color: GOLD, border: "1px solid #c9a25e55", borderRadius: 30, padding: "11px 16px", fontSize: 11, letterSpacing: 1.5, textTransform: "uppercase", fontWeight: 600, cursor: "pointer", boxShadow: "0 10px 30px -10px #000000aa" }}>
+        ✦ Background
+      </button>
+    </div>
+  );
 }
 
 const DNA = [
@@ -1023,6 +1104,7 @@ function Contact() {
     <section style={{ ...S.section, paddingTop: 160, textAlign: "center" }}>
       <h2 style={S.h2}>Ready to build?</h2>
       <p style={S.note}>Tell us about your project. The first consultation is free.</p>
+      <BgControls />
       <ContactForm />
       <div style={S.contactGrid}>
         <a href={LINKS.erp} target="_blank" rel="noreferrer" style={S.contactCard} className="card"><span style={S.contactBig}>◳</span>Project portal<span style={S.contactSmall}>Track your build ↗</span></a>
