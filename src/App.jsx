@@ -468,11 +468,11 @@ const SERVICES = [
 
 const PROJECTS = [
   { t: "Bay Area Full Remodel", tag: "Whole-Home", g: "linear-gradient(135deg,#3a2f1c,#6e4b22)" },
-  { t: "Backyard ADU", tag: "ADU", g: "linear-gradient(135deg,#2a2438,#3a2f4a)" },
-  { t: "Chef's Kitchen", tag: "Kitchen", g: "linear-gradient(135deg,#4a3320,#8a6a3a)" },
-  { t: "Spa Bath", tag: "Bath", g: "linear-gradient(135deg,#1f2a2a,#3a4a44)" },
-  { t: "Master Suite Addition", tag: "Addition", g: "linear-gradient(135deg,#322820,#5a4530)" },
-  { t: "Hillside Deck", tag: "Exterior", g: "linear-gradient(135deg,#2b2620,#4a4035)" },
+  { t: "Backyard ADU", tag: "ADU", g: "linear-gradient(135deg,#2a2438,#3a2f4a)", img: "https://mmekvaqcebyufclmivaf.supabase.co/storage/v1/object/sign/Before%20and%20After/ADUs.jpeg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8yNGRiOGE5YS1iZWQwLTRlNmQtYTZhOC1hNTY1YTRlOGNmZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJCZWZvcmUgYW5kIEFmdGVyL0FEVXMuanBlZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODEzMTE0ODUsImV4cCI6MTgxMjg0NzQ4NX0.7lXNy5_VH_yZwzDjEPcFFqDEeuY20KYXxnXYylaFLNA" },
+  { t: "Chef's Kitchen", tag: "Kitchen", g: "linear-gradient(135deg,#4a3320,#8a6a3a)", img: "https://mmekvaqcebyufclmivaf.supabase.co/storage/v1/object/sign/Before%20and%20After/Kitchen.webp?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8yNGRiOGE5YS1iZWQwLTRlNmQtYTZhOC1hNTY1YTRlOGNmZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJCZWZvcmUgYW5kIEFmdGVyL0tpdGNoZW4ud2VicCIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODEzMTEzNzUsImV4cCI6MTgxMjg0NzM3NX0.WIqtTvrSnoDiQ5txVYdRmfkqQ5zGesfzrv23chHBDmE" },
+  { t: "Spa Bath", tag: "Bath", g: "linear-gradient(135deg,#1f2a2a,#3a4a44)", img: "https://mmekvaqcebyufclmivaf.supabase.co/storage/v1/object/sign/Before%20and%20After/Bathroom%20Spa.webp?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8yNGRiOGE5YS1iZWQwLTRlNmQtYTZhOC1hNTY1YTRlOGNmZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJCZWZvcmUgYW5kIEFmdGVyL0JhdGhyb29tIFNwYS53ZWJwIiwic2NvcGUiOiJkb3dubG9hZCIsImlhdCI6MTc4MTMxMTQwOCwiZXhwIjoxODEyODQ3NDA4fQ.6nMBkStiiBmIg7Ft4rhUXxFMM__iVO7zoilSonDnwLk" },
+  { t: "Master Suite Addition", tag: "Addition", g: "linear-gradient(135deg,#322820,#5a4530)", img: "https://mmekvaqcebyufclmivaf.supabase.co/storage/v1/object/sign/Before%20and%20After/Addition.webp?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8yNGRiOGE5YS1iZWQwLTRlNmQtYTZhOC1hNTY1YTRlOGNmZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJCZWZvcmUgYW5kIEFmdGVyL0FkZGl0aW9uLndlYnAiLCJzY29wZSI6ImRvd25sb2FkIiwiaWF0IjoxNzgxMzExNDI1LCJleHAiOjE4MTI4NDc0MjV9.jtMmqT_N_z2YzfWv1whvziYPRYmW0BZ7YyqtVdyRS8Y" },
+  { t: "Deck, Siding & Panoramic Door", tag: "Exterior", g: "linear-gradient(135deg,#2b2620,#4a4035)", img: "https://mmekvaqcebyufclmivaf.supabase.co/storage/v1/object/sign/Before%20and%20After/deck,%20siding%20and%20panoramic%20door.webp?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8yNGRiOGE5YS1iZWQwLTRlNmQtYTZhOC1hNTY1YTRlOGNmZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJCZWZvcmUgYW5kIEFmdGVyL2RlY2ssIHNpZGluZyBhbmQgcGFub3JhbWljIGRvb3Iud2VicCIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODEzMTE0MzgsImV4cCI6MTgxMjg0NzQzOH0.PcaSifsYoU8Y9CXxdFenPDHspVNme5_kU-5ctczmbsk" },
 ];
 
 const TIMELINE = [
@@ -920,11 +920,13 @@ function Portfolio({ go }) {
         {shown.map((p, i) => (
           <Reveal key={p.t} delay={(i % 3) * 0.08}>
           <div style={{ ...S.portCard, background: p.g }} className="card">
-            {p.img && (
-              <>
-                <img src={p.img} alt={p.t} loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} onError={(e) => { e.currentTarget.style.display = "none"; }} />
-                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(12,10,8,0.88), rgba(12,10,8,0.15) 55%, rgba(12,10,8,0.05))" }} />
-              </>
+            {p.video ? (
+              <video src={p.video} autoPlay muted loop playsInline style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+            ) : p.img ? (
+              <img src={p.img} alt={p.t} loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} onError={(e) => { e.currentTarget.style.display = "none"; }} />
+            ) : null}
+            {(p.video || p.img) && (
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(12,10,8,0.88), rgba(12,10,8,0.15) 55%, rgba(12,10,8,0.05))" }} />
             )}
             <div style={S.cardSheen} className="sheen" />
             <span style={{ ...S.portTag, position: "relative", zIndex: 1 }}>{p.tag}</span>
