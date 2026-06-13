@@ -920,9 +920,15 @@ function Portfolio({ go }) {
         {shown.map((p, i) => (
           <Reveal key={p.t} delay={(i % 3) * 0.08}>
           <div style={{ ...S.portCard, background: p.g }} className="card">
+            {p.img && (
+              <>
+                <img src={p.img} alt={p.t} loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} onError={(e) => { e.currentTarget.style.display = "none"; }} />
+                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(12,10,8,0.88), rgba(12,10,8,0.15) 55%, rgba(12,10,8,0.05))" }} />
+              </>
+            )}
             <div style={S.cardSheen} className="sheen" />
-            <span style={S.portTag}>{p.tag}</span>
-            <span style={S.portTitle}>{p.t}</span>
+            <span style={{ ...S.portTag, position: "relative", zIndex: 1 }}>{p.tag}</span>
+            <span style={{ ...S.portTitle, position: "relative", zIndex: 1 }}>{p.t}</span>
           </div>
           </Reveal>
         ))}
