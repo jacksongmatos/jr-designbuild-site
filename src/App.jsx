@@ -538,9 +538,9 @@ function BgControls() {
 }
 
 const DNA = [
-  { k: "DARE", q: "How can we do this differently?", t: "We dare to challenge the status quo.", d: "We refuse \"that's how contractors work.\" Real schedules, documented processes, Matterport, VR, a client portal, AI — technology in service of a better build, not marketing.", journey: "These people work differently." },
-  { k: "NURTURE", q: "Are we caring for everyone involved?", t: "We nurture people through construction.", d: "We don't just build houses — we care for the people involved. Clear communication, education and follow-up for clients; training and growth for our team; long-term respect for partners.", journey: "They actually care about me." },
-  { k: "AMAZE", q: "What can we do to exceed expectation?", t: "We amaze through disciplined execution.", d: "Most clients expect problems. When they find organization, cleanliness, communication and a result beyond what they pictured — that's the moment a client becomes a fan.", journey: "I never imagined a build could feel like this." },
+  { k: "DARE", q: "How can we do this differently?", t: "Dare to go further — so our clients can dream beyond.", d: "We refuse \"that's how contractors work.\" Real schedules, documented processes, Matterport, VR, a client portal, AI — technology in service of a better build, not marketing.", journey: "These people work differently." },
+  { k: "NURTURE", q: "Are we caring for everyone involved?", t: "Nurture every detail — so trust grows naturally.", d: "We don't just build houses — we care for the people involved. Clear communication, education and follow-up for clients; training and growth for our team; long-term respect for partners.", journey: "They actually care about me." },
+  { k: "AMAZE", q: "What can we do to exceed expectation?", t: "Amaze with excellence — so every result inspires emotion.", d: "Most clients expect problems. When they find organization, cleanliness, communication and a result beyond what they pictured — that's the moment a client becomes a fan.", journey: "I never imagined a build could feel like this." },
 ];
 
 const SERVICES = [
