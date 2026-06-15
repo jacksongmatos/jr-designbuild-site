@@ -13,7 +13,7 @@ import React, { useMemo, useState } from "react";
 const GOLD = "#c9a25e";
 const INK = "#0c0a08";
 const HFS = "https://www.hfsfinancial.net/promo/67c93a097f42caadb8a6b73c";
-const EMAIL = "hello@jrdesignbuild.com";
+const EMAIL = "estimate@jrdesignbuilds.com";
 const CSLB_VERIFY =
   "https://www.cslb.ca.gov/onlineservices/checklicenseII/checklicense.aspx";
 

@@ -30,7 +30,10 @@ const LINKS = {
   houzz: "https://www.houzz.com/professionals/general-contractors/jr-home-remodeling-inc-pfvwus-pf~726261874",
   yelp: "https://www.yelp.com/biz/jr-design-build-san-mateo",
   facebook: "https://www.facebook.com/people/JR-Home-Remodeling-Inc/100074956298502/",
-  email: "mailto:hello@jrdesignbuild.com",
+  email: "mailto:estimate@jrdesignbuilds.com",
+  emailText: "estimate@jrdesignbuilds.com",
+  phone: "tel:+16502815232",
+  phoneText: "(650) 281-5232",
 };
 
 const ROUTES = [
@@ -1126,9 +1129,10 @@ function Contact() {
       <BgControls />
       <ContactForm />
       <div style={S.contactGrid}>
+        <a href={LINKS.phone} style={S.contactCard} className="card"><span style={S.contactBig}>✆</span>Call us<span style={S.contactSmall}>{LINKS.phoneText}</span></a>
+        <a href={LINKS.email} style={S.contactCard} className="card"><span style={S.contactBig}>✉</span>Email us<span style={S.contactSmall}>{LINKS.emailText}</span></a>
         <a href={LINKS.erp} target="_blank" rel="noreferrer" style={S.contactCard} className="card"><span style={S.contactBig}>◳</span>Project portal<span style={S.contactSmall}>Track your build ↗</span></a>
         <a href={LINKS.financing} target="_blank" rel="noreferrer" style={S.contactCard} className="card"><span style={S.contactBig}>$</span>Financing<span style={S.contactSmall}>HFS Financial ↗</span></a>
-        <a href={LINKS.email} style={S.contactCard} className="card"><span style={S.contactBig}>✉</span>Email us<span style={S.contactSmall}>hello@jrdesignbuild.com</span></a>
       </div>
       <div style={S.social}>
         <a href={LINKS.instagram} target="_blank" rel="noreferrer" style={S.socialLink} className="navlink">Instagram</a>
@@ -1202,7 +1206,7 @@ function ContactForm() {
         <div style={{ color: "#cf8a5a", fontSize: 13, marginTop: -4 }}>Please fill in your name, email, phone and project address.</div>
       )}
       {state === "error" && (
-        <div style={{ color: "#cf8a5a", fontSize: 13 }}>Something went wrong — please try again or email hello@jrdesignbuild.com.</div>
+        <div style={{ color: "#cf8a5a", fontSize: 13 }}>Something went wrong — please try again or email estimate@jrdesignbuilds.com.</div>
       )}
       <button onClick={submit} disabled={state === "sending"} style={{ ...S.ctaPrimary, border: "none", cursor: "pointer", width: "fit-content", opacity: state === "sending" ? 0.6 : 1 }} className="cta-prim">
         {state === "sending" ? "Sending…" : "Send inquiry →"}
@@ -1263,7 +1267,7 @@ function InvestorInquiry() {
                 <input style={S.input} placeholder="Amount you'd consider investing (optional)" value={f.amount} onChange={set("amount")} />
                 <textarea style={{ ...S.input, minHeight: 90, resize: "vertical" }} placeholder="Anything you'd like us to know? (optional)" value={f.msg} onChange={set("msg")} />
                 {state === "invalid" && <div style={{ color: "#cf8a5a", fontSize: 12.5 }}>Please add your name and a phone or email.</div>}
-                {state === "error" && <div style={{ color: "#cf8a5a", fontSize: 12.5 }}>Something went wrong — try again or email hello@jrdesignbuild.com.</div>}
+                {state === "error" && <div style={{ color: "#cf8a5a", fontSize: 12.5 }}>Something went wrong — try again or email estimate@jrdesignbuilds.com.</div>}
                 <button type="submit" disabled={state === "sending"} style={{ ...S.ctaPrimary, border: "none", cursor: "pointer", opacity: state === "sending" ? 0.6 : 1 }} className="cta-prim">
                   {state === "sending" ? "Sending…" : "Submit interest →"}
                 </button>
@@ -1533,6 +1537,7 @@ export default function App() {
             <a key={r.id} href={`#/${r.id}`} onClick={(e) => { e.preventDefault(); go(r.id); }}
               style={{ ...S.navLink, color: route === r.id ? GOLD : "#ece6db" }} className="navlink">{r.label}</a>
           ))}
+          <a href={LINKS.phone} style={{ ...S.navLink, color: "#ece6db", fontWeight: 600 }} className="navlink">✆ {LINKS.phoneText}</a>
           <a href={LINKS.erp} target="_blank" rel="noreferrer"
             style={{ ...S.navLink, color: GOLD, border: `1px solid ${GOLD}66`, borderRadius: 30, padding: "8px 16px" }} className="navlink">Project Portal ↗</a>
         </div>
@@ -1549,6 +1554,9 @@ export default function App() {
                 <span style={S.mobileNum}>{String(i + 1).padStart(2, "0")}</span>{r.label}
               </a>
             ))}
+            <a href={LINKS.phone} className="mobile-link" style={{ ...S.mobileLink, color: "#fff", opacity: 1 }}>
+              <span style={S.mobileNum}>✆</span>{LINKS.phoneText}
+            </a>
             <a href={LINKS.erp} target="_blank" rel="noreferrer" className="mobile-link"
               style={{ ...S.mobileLink, color: GOLD, opacity: 1 }}>
               <span style={S.mobileNum}>↗</span>Project Portal
@@ -1581,7 +1589,8 @@ export default function App() {
             <a href={LINKS.erp} target="_blank" rel="noreferrer" style={S.footLink} className="footlink">Project Portal ↗</a>
             <a href={LINKS.financing} target="_blank" rel="noreferrer" style={S.footLink} className="footlink">Financing ↗</a>
             <a href={LINKS.instagram} target="_blank" rel="noreferrer" style={S.footLink} className="footlink">Instagram ↗</a>
-            <a href={LINKS.email} style={S.footEmail} className="footlink">hello@jrdesignbuild.com</a>
+            <a href={LINKS.phone} style={S.footEmail} className="footlink">{LINKS.phoneText}</a>
+            <a href={LINKS.email} style={S.footEmail} className="footlink">{LINKS.emailText}</a>
           </div>
         </div>
         <div style={S.footBottom}>
