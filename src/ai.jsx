@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { navigate } from "./nav";
 
 /*
  * Floating AI assistant for JR Design Build.
@@ -117,8 +118,8 @@ function Fallback({ err }) {
         In the meantime, use the instant estimator or book your free consultation.
       </p>
       <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
-        <a href="#/tools" style={st.ghost}>Instant tools</a>
-        <a href="#/contact" style={{ ...st.ghost, background: GOLD, color: INK, border: "none" }}>
+        <a href="/tools" onClick={(e) => { e.preventDefault(); navigate("tools"); }} style={st.ghost}>Instant tools</a>
+        <a href="/contact" onClick={(e) => { e.preventDefault(); navigate("contact"); }} style={{ ...st.ghost, background: GOLD, color: INK, border: "none" }}>
           Book a consult
         </a>
       </div>
@@ -244,7 +245,7 @@ function EstimateTab({ prefill }) {
           <p style={{ ...st.note, marginTop: 12 }}>
             {res.disclaimer || "Non-binding estimate. Book a free consultation for exact numbers."}
           </p>
-          <a href="#/contact" style={{ ...st.btn, display: "block", textAlign: "center", textDecoration: "none", marginTop: 12 }}>
+          <a href="/contact" onClick={(e) => { e.preventDefault(); navigate("contact"); }} data-analytics="book_consultation" style={{ ...st.btn, display: "block", textAlign: "center", textDecoration: "none", marginTop: 12 }}>
             Book my free consultation →
           </a>
         </div>
@@ -302,6 +303,10 @@ function ChatTab() {
           source: "Website chat",
         }),
       });
+      // GA4 conversion: chat intake lead (no-op until Measurement ID is set).
+      if (typeof window !== "undefined" && typeof window.gtag === "function") {
+        window.gtag("event", "generate_lead", { event_category: "engagement", event_label: "Website chat" });
+      }
     } catch (_) { /* non-blocking — still proceed to chat */ }
 
     // Keep the collected details as hidden context for the AI.
@@ -421,7 +426,7 @@ export default function AiAssistant() {
 
   if (!open) {
     return (
-      <button style={st.fab} onClick={() => setOpen(true)} aria-label="Open AI assistant">
+      <button style={st.fab} onClick={() => setOpen(true)} aria-label="Open AI assistant" data-analytics="talk_with_jr">
         <span style={{ fontSize: 15 }}>✨</span> Talk with JR
       </button>
     );

@@ -31,6 +31,7 @@
 // =============================================================================
 
 import { useEffect, useRef, useState } from "react";
+import { navigate } from "./nav";
 
 // ---------------------------------------------------------------- tokens ----
 const GOLD = "#C9A227";
@@ -751,7 +752,9 @@ function TrustGrid() {
       </div>
       <div style={{ marginTop: 56, textAlign: "center" }}>
         <a
-          href="#/contact"
+          href="/contact"
+          onClick={(e) => { e.preventDefault(); navigate("contact"); }}
+          data-analytics="book_consultation"
           style={{
             display: "inline-block",
             padding: "16px 38px",

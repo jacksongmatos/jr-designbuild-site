@@ -6,6 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0c0a08" />
 
+    <!-- Google Analytics 4 — loaded async so it doesn't block Core Web Vitals.
+         👉 Replace BOTH occurrences of G-XXXXXXXXXX below with the real GA4
+            Measurement ID (Admin → Data Streams → Web → Measurement ID). -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+
+      // Conversion tracking. Any element carrying data-analytics="<event_name>"
+      // fires that GA4 event on click (works for SPA buttons and prerendered
+      // city pages alike). The contact form fires "generate_lead" on submit
+      // from the React handler. Safe no-op until the real ID is set.
+      document.addEventListener('click', function (e) {
+        var el = e.target.closest && e.target.closest('[data-analytics]');
+        if (!el) return;
+        gtag('event', el.getAttribute('data-analytics'), {
+          event_category: 'engagement',
+          event_label: (el.textContent || '').trim().slice(0, 80)
+        });
+      });
+    </script>
+
     <title>JR Design Build — Bay Area Design-Build General Contractor</title>
     <meta
       name="description"

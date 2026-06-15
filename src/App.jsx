@@ -8,13 +8,14 @@ import StudioEditor from "./studio-editor";
 import SuppliersPortal from "./suppliers";
 import AdminStudio from "./admin-studio";
 import TrackRecordSection from "./TrackRecordSection";
+import { navigate, routeFromPath } from "./nav";
 
 // ─────────────────────────────────────────────────────────────
 //  JR DESIGN BUILD — full site, built around the brand DNA
 //  Purpose: Restore Trust in Construction
 //  DNA: DARE · NURTURE · AMAZE
 //  Palette: Black · White · Gold (luxe, discreet)
-//  Liquid-metal WebGL background. Hash router. Mobile menu.
+//  Liquid-metal WebGL background. History-API router. Mobile menu.
 //  Keyboard shortcuts (1-6 / first letters). Real links. Form.
 // ─────────────────────────────────────────────────────────────
 
@@ -194,15 +195,22 @@ const PARTNERS = [
   { name: "East Star", cat: "Building materials & finishes" },
 ];
 
-function useHashRoute() {
-  const get = () => (window.location.hash.replace("#/", "") || "home").split("?")[0];
-  const [route, setRoute] = useState(get());
+function usePathRoute() {
+  const [route, setRoute] = useState(routeFromPath());
   useEffect(() => {
-    const on = () => { setRoute(get()); window.scrollTo({ top: 0, behavior: "smooth" }); };
-    window.addEventListener("hashchange", on);
-    return () => window.removeEventListener("hashchange", on);
+    // Migrate legacy hash URLs (/services -> /services) so old bookmarks and
+    // inbound links keep working after the move to real paths.
+    if (window.location.hash.startsWith("/")) {
+      const id = window.location.hash.slice(2).split("?")[0];
+      window.history.replaceState({}, "", id ? `/${id}` : "/");
+      setRoute(id || "home");
+      window.scrollTo({ top: 0 });
+    }
+    const on = () => { setRoute(routeFromPath()); window.scrollTo({ top: 0, behavior: "smooth" }); };
+    window.addEventListener("popstate", on);
+    return () => window.removeEventListener("popstate", on);
   }, []);
-  const go = useCallback((id) => { window.location.hash = `#/${id}`; }, []);
+  const go = useCallback((id) => { navigate(id); }, []);
   return [route, go];
 }
 
@@ -608,9 +616,9 @@ function Home({ go }) {
           </h1>
           <p style={S.sub}>We don't simply build homes — we restore trust in construction. Real schedules, obsessive craft and Matterport precision, so the build itself becomes something you enjoy.</p>
           <div style={S.ctaRow}>
-            <a onClick={(e) => { e.preventDefault(); go("report"); }} href="#/report" style={S.ctaPrimary} className="cta-prim">Analyze my property →</a>
-            <a onClick={(e) => { e.preventDefault(); go("contact"); }} href="#/contact" style={S.ctaGhost} className="cta-ghost">Start your build</a>
-            <a onClick={(e) => { e.preventDefault(); go("portfolio"); }} href="#/portfolio" style={S.ctaGhost} className="cta-ghost">See the work</a>
+            <a onClick={(e) => { e.preventDefault(); go("report"); }} href="/report" data-analytics="analyze_property" style={S.ctaPrimary} className="cta-prim">Analyze my property →</a>
+            <a onClick={(e) => { e.preventDefault(); go("contact"); }} href="/contact" data-analytics="book_consultation" style={S.ctaGhost} className="cta-ghost">Start your build</a>
+            <a onClick={(e) => { e.preventDefault(); go("portfolio"); }} href="/portfolio" style={S.ctaGhost} className="cta-ghost">See the work</a>
           </div>
         </div>
         <div style={{ ...S.scrollCue, opacity: fade }} className="scroll-cue"><span style={S.scrollLine} /><span style={S.scrollWord}>Scroll</span></div>
@@ -631,7 +639,7 @@ function Home({ go }) {
           JR exists to prove a build can be organized, transparent, predictable and professional.
           We don't sell renovation. We sell peace of mind.
         </p>
-        <a onClick={(e) => { e.preventDefault(); go("dna"); }} href="#/dna" style={{ ...S.ctaGhost, marginTop: 40, display: "inline-block" }} className="cta-ghost">Discover our DNA →</a>
+        <a onClick={(e) => { e.preventDefault(); go("dna"); }} href="/dna" style={{ ...S.ctaGhost, marginTop: 40, display: "inline-block" }} className="cta-ghost">Discover our DNA →</a>
       </section>
       </Reveal>
 
@@ -656,7 +664,7 @@ function Home({ go }) {
         <h2 style={S.h2}>What we craft</h2>
         <div style={S.grid}>
           {SERVICES.map((s) => (
-            <a key={s.n} href="#/services" onClick={(e) => { e.preventDefault(); go("services"); }} style={{ ...S.card, textDecoration: "none", display: "block" }} className="card">
+            <a key={s.n} href="/services" onClick={(e) => { e.preventDefault(); go("services"); }} style={{ ...S.card, textDecoration: "none", display: "block" }} className="card">
               <div style={{ ...S.cardAccent, background: `linear-gradient(90deg, ${GOLD}, ${s.tint})` }} />
               <div style={S.cardSheen} className="sheen" />
               <div style={S.cardTop}>
@@ -1109,7 +1117,7 @@ function Services({ go }) {
           <h3 style={{ ...S.svcTitle, fontSize: 26 }}>Visualize your finishes first</h3>
           <p style={S.svcLong}>Try wall colors, cabinets, countertops, flooring and molding in our interactive Design Studio — then send us the look.</p>
         </div>
-        <a onClick={(e) => { e.preventDefault(); go("studio"); }} href="#/studio" style={S.ctaPrimary} className="cta-prim">Open Design Studio →</a>
+        <a onClick={(e) => { e.preventDefault(); go("studio"); }} href="/studio" style={S.ctaPrimary} className="cta-prim">Open Design Studio →</a>
       </div>
       </Reveal>
       <CtaBand go={go} />
@@ -1175,6 +1183,10 @@ function ContactForm() {
         body: JSON.stringify({ name: f.name, email: f.email, phone: f.phone, address: f.address, notes: f.msg, source: "Website contact" }),
       });
       if (!r.ok) throw new Error("bad");
+      // GA4 conversion: contact form lead (no-op until Measurement ID is set).
+      if (typeof window !== "undefined" && typeof window.gtag === "function") {
+        window.gtag("event", "generate_lead", { event_category: "engagement", event_label: "Website contact" });
+      }
       setState("done");
     } catch (_) {
       setState("error");
@@ -1312,8 +1324,8 @@ function CtaBand({ go }) {
     <section style={S.ctaBand}>
       <h2 style={S.ctaBandH}>Let's build your vision.</h2>
       <div style={{ display: "flex", gap: 16, justifyContent: "center", flexWrap: "wrap" }}>
-        <a onClick={(e) => { e.preventDefault(); go("contact"); }} href="#/contact" style={S.ctaPrimary} className="cta-prim">Start the conversation →</a>
-        <a onClick={(e) => { e.preventDefault(); go("tools"); }} href="#/tools" style={S.ctaGhost} className="cta-ghost">Plan your project →</a>
+        <a onClick={(e) => { e.preventDefault(); go("contact"); }} href="/contact" data-analytics="book_consultation" style={S.ctaPrimary} className="cta-prim">Start the conversation →</a>
+        <a onClick={(e) => { e.preventDefault(); go("tools"); }} href="/tools" style={S.ctaGhost} className="cta-ghost">Plan your project →</a>
       </div>
     </section>
   );
@@ -1468,7 +1480,7 @@ function PrivacyPage() {
 }
 
 export default function App() {
-  const [route, go] = useHashRoute();
+  const [route, go] = usePathRoute();
   const [menu, setMenu] = useState(false);
   const scrolled = useScrolled(40);
 
@@ -1534,7 +1546,7 @@ export default function App() {
         </div>
         <div style={S.navLinks} className="desktop-nav">
           {ROUTES.map((r) => (
-            <a key={r.id} href={`#/${r.id}`} onClick={(e) => { e.preventDefault(); go(r.id); }}
+            <a key={r.id} href={`/${r.id}`} onClick={(e) => { e.preventDefault(); go(r.id); }}
               style={{ ...S.navLink, color: route === r.id ? GOLD : "#ece6db" }} className="navlink">{r.label}</a>
           ))}
           <a href={LINKS.phone} style={{ ...S.navLink, color: "#ece6db", fontWeight: 600 }} className="navlink">✆ {LINKS.phoneText}</a>
@@ -1548,7 +1560,7 @@ export default function App() {
         <div style={S.mobileMenu} className="mobile-menu">
           <div style={S.mobileMenuInner}>
             {ROUTES.map((r, i) => (
-              <a key={r.id} href={`#/${r.id}`} onClick={(e) => { e.preventDefault(); go(r.id); }}
+              <a key={r.id} href={`/${r.id}`} onClick={(e) => { e.preventDefault(); go(r.id); }}
                 className="mobile-link"
                 style={{ ...S.mobileLink, color: route === r.id ? GOLD : "#fff", animationDelay: `${0.05 + i * 0.06}s` }}>
                 <span style={S.mobileNum}>{String(i + 1).padStart(2, "0")}</span>{r.label}
@@ -1581,11 +1593,11 @@ export default function App() {
           </div>
           <div style={S.footLinks}>
             <div style={S.footColLabel}>Explore</div>
-            {ROUTES.map((r) => (<a key={r.id} href={`#/${r.id}`} onClick={(e) => { e.preventDefault(); go(r.id); }} style={S.footLink} className="footlink">{r.label}</a>))}
+            {ROUTES.map((r) => (<a key={r.id} href={`/${r.id}`} onClick={(e) => { e.preventDefault(); go(r.id); }} style={S.footLink} className="footlink">{r.label}</a>))}
           </div>
           <div style={S.footLinks}>
             <div style={S.footColLabel}>Connect</div>
-            <a href="#/suppliers" onClick={(e) => { e.preventDefault(); go("suppliers"); }} style={S.footLink} className="footlink">Supplier Portal</a>
+            <a href="/suppliers" onClick={(e) => { e.preventDefault(); go("suppliers"); }} style={S.footLink} className="footlink">Supplier Portal</a>
             <a href={LINKS.erp} target="_blank" rel="noreferrer" style={S.footLink} className="footlink">Project Portal ↗</a>
             <a href={LINKS.financing} target="_blank" rel="noreferrer" style={S.footLink} className="footlink">Financing ↗</a>
             <a href={LINKS.instagram} target="_blank" rel="noreferrer" style={S.footLink} className="footlink">Instagram ↗</a>
@@ -1596,7 +1608,7 @@ export default function App() {
         <div style={S.footBottom}>
           <span>
             © {new Date().getFullYear()} JR Design Build Inc · All rights reserved ·{" "}
-            <a href="#/privacy" onClick={(e) => { e.preventDefault(); go("privacy"); }} style={{ color: "#d8cebd" }} className="footlink">Privacy Policy</a>
+            <a href="/privacy" onClick={(e) => { e.preventDefault(); go("privacy"); }} style={{ color: "#d8cebd" }} className="footlink">Privacy Policy</a>
           </span>
           <span style={{ opacity: 0.55 }}>Press 1–9 to navigate</span>
         </div>

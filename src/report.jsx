@@ -97,7 +97,7 @@ export default function ReportPage({ go }) {
         {err && (
           <Section label="Heads up">
             <p style={s.note}>Couldn't generate the report right now. Try again, or {""}
-              <a href="#/contact" style={{ color: GOLD }} onClick={(e) => { e.preventDefault(); go("contact"); }}>book a consult ↗</a>.
+              <a href="/contact" style={{ color: GOLD }} onClick={(e) => { e.preventDefault(); go("contact"); }}>book a consult ↗</a>.
             </p>
           </Section>
         )}
@@ -234,8 +234,8 @@ export default function ReportPage({ go }) {
 
             <p style={{ ...s.note, marginTop: 18 }}>{r.disclaimer}</p>
             <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 18 }}>
-              <a href="#/contact" style={s.btn} onClick={(e) => { e.preventDefault(); go("contact"); }}>Get a professional property review →</a>
-              <a href="#/tools" style={s.ghost} onClick={(e) => { e.preventDefault(); go("tools"); }}>Open the planning tools</a>
+              <a href="/contact" style={s.btn} onClick={(e) => { e.preventDefault(); go("contact"); }}>Get a professional property review →</a>
+              <a href="/tools" style={s.ghost} onClick={(e) => { e.preventDefault(); go("tools"); }}>Open the planning tools</a>
             </div>
           </div>
         )}
