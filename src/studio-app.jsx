@@ -39,6 +39,30 @@ const Overlay2DEngine = {
 // Phase 2 hook: register an AIEngine here and switch ENGINE — no Studio changes.
 const ENGINE = Overlay2DEngine;
 
+// Fallback finishes so the Studio is never blank when the catalog API has no
+// data yet. Replaced by live data from /api/studio/catalog when available.
+const DEFAULT_CATALOG = [
+  { name: "Wall Paint", slug: "paint", items: [
+    { id: "p-agreeable", name: "Agreeable Gray", swatch_color: "#d8d2c6", supplier: "Sherwin-Williams" },
+    { id: "p-pure-white", name: "Pure White", swatch_color: "#eef0ea", supplier: "Sherwin-Williams" },
+    { id: "p-naval", name: "Naval", swatch_color: "#2b3a4a", supplier: "Sherwin-Williams" },
+    { id: "p-urbane", name: "Urbane Bronze", swatch_color: "#54504a", supplier: "Sherwin-Williams" },
+  ] },
+  { name: "Tile & Stone", slug: "tile", items: [
+    { id: "t-carrara", name: "Carrara Marble", swatch_color: "#e9e9e6", supplier: "Daltile" },
+    { id: "t-travertine", name: "Travertine", swatch_color: "#cbb79c", supplier: "Daltile" },
+    { id: "t-slate", name: "Slate Charcoal", swatch_color: "#3a3d40", supplier: "Daltile" },
+  ] },
+  { name: "Countertops", slug: "counter", items: [
+    { id: "c-quartz", name: "White Quartz", swatch_color: "#ecebe7", supplier: "KZ Kitchen & Bath" },
+    { id: "c-galaxy", name: "Black Galaxy", swatch_color: "#1c1c1e", supplier: "KZ Kitchen & Bath" },
+  ] },
+  { name: "Flooring", slug: "floor", items: [
+    { id: "f-white-oak", name: "White Oak", swatch_color: "#caa873", supplier: "Floor & Decor" },
+    { id: "f-walnut", name: "Walnut", swatch_color: "#6b4a2f", supplier: "Floor & Decor" },
+  ] },
+];
+
 const clipFor = (poly) => `polygon(${poly.map((p) => `${(p[0] * 100).toFixed(2)}% ${(p[1] * 100).toFixed(2)}%`).join(",")})`;
 
 function LayerView({ layer }) {
@@ -65,9 +89,11 @@ export default function StudioApp() {
   const fileRef = useRef(null);
 
   useEffect(() => {
+    const applyCatalog = (cats) => { setCatalog(cats); setOpenCat(cats[0]?.slug || null); };
     fetch("/api/studio/catalog").then((r) => r.json()).then((d) => {
-      if (d.ok) { setCatalog(d.categories || []); setOpenCat(d.categories?.[0]?.slug || null); }
-    }).catch(() => {});
+      const cats = d && d.ok && Array.isArray(d.categories) && d.categories.length ? d.categories : DEFAULT_CATALOG;
+      applyCatalog(cats);
+    }).catch(() => applyCatalog(DEFAULT_CATALOG));
   }, []);
 
   const onFile = async (e) => {

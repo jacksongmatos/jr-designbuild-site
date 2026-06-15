@@ -239,6 +239,8 @@ function CountUp({ value }) {
     const group = !pre.includes("#"); // no thousands separators for IDs like #1083248
     const fmt = (n) => (group ? n.toLocaleString() : String(n));
     if (!el || typeof IntersectionObserver === "undefined") { setDisp(value); return; }
+    // hold at the zero-state until the counter is actually scrolled into view
+    setDisp(pre + fmt(0) + post);
     let started = false;
     const io = new IntersectionObserver((ents) => {
       ents.forEach((e) => {
@@ -551,7 +553,7 @@ const SERVICES = [
 ];
 
 const PROJECTS = [
-  { t: "Bay Area Full Remodel", tag: "Whole-Home", g: "linear-gradient(135deg,#3a2f1c,#6e4b22)", video: "https://mmekvaqcebyufclmivaf.supabase.co/storage/v1/object/sign/Before%20and%20After/Whole%20House.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8yNGRiOGE5YS1iZWQwLTRlNmQtYTZhOC1hNTY1YTRlOGNmZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJCZWZvcmUgYW5kIEFmdGVyL1dob2xlIEhvdXNlLm1wNCIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODEzMTE3OTUsImV4cCI6MTgxMjg0Nzc5NX0.hboyx2MrWmWPql8LKKSEOpBWLlGDNTNT-x8PNvNvd7Y", matterport: "https://my.matterport.com/show/?m=Y41prh65sFF&play=0&qs=1&tiles=1&vr=0&title=0&help=2&tourcta=2&hlr=2&rf-experience=" },
+  { t: "Bay Area Full Remodel", tag: "Whole-Home", g: "linear-gradient(135deg,#3a2f1c,#6e4b22)", poster: "https://mmekvaqcebyufclmivaf.supabase.co/storage/v1/object/sign/Before%20and%20After/Depois.webp?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8yNGRiOGE5YS1iZWQwLTRlNmQtYTZhOC1hNTY1YTRlOGNmZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJCZWZvcmUgYW5kIEFmdGVyL0RlcG9pcy53ZWJwIiwic2NvcGUiOiJkb3dubG9hZCIsImlhdCI6MTc4MTI1Njk2MCwiZXhwIjozMzU4MDU2OTYwfQ.PKPq98LsFsE-Ly9vGQH4O4yE6nfPXZcyBn7u_nhTvIQ", video: "https://mmekvaqcebyufclmivaf.supabase.co/storage/v1/object/sign/Before%20and%20After/Whole%20House.mp4?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8yNGRiOGE5YS1iZWQwLTRlNmQtYTZhOC1hNTY1YTRlOGNmZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJCZWZvcmUgYW5kIEFmdGVyL1dob2xlIEhvdXNlLm1wNCIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODEzMTE3OTUsImV4cCI6MTgxMjg0Nzc5NX0.hboyx2MrWmWPql8LKKSEOpBWLlGDNTNT-x8PNvNvd7Y", matterport: "https://my.matterport.com/show/?m=Y41prh65sFF&play=0&qs=1&tiles=1&vr=0&title=0&help=2&tourcta=2&hlr=2&rf-experience=" },
   { t: "Backyard ADU", tag: "ADU", g: "linear-gradient(135deg,#2a2438,#3a2f4a)", img: "https://mmekvaqcebyufclmivaf.supabase.co/storage/v1/object/sign/Before%20and%20After/ADUs.jpeg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8yNGRiOGE5YS1iZWQwLTRlNmQtYTZhOC1hNTY1YTRlOGNmZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJCZWZvcmUgYW5kIEFmdGVyL0FEVXMuanBlZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODEzMTE0ODUsImV4cCI6MTgxMjg0NzQ4NX0.7lXNy5_VH_yZwzDjEPcFFqDEeuY20KYXxnXYylaFLNA" },
   { t: "Chef's Kitchen", tag: "Kitchen", g: "linear-gradient(135deg,#4a3320,#8a6a3a)", img: "https://mmekvaqcebyufclmivaf.supabase.co/storage/v1/object/sign/Before%20and%20After/Kitchen.webp?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8yNGRiOGE5YS1iZWQwLTRlNmQtYTZhOC1hNTY1YTRlOGNmZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJCZWZvcmUgYW5kIEFmdGVyL0tpdGNoZW4ud2VicCIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODEzMTEzNzUsImV4cCI6MTgxMjg0NzM3NX0.WIqtTvrSnoDiQ5txVYdRmfkqQ5zGesfzrv23chHBDmE" },
   { t: "Spa Bath", tag: "Bath", g: "linear-gradient(135deg,#1f2a2a,#3a4a44)", img: "https://mmekvaqcebyufclmivaf.supabase.co/storage/v1/object/sign/Before%20and%20After/Bathroom%20Spa.webp?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8yNGRiOGE5YS1iZWQwLTRlNmQtYTZhOC1hNTY1YTRlOGNmZDgiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJCZWZvcmUgYW5kIEFmdGVyL0JhdGhyb29tIFNwYS53ZWJwIiwic2NvcGUiOiJkb3dubG9hZCIsImlhdCI6MTc4MTMxMTQwOCwiZXhwIjoxODEyODQ3NDA4fQ.6nMBkStiiBmIg7Ft4rhUXxFMM__iVO7zoilSonDnwLk" },
@@ -651,7 +653,7 @@ function Home({ go }) {
         <h2 style={S.h2}>What we craft</h2>
         <div style={S.grid}>
           {SERVICES.map((s) => (
-            <div key={s.n} style={S.card} className="card" onClick={() => go("services")}>
+            <a key={s.n} href="#/services" onClick={(e) => { e.preventDefault(); go("services"); }} style={{ ...S.card, textDecoration: "none", display: "block" }} className="card">
               <div style={{ ...S.cardAccent, background: `linear-gradient(90deg, ${GOLD}, ${s.tint})` }} />
               <div style={S.cardSheen} className="sheen" />
               <div style={S.cardTop}>
@@ -661,7 +663,7 @@ function Home({ go }) {
               <h3 style={S.cardTitle}>{s.t}</h3>
               <p style={S.cardDesc}>{s.d}</p>
               <div style={S.cardArrow} className="card-arrow">Explore →</div>
-            </div>
+            </a>
           ))}
         </div>
       </section>
@@ -1024,12 +1026,15 @@ function Portfolio({ go }) {
             tabIndex={p.matterport ? 0 : undefined}
             onKeyDown={p.matterport ? (e) => { if (e.key === "Enter") setTour(p.matterport); } : undefined}
           >
+            {p.poster && (
+              <img src={p.poster} alt={p.t} loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} onError={(e) => { e.currentTarget.style.display = "none"; }} />
+            )}
             {p.video ? (
-              <video src={p.video} autoPlay muted loop playsInline preload="metadata" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+              <video src={p.video} poster={p.poster} autoPlay muted loop playsInline preload="metadata" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} onError={(e) => { e.currentTarget.style.display = "none"; }} />
             ) : p.img ? (
               <img src={p.img} alt={p.t} loading="lazy" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} onError={(e) => { e.currentTarget.style.display = "none"; }} />
             ) : null}
-            {(p.video || p.img) && (
+            {(p.video || p.img || p.poster) && (
               <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(12,10,8,0.88), rgba(12,10,8,0.15) 55%, rgba(12,10,8,0.05))" }} />
             )}
             <div style={S.cardSheen} className="sheen" />
@@ -1789,7 +1794,7 @@ input:focus, textarea:focus { border-color: #c9a25e !important; }
 ul li::before { content: "·"; color: #c9a25e; position: absolute; left: 2px; font-weight: 700; }
 .svc-row { transition: padding-left .5s cubic-bezier(.16,.84,.44,1), background .5s cubic-bezier(.16,.84,.44,1); } .svc-row:hover { padding-left: 20px; }
 .cta-prim { transition: transform .4s cubic-bezier(.16,.84,.44,1), box-shadow .4s cubic-bezier(.16,.84,.44,1), background .4s; } .cta-prim:hover { transform: translateY(-2px); box-shadow: 0 16px 40px -8px #c9a25e66; }
-.cta-ghost { transition: background .4s cubic-bezier(.16,.84,.44,1), color .4s cubic-bezier(.16,.84,.44,1), border-color .4s cubic-bezier(.16,.84,.44,1); } .cta-ghost:hover { background: #ece6db; color: #0c0a08 !important; border-color: #ece6db; }
+.cta-ghost { transition: background .4s cubic-bezier(.16,.84,.44,1), color .4s cubic-bezier(.16,.84,.44,1), border-color .4s cubic-bezier(.16,.84,.44,1); } .cta-ghost:hover { background: #ece6db !important; color: #0c0a08 !important; border-color: #ece6db !important; }
 .logo:hover { opacity: .85; }
 @keyframes cuePulse { 0%,100% { opacity: .5; transform: translateX(0); } 50% { opacity: 1; transform: translateX(6px); } }
 .scroll-cue { animation: cuePulse 2.6s ease-in-out infinite; }
