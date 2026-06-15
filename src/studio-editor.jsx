@@ -2,7 +2,7 @@ import React, { useMemo, useRef, useState } from "react";
 import { SW, CABINETS, COUNTERS, BACKSPLASH, FLOORS, LIBS, fillOf } from "./studio";
 
 /*
- * Design Studio — region marker (authoring tool, hidden route #/studio-editor).
+ * Design Studio — region marker (authoring tool, hidden route /studio-editor).
  *
  * Load a photo, pick a surface, click its corners. Walls/ceiling/cabinets/
  * counter/backsplash are polygons (click as many corners as you like, in order

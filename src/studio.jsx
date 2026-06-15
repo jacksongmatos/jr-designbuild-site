@@ -16,7 +16,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
  *                     floor warps a texture onto a 4-corner quad in perspective.
  *
  * You don't hand-write the polygons — use the in-browser marker at
- * #/studio-editor: load a photo, click the corners of each surface, copy the
+ * /studio-editor: load a photo, click the corners of each surface, copy the
  * generated room config into ROOMS below, drop the photo in
  * public/studio/<id>/. See docs/DESIGN_STUDIO.md.
  */
@@ -93,7 +93,7 @@ export const LIBS = { SW, CABINETS, COUNTERS, BACKSPLASH, FLOORS };
 
 /* ----------------------------------------------------------------------------
  * Rooms. The vector kitchen ships by default. Photo rooms (added via the
- * #/studio-editor tool) follow the same shape with kind:"photo", a `base`
+ * /studio-editor tool) follow the same shape with kind:"photo", a `base`
  * image, and per-region `poly`/`quad` coordinates in % of the image.
  * ------------------------------------------------------------------------- */
 export const ROOMS = [
@@ -116,7 +116,7 @@ export const ROOMS = [
   /*  ── Gray kitchen (pre-marked from your photo) ──────────────────────────
    *  To activate: save the photo as public/studio/kitchen-gray/base.jpg and
    *  remove the comment markers around this object. Coords are eyeballed from
-   *  the photo — nudge them in #/studio-editor if any region is slightly off.
+   *  the photo — nudge them in /studio-editor if any region is slightly off.
   {
     id: "kitchen-gray",
     name: "Gray Kitchen",

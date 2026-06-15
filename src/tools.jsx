@@ -761,7 +761,7 @@ export default function ToolsPage({ go }) {
 
         <div style={{ textAlign: "center", marginTop: 44 }}>
           <a
-            href="#/contact"
+            href="/contact"
             onClick={(e) => {
               e.preventDefault();
               go("contact");

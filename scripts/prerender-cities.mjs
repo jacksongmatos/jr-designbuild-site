@@ -18,6 +18,7 @@ import { join } from "node:path";
 const DIST = "dist";
 const ORIGIN = "https://jrdesignbuilds.com";
 const YEAR = new Date().getFullYear();
+const LASTMOD = new Date().toISOString().slice(0, 10); // YYYY-MM-DD, build date
 
 // Cities with REAL project counts (from the JR ERP / QuickBooks, 2026-06-11).
 // permits = real permits filed where known.
@@ -118,6 +119,9 @@ const HEAD = (title, desc, canonical, jsonld) => `<!doctype html>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="theme-color" content="#0c0a08" />
+<!-- Google Analytics 4 — async. Replace G-XXXXXXXXXX with the real Measurement ID (same as index.html). -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');document.addEventListener('click',function(e){var el=e.target.closest&&e.target.closest('[data-analytics]');if(!el)return;gtag('event',el.getAttribute('data-analytics'),{event_category:'engagement',event_label:(el.textContent||'').trim().slice(0,80)});});</script>
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(desc)}" />
 <link rel="canonical" href="${canonical}" />
@@ -192,8 +196,8 @@ function cityPage(c) {
 <h1>Design-build in ${esc(c.name)}.</h1>
 <p>From ADUs and additions to whole-home remodels — designed and built under one roof, with transparent schedules and Matterport precision. We restore trust in construction across ${esc(c.name)} and the Bay Area.</p>
 ${statBand(c)}
-<a class="cta" href="/#/report">Analyze my ${esc(c.name)} property →</a>
-<a class="ghost" href="/#/contact">Book a free consultation</a>
+<a class="cta" href="/report" data-analytics="analyze_property">Analyze my ${esc(c.name)} property →</a>
+<a class="ghost" href="/contact" data-analytics="book_consultation">Book a free consultation</a>
 <h2>What we build in ${esc(c.name)}</h2>
 ${serviceChips(slug)}
 <h2>${esc(c.name)} FAQ</h2>
@@ -229,8 +233,8 @@ function servicePage(c, sv) {
 <h1>${esc(sv.name)} in ${esc(c.name)}.</h1>
 <p>${esc(sv.blurb)} One accountable design-build team — design, engineering, permits and construction under one roof in ${esc(c.name)}.</p>
 ${statBand(c)}
-<a class="cta" href="/#/report">See what your ${esc(c.name)} property can do →</a>
-<a class="ghost" href="/#/contact">Book a free consultation</a>
+<a class="cta" href="/report" data-analytics="analyze_property">See what your ${esc(c.name)} property can do →</a>
+<a class="ghost" href="/contact" data-analytics="book_consultation">Book a free consultation</a>
 <h2>Other services in ${esc(c.name)}</h2>
 <div class="chips">${others.map((s) => `<a href="/cities/${slug}/${s.slug}/">${esc(s.name)}</a>`).join("")}</div>
 <h2>${esc(sv.name)} in ${esc(c.name)} — FAQ</h2>
@@ -255,16 +259,25 @@ function hubPage() {
 <div class="chips">${real.map((c) => `<a href="/cities/${slugify(c.name)}/">${esc(c.name)} (${c.projects}+)</a>`).join("")}</div>
 <h2>Also serving</h2>
 <div class="chips">${more.map((c) => `<a href="/cities/${slugify(c.name)}/">${esc(c.name)}</a>`).join("")}</div>
-<a class="cta" style="margin-top:30px" href="/#/report">Analyze my property →</a>
+<a class="cta" style="margin-top:30px" href="/report" data-analytics="analyze_property">Analyze my property →</a>
 ` +
     FOOT()
   );
 }
 
 function sitemap(urls) {
+  // Each entry may be a plain string or { loc, changefreq, priority }.
+  const norm = (u) =>
+    typeof u === "string" ? { loc: u, changefreq: "weekly", priority: "0.7" } : u;
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls.map((u) => `  <url><loc>${u}</loc><changefreq>weekly</changefreq></url>`).join("\n")}
+${urls
+  .map(norm)
+  .map(
+    (u) =>
+      `  <url><loc>${u.loc}</loc><lastmod>${LASTMOD}</lastmod><changefreq>${u.changefreq || "weekly"}</changefreq><priority>${u.priority || "0.7"}</priority></url>`
+  )
+  .join("\n")}
 </urlset>
 `;
 }
@@ -274,16 +287,17 @@ function main() {
     console.warn("[prerender] dist/ not found — skipping (run after vite build).");
     return;
   }
+  // Real, crawlable URLs (no hash fragments). Money pages get higher priority.
   const urls = [
-    `${ORIGIN}/`,
-    `${ORIGIN}/#/services`,
-    `${ORIGIN}/#/portfolio`,
-    `${ORIGIN}/#/contact`,
-    `${ORIGIN}/#/studio`,
-    `${ORIGIN}/#/tools`,
-    `${ORIGIN}/#/dna`,
-    `${ORIGIN}/#/group`,
-    `${ORIGIN}/cities`,
+    { loc: `${ORIGIN}/`, changefreq: "weekly", priority: "1.0" },
+    { loc: `${ORIGIN}/services`, changefreq: "monthly", priority: "0.9" },
+    { loc: `${ORIGIN}/portfolio`, changefreq: "monthly", priority: "0.8" },
+    { loc: `${ORIGIN}/contact`, changefreq: "monthly", priority: "0.9" },
+    { loc: `${ORIGIN}/studio`, changefreq: "monthly", priority: "0.7" },
+    { loc: `${ORIGIN}/tools`, changefreq: "monthly", priority: "0.7" },
+    { loc: `${ORIGIN}/dna`, changefreq: "monthly", priority: "0.6" },
+    { loc: `${ORIGIN}/group`, changefreq: "monthly", priority: "0.6" },
+    { loc: `${ORIGIN}/cities`, changefreq: "weekly", priority: "0.8" },
   ];
   mkdirSync(join(DIST, "cities"), { recursive: true });
   writeFileSync(join(DIST, "cities", "index.html"), hubPage());
@@ -295,7 +309,7 @@ function main() {
     const dir = join(DIST, "cities", slug);
     mkdirSync(dir, { recursive: true });
     writeFileSync(join(dir, "index.html"), cityPage(c));
-    urls.push(`${ORIGIN}/cities/${slug}`);
+    urls.push({ loc: `${ORIGIN}/cities/${slug}`, changefreq: "weekly", priority: "0.7" });
     cityCount++;
     // city x service long-tail only for cities with a meaningful track record
     if (c.projects >= SERVICE_MIN) {
@@ -303,7 +317,7 @@ function main() {
         const sdir = join(dir, sv.slug);
         mkdirSync(sdir, { recursive: true });
         writeFileSync(join(sdir, "index.html"), servicePage(c, sv));
-        urls.push(`${ORIGIN}/cities/${slug}/${sv.slug}`);
+        urls.push({ loc: `${ORIGIN}/cities/${slug}/${sv.slug}`, changefreq: "monthly", priority: "0.6" });
         svcCount++;
       }
     }
