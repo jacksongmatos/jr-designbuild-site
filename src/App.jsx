@@ -680,7 +680,7 @@ function Home({ go }) {
           <a href={LINKS.yelp} target="_blank" rel="noreferrer"
             style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "9px 18px", border: `1px solid ${GOLD}`, borderRadius: 30, color: "#f3e3be", textDecoration: "none", fontSize: 13, letterSpacing: 1 }}>
             <span style={{ color: GOLD, letterSpacing: 2 }}>★★★★★</span>
-            <span><strong style={{ color: "#fff", fontWeight: 700 }}>5.0</strong> on Yelp ↗</span>
+            <span><strong style={{ color: "#fff", fontWeight: 700 }}>4.9</strong> · 47 reviews on Yelp ↗</span>
           </a>
         </div>
         <div style={S.testGrid}>
