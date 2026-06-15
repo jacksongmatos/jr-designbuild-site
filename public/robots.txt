@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.jrdesignbuild.com/sitemap.xml
+Sitemap: https://jrdesignbuilds.com/sitemap.xml

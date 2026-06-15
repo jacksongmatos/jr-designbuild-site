@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Fallback sitemap. The build (scripts/prerender-cities.mjs) overwrites this
+     in dist/ with the full list including all city pages. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://www.jrdesignbuild.com/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
+  <url><loc>https://jrdesignbuilds.com/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://jrdesignbuilds.com/#/services</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://jrdesignbuilds.com/#/portfolio</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://jrdesignbuilds.com/#/contact</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://jrdesignbuilds.com/#/studio</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://jrdesignbuilds.com/#/tools</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://jrdesignbuilds.com/#/dna</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://jrdesignbuilds.com/#/group</loc><changefreq>monthly</changefreq></url>
+  <url><loc>https://jrdesignbuilds.com/cities</loc><changefreq>weekly</changefreq></url>
 </urlset>

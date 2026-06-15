@@ -16,7 +16,7 @@ import { mkdirSync, writeFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 
 const DIST = "dist";
-const ORIGIN = "https://www.jrdesignbuild.com";
+const ORIGIN = "https://jrdesignbuilds.com";
 const YEAR = new Date().getFullYear();
 
 // Cities with REAL project counts (from the JR ERP / QuickBooks, 2026-06-11).
@@ -274,7 +274,17 @@ function main() {
     console.warn("[prerender] dist/ not found — skipping (run after vite build).");
     return;
   }
-  const urls = [`${ORIGIN}/`, `${ORIGIN}/cities`];
+  const urls = [
+    `${ORIGIN}/`,
+    `${ORIGIN}/#/services`,
+    `${ORIGIN}/#/portfolio`,
+    `${ORIGIN}/#/contact`,
+    `${ORIGIN}/#/studio`,
+    `${ORIGIN}/#/tools`,
+    `${ORIGIN}/#/dna`,
+    `${ORIGIN}/#/group`,
+    `${ORIGIN}/cities`,
+  ];
   mkdirSync(join(DIST, "cities"), { recursive: true });
   writeFileSync(join(DIST, "cities", "index.html"), hubPage());
 
