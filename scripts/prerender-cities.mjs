@@ -119,9 +119,9 @@ const HEAD = (title, desc, canonical, jsonld) => `<!doctype html>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="theme-color" content="#0c0a08" />
-<!-- Google Analytics 4 — async. Replace G-XXXXXXXXXX with the real Measurement ID (same as index.html). -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');document.addEventListener('click',function(e){var el=e.target.closest&&e.target.closest('[data-analytics]');if(!el)return;gtag('event',el.getAttribute('data-analytics'),{event_category:'engagement',event_label:(el.textContent||'').trim().slice(0,80)});});</script>
+<!-- Google Analytics 4 — async. Measurement ID G-01P3Z2Y141 (same shared property as index.html). -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-01P3Z2Y141"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-01P3Z2Y141');document.addEventListener('click',function(e){var el=e.target.closest&&e.target.closest('[data-analytics]');if(!el)return;gtag('event',el.getAttribute('data-analytics'),{event_category:'engagement',event_label:(el.textContent||'').trim().slice(0,80)});});</script>
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(desc)}" />
 <link rel="canonical" href="${canonical}" />
