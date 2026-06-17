@@ -156,7 +156,7 @@ const JR_ACADEMY = [
   { mIdx: 5, m: "Jun", title: "GOAT Soccer Cup", desc: "Private press event for the youth soccer championship — 100 kids' teams." },
   { mIdx: 6, m: "Jul", title: "Multifamily Summit", desc: "Multifamily investment event with Zencoast Capital." },
   { mIdx: 7, m: "Aug", title: "Technology & Robotics", desc: "Tech and robotics showcase with vendors and Silicon Impact." },
-  { mIdx: 8, m: "Sep", title: "To be announced", desc: "", tba: true },
+  { mIdx: 8, m: "Sep", title: "Business Wealth & Investments", desc: "Wealth management and investments with Merrill Lynch specialists — the premier American wealth management and investment division of Bank of America." },
   { mIdx: 9, m: "Oct", title: "To be announced", desc: "", tba: true },
   { mIdx: 10, m: "Nov", title: "To be announced", desc: "", tba: true },
   { mIdx: 11, m: "Dec", title: "To be announced", desc: "", tba: true },
