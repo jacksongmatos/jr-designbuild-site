@@ -8,6 +8,7 @@ import StudioEditor from "./studio-editor";
 import SuppliersPortal from "./suppliers";
 import AdminStudio from "./admin-studio";
 import TrackRecordSection from "./TrackRecordSection";
+import PlannerModal from "./PlannerModal";
 import { navigate, routeFromPath } from "./nav";
 
 // ─────────────────────────────────────────────────────────────
@@ -619,6 +620,10 @@ function Home({ go }) {
             <a onClick={(e) => { e.preventDefault(); go("report"); }} href="/report" data-analytics="analyze_property" style={S.ctaPrimary} className="cta-prim">Analyze my property →</a>
             <a onClick={(e) => { e.preventDefault(); go("contact"); }} href="/contact" data-analytics="book_consultation" style={S.ctaGhost} className="cta-ghost">Start your build</a>
             <a onClick={(e) => { e.preventDefault(); go("portfolio"); }} href="/portfolio" style={S.ctaGhost} className="cta-ghost">See the work</a>
+          </div>
+          {/* Free 3D floor-planner MVP — opens a fullscreen modal (PlannerModal). */}
+          <div style={{ ...S.ctaRow, marginTop: 16 }}>
+            <PlannerModal go={go} logo={LOGO} buttonStyle={{ boxShadow: "0 14px 34px -12px #000000aa" }} />
           </div>
         </div>
         <div style={{ ...S.scrollCue, opacity: fade }} className="scroll-cue"><span style={S.scrollLine} /><span style={S.scrollWord}>Scroll</span></div>
