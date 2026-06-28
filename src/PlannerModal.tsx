@@ -1,43 +1,47 @@
-import React, { useCallback, useEffect, useId, useRef, useState } from "react";
+import React, {
+  Component,
+  Suspense,
+  lazy,
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
 
 /*
- * PlannerModal — free, white-label 3D floor-planner MVP for JR Design Build.
+ * PlannerModal — free 3D floor-planner for JR Design Build.
  *
- * Renders a "Design Your Space" call-to-action that opens a fullscreen modal
- * containing a self-hosted planner inside an <iframe>. The planner files live
- * under /public/planner/ (see public/planner/README.md). Keeping it iframe-based
- * means the underlying planner (Sweet Home 3D JS today) can be swapped later
- * without touching this component — just drop new files in /public/planner/ or
- * point PLANNER_URL elsewhere.
+ * Embeds the Pascal Editor (@pascal-app/editor) as a NATIVE React component —
+ * no iframe — inside a fullscreen modal opened by the "Design Your Space" CTA.
  *
- * No paid APIs, no Planner 5D / HomeByMe dependency, no external trackers.
+ * The editor is code-split (lazy) so its heavy three.js/WebGPU bundle only
+ * loads when the planner is opened. If it fails to load (offline, chunk error,
+ * runtime crash), an ErrorBoundary shows a graceful fallback.
+ *
+ * To swap the planner later, change what src/pascal/PascalEditor.tsx renders —
+ * this modal shell (branding, a11y, Request Estimate) stays the same.
  */
 
-// ─────────────────────────────────────────────────────────────────────────────
-// CHANGE THE PLANNER HERE.
-// To swap the planner later, edit PLANNER_URL (e.g. a different self-hosted
-// build, or — if you ever choose to — an external embeddable planner URL).
-// As long as the target renders inside an iframe, nothing else needs to change.
-const PLANNER_URL = "/planner/index.html";
+// Lazy-loaded so three.js/r3f/drei stay out of the initial page bundle.
+const PascalEditor = lazy(() => import("./pascal/PascalEditor"));
 
 // Where "Request Estimate" sends people. The ?source=planner tag lets the
 // contact form / lead pipeline attribute the lead to the 3D planner.
 const CONTACT_URL = "/contact?source=planner";
-// ─────────────────────────────────────────────────────────────────────────────
 
 const GOLD = "#c9a25e";
 const INK = "#0c0a08";
 const DISPLAY = "'Bodoni Moda', Georgia, serif";
 
 type PlannerModalProps = {
-  /** Optional SPA navigation handler (e.g. the site's `go`). When provided,
-   *  "Request Estimate" navigates client-side to the contact route and records
-   *  the planner as the lead source. Falls back to a normal redirect otherwise. */
+  /** Optional SPA navigation handler (the site's `go`). When provided,
+   *  "Request Estimate" navigates client-side and records the lead source.
+   *  Falls back to a normal redirect otherwise. */
   go?: (route: string) => void;
-  /** Logo image src shown in the modal header. Falls back to a "JR" wordmark. */
+  /** Logo image src for the modal header. Falls back to a "JR" wordmark. */
   logo?: string;
-  /** Override the planner iframe URL (defaults to /planner/index.html). */
-  plannerUrl?: string;
   /** Override the contact destination (defaults to /contact?source=planner). */
   contactUrl?: string;
   /** Button label / subtext (kept as props so copy is easy to tweak). */
@@ -51,7 +55,6 @@ type PlannerModalProps = {
 export default function PlannerModal({
   go,
   logo,
-  plannerUrl = PLANNER_URL,
   contactUrl = CONTACT_URL,
   label = "Design Your Space",
   subtext = "Sketch your idea and request an estimate",
@@ -59,8 +62,6 @@ export default function PlannerModal({
   buttonClassName,
 }: PlannerModalProps) {
   const [open, setOpen] = useState(false);
-  // planner availability: "checking" until we confirm /planner/index.html exists
-  const [status, setStatus] = useState<"checking" | "ready" | "missing">("checking");
 
   const closeBtnRef = useRef<HTMLButtonElement | null>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
@@ -69,48 +70,30 @@ export default function PlannerModal({
   const openModal = useCallback(() => setOpen(true), []);
   const closeModal = useCallback(() => setOpen(false), []);
 
-  // When the modal opens: lock background scroll, wire ESC, move focus in, and
-  // probe whether the planner is actually present (else show the fallback).
+  // When open: lock background scroll, wire ESC, move focus into the modal,
+  // and restore focus to the trigger on close.
   useEffect(() => {
     if (!open) return;
 
-    // No page scroll behind the modal.
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
-    // ESC closes.
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") closeModal();
     };
     document.addEventListener("keydown", onKey);
 
-    // Focus the close button so keyboard/screen-reader users land inside.
     closeBtnRef.current?.focus();
 
-    // Probe the planner. If /planner/index.html is missing, fall back to a
-    // friendly message instead of a broken iframe.
-    let active = true;
-    setStatus("checking");
-    fetch(plannerUrl, { method: "HEAD" })
-      .then((r) => {
-        if (active) setStatus(r.ok ? "ready" : "missing");
-      })
-      .catch(() => {
-        if (active) setStatus("missing");
-      });
-
     return () => {
-      active = false;
       document.body.style.overflow = prevOverflow;
       document.removeEventListener("keydown", onKey);
-      // Restore focus to the trigger when the modal closes.
       triggerRef.current?.focus();
     };
-  }, [open, plannerUrl, closeModal]);
+  }, [open, closeModal]);
 
   const requestEstimate = useCallback(() => {
-    // Tag the lead source so the contact form / pipeline knows it came from the
-    // planner (mirrors the existing sessionStorage handoff used by the Studio).
+    // Tag the lead source (mirrors the Studio's sessionStorage handoff).
     try {
       sessionStorage.setItem("jr_lead_source", "planner");
     } catch {
@@ -121,7 +104,7 @@ export default function PlannerModal({
       go("contact");
       return;
     }
-    // Fallback: hard redirect honoring the literal /contact?source=planner URL.
+    // Fallback: honor the literal /contact?source=planner URL.
     window.location.href = contactUrl;
   }, [go, contactUrl, closeModal]);
 
@@ -151,9 +134,7 @@ export default function PlannerModal({
           ...buttonStyle,
         }}
       >
-        <span style={{ fontSize: 14, fontWeight: 700, letterSpacing: 0.4 }}>
-          {label} →
-        </span>
+        <span style={{ fontSize: 14, fontWeight: 700, letterSpacing: 0.4 }}>{label} →</span>
         <span style={{ fontSize: 11, fontWeight: 500, opacity: 0.78 }}>{subtext}</span>
       </button>
 
@@ -163,13 +144,13 @@ export default function PlannerModal({
           role="dialog"
           aria-modal="true"
           aria-labelledby={titleId}
-          // Click on the dark backdrop (outside the panel) closes the modal.
           onMouseDown={(e) => {
+            // Click on the dark backdrop (outside the panel) closes the modal.
             if (e.target === e.currentTarget) closeModal();
           }}
         >
           <div style={st.panel}>
-            {/* JR branding bar above the iframe. */}
+            {/* JR branding bar above the planner. */}
             <header style={st.header}>
               <div style={st.brand}>
                 {logo ? (
@@ -207,57 +188,70 @@ export default function PlannerModal({
               </div>
             </header>
 
-            {/* Planner surface. */}
+            {/* Planner surface — native Pascal Editor, lazy-loaded + guarded. */}
             <div style={st.stage}>
-              {status === "ready" && (
-                <iframe
-                  // To change the planner later, edit PLANNER_URL above.
-                  src={plannerUrl}
-                  title="JR Design Build 3D Floor Planner"
-                  style={st.iframe}
-                  // Sandbox keeps the embedded planner isolated while still
-                  // allowing it to run scripts and use same-origin storage.
-                  sandbox="allow-scripts allow-same-origin allow-forms allow-pointer-lock allow-downloads"
-                  allow="fullscreen"
-                  loading="lazy"
-                />
-              )}
-
-              {status === "checking" && (
-                <div style={st.message}>
-                  <div style={st.spinner} aria-hidden="true" />
-                  <p style={st.messageText}>Loading the planner…</p>
-                </div>
-              )}
-
-              {status === "missing" && (
-                <div style={st.message} role="status">
-                  <div style={st.fallbackMark} aria-hidden="true">
-                    ▦
-                  </div>
-                  <p style={st.fallbackHeading}>
-                    Planner is being prepared. Please request a consultation.
-                  </p>
-                  <button
-                    type="button"
-                    onClick={requestEstimate}
-                    style={{ ...st.estimateBtn, marginTop: 6 }}
-                    className="cta-prim"
-                  >
-                    Request Estimate →
-                  </button>
-                </div>
-              )}
+              <PlannerErrorBoundary onRequestEstimate={requestEstimate}>
+                <Suspense fallback={<LoadingState />}>
+                  <PascalEditor />
+                </Suspense>
+              </PlannerErrorBoundary>
             </div>
           </div>
         </div>
       )}
 
-      {/* Component-scoped CSS (spinner + responsive header). Avoids external
-          stylesheets and keeps everything tracker-free. */}
       <style>{CSS}</style>
     </>
   );
+}
+
+function LoadingState() {
+  return (
+    <div style={st.message}>
+      <div style={st.spinner} aria-hidden="true" />
+      <p style={st.messageText}>Loading the 3D planner…</p>
+    </div>
+  );
+}
+
+function FallbackState({ onRequestEstimate }: { onRequestEstimate: () => void }) {
+  return (
+    <div style={st.message} role="status">
+      <div style={st.fallbackMark} aria-hidden="true">
+        ▦
+      </div>
+      <p style={st.fallbackHeading}>
+        Planner is being prepared. Please request a consultation.
+      </p>
+      <button
+        type="button"
+        onClick={onRequestEstimate}
+        style={{ ...st.estimateBtn, marginTop: 6 }}
+        className="cta-prim"
+      >
+        Request Estimate →
+      </button>
+    </div>
+  );
+}
+
+// Catches lazy-load/runtime failures in the editor and shows the fallback.
+class PlannerErrorBoundary extends Component<
+  { onRequestEstimate: () => void; children: ReactNode },
+  { hasError: boolean }
+> {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <FallbackState onRequestEstimate={this.props.onRequestEstimate} />;
+    }
+    return this.props.children;
+  }
 }
 
 const st: Record<string, React.CSSProperties> = {
@@ -276,7 +270,7 @@ const st: Record<string, React.CSSProperties> = {
     position: "relative",
     width: "100%",
     height: "100%",
-    maxWidth: 1400,
+    maxWidth: 1500,
     maxHeight: "100%",
     display: "flex",
     flexDirection: "column",
@@ -295,6 +289,7 @@ const st: Record<string, React.CSSProperties> = {
     padding: "12px 16px",
     borderBottom: `1px solid ${GOLD}26`,
     background: "linear-gradient(180deg,#12100c,#0c0a08)",
+    flexShrink: 0,
   },
   brand: { display: "flex", alignItems: "center", gap: 12, minWidth: 0 },
   logoImg: { height: 36, width: "auto", display: "block" },
@@ -344,7 +339,6 @@ const st: Record<string, React.CSSProperties> = {
     cursor: "pointer",
   },
   stage: { position: "relative", flex: 1, minHeight: 0, background: "#000" },
-  iframe: { width: "100%", height: "100%", border: "none", display: "block" },
   message: {
     position: "absolute",
     inset: 0,
@@ -378,7 +372,7 @@ const st: Record<string, React.CSSProperties> = {
 const CSS = `
 @keyframes jr-planner-spin { to { transform: rotate(360deg); } }
 
-/* Mobile-friendly: stack the brand and actions, let the estimate button grow. */
+/* Mobile-friendly: stack the brand and actions. */
 @media (max-width: 560px) {
   [role="dialog"] header { flex-direction: column; align-items: stretch; }
 }
