@@ -17,6 +17,11 @@
  */
 import React from "react";
 
+// Bump when the self-hosted icons in public/icons/ change. Appended as ?v= to
+// "/icons/*" requests so browsers/edges that cached an old response (including
+// the pre-self-hosting 404s) fetch the current file instead of serving stale.
+const ICONS_VERSION = "1";
+
 type StaticImport = { src: string; height?: number; width?: number };
 
 type NextImageProps = {
@@ -44,8 +49,12 @@ type NextImageProps = {
 };
 
 function resolveSrc(src: string | StaticImport): string {
-  // Pass paths through unchanged; "/icons/*" is handled by public/_redirects.
-  return typeof src === "string" ? src : src?.src || "";
+  const raw = typeof src === "string" ? src : src?.src || "";
+  // Cache-bust the self-hosted icons; everything else passes through unchanged.
+  if (raw.startsWith("/icons/")) {
+    return `${raw}${raw.includes("?") ? "&" : "?"}v=${ICONS_VERSION}`;
+  }
+  return raw;
 }
 
 const NextImage = React.forwardRef<HTMLImageElement, NextImageProps>(function NextImage(

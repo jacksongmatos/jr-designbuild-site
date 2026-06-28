@@ -1,0 +1,8 @@
+# Cloudflare Pages headers.
+#
+# The Pascal editor icons under /icons/* were served as 404s before they were
+# self-hosted, and some browsers/edge nodes cached that. Force revalidation so
+# clients always pick up the real files (and any future icon changes) instead of
+# serving a stale cached response.
+/icons/*
+  Cache-Control: no-cache, must-revalidate
