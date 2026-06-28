@@ -1167,6 +1167,12 @@ function ContactForm() {
         msg = "My Design Studio selection:\n" + Object.entries(look).map(([k, v]) => `• ${k}: ${v}`).join("\n") + "\n\n";
         sessionStorage.removeItem("jr_studio_look");
       }
+      // Floor-planner sketch summary (set by PlannerModal's Request Estimate).
+      const sketch = sessionStorage.getItem("jr_planner_summary");
+      if (sketch) {
+        msg += sketch + "\n\n";
+        sessionStorage.removeItem("jr_planner_summary");
+      }
     } catch {}
     return { name: "", email: "", phone: "", address: "", msg };
   });
@@ -1554,9 +1560,9 @@ export default function App() {
             <React.Fragment key={r.id}>
               <a href={`/${r.id}`} onClick={(e) => { e.preventDefault(); go(r.id); }}
                 style={{ ...S.navLink, color: route === r.id ? GOLD : "#ece6db" }} className="navlink">{r.label}</a>
-              {/* 3D Planner — sits right after Studio and opens the PlannerModal. */}
+              {/* Floor Planner — sits right after Studio and opens the PlannerModal. */}
               {r.id === "studio" && (
-                <PlannerModal go={go} logo={LOGO} label="3D Planner" subtext=""
+                <PlannerModal go={go} logo={LOGO} label="Floor Planner" subtext=""
                   buttonClassName="navlink"
                   buttonStyle={{ ...S.navLink, background: "transparent", color: GOLD, border: `1px solid ${GOLD}66`, borderRadius: 30, padding: "8px 16px", flexDirection: "row" }} />
               )}
@@ -1579,9 +1585,9 @@ export default function App() {
                   style={{ ...S.mobileLink, color: route === r.id ? GOLD : "#fff", animationDelay: `${0.05 + i * 0.06}s` }}>
                   <span style={S.mobileNum}>{String(i + 1).padStart(2, "0")}</span>{r.label}
                 </a>
-                {/* 3D Planner — opens the PlannerModal from the mobile menu, next to Studio. */}
+                {/* Floor Planner — opens the PlannerModal from the mobile menu, next to Studio. */}
                 {r.id === "studio" && (
-                  <PlannerModal go={go} logo={LOGO} label="▦  3D Planner" subtext=""
+                  <PlannerModal go={go} logo={LOGO} label="▦  Floor Planner" subtext=""
                     onOpen={() => setMenu(false)}
                     buttonClassName="mobile-link"
                     buttonStyle={{ ...S.mobileLink, color: GOLD, opacity: 1, background: "transparent", border: "none", flexDirection: "row", width: "100%", textAlign: "left" }} />

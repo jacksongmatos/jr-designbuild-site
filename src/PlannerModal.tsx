@@ -1,35 +1,27 @@
 import React, {
-  Component,
-  Suspense,
-  lazy,
   useCallback,
   useEffect,
   useId,
   useRef,
   useState,
-  type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
+import Planner2D, { type PlannerHandle } from "./Planner2D";
 
 /*
- * PlannerModal — free 3D floor-planner for JR Design Build.
+ * PlannerModal — free, white-label 2D floor-planner for JR Design Build.
  *
- * Embeds the Pascal Editor (@pascal-app/editor) as a NATIVE React component —
- * no iframe — inside a fullscreen modal opened by the "Design Your Space" CTA.
+ * Opens a fullscreen modal (via a body portal) from the "Design Your Space" CTA
+ * and renders our own Planner2D — a self-contained SVG sketch tool, no iframe,
+ * no external dependencies. On "Request Estimate" the current sketch summary is
+ * attached to the lead handoff and the user is sent to /contact?source=planner.
  *
- * The editor is code-split (lazy) so its heavy three.js/WebGPU bundle only
- * loads when the planner is opened. If it fails to load (offline, chunk error,
- * runtime crash), an ErrorBoundary shows a graceful fallback.
- *
- * To swap the planner later, change what src/pascal/PascalEditor.tsx renders —
- * this modal shell (branding, a11y, Request Estimate) stays the same.
+ * To swap the planner later, change what's rendered in the stage below — the
+ * modal shell (branding, a11y, Request Estimate) stays the same.
  */
 
-// Lazy-loaded so three.js/r3f/drei stay out of the initial page bundle.
-const PascalEditor = lazy(() => import("./pascal/PascalEditor"));
-
 // Where "Request Estimate" sends people. The ?source=planner tag lets the
-// contact form / lead pipeline attribute the lead to the 3D planner.
+// contact form / lead pipeline attribute the lead to the planner.
 const CONTACT_URL = "/contact?source=planner";
 
 const GOLD = "#c9a25e";
@@ -69,6 +61,7 @@ export default function PlannerModal({
 
   const closeBtnRef = useRef<HTMLButtonElement | null>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
+  const plannerRef = useRef<PlannerHandle>(null);
   const titleId = useId();
 
   const openModal = useCallback(() => {
@@ -100,9 +93,13 @@ export default function PlannerModal({
   }, [open, closeModal]);
 
   const requestEstimate = useCallback(() => {
-    // Tag the lead source (mirrors the Studio's sessionStorage handoff).
+    // Tag the lead source + attach the sketch summary (mirrors the Studio's
+    // sessionStorage handoff; the contact form reads jr_planner_summary).
     try {
       sessionStorage.setItem("jr_lead_source", "planner");
+      const summary = plannerRef.current?.getSummary();
+      if (summary) sessionStorage.setItem("jr_planner_summary", summary);
+      else sessionStorage.removeItem("jr_planner_summary");
     } catch {
       /* ignore storage failures (private mode, etc.) */
     }
@@ -187,7 +184,7 @@ export default function PlannerModal({
                   <span id={titleId} style={st.brandTitle}>
                     Design Your Space
                   </span>
-                  <span style={st.brandSub}>3D Floor Planner · JR Design Build</span>
+                  <span style={st.brandSub}>2D Floor Planner · JR Design Build</span>
                 </div>
               </div>
 
@@ -213,13 +210,9 @@ export default function PlannerModal({
               </div>
             </header>
 
-            {/* Planner surface — native Pascal Editor, lazy-loaded + guarded. */}
+            {/* Planner surface — our self-contained 2D sketch tool. */}
             <div style={st.stage}>
-              <PlannerErrorBoundary onRequestEstimate={requestEstimate}>
-                <Suspense fallback={<LoadingState />}>
-                  <PascalEditor />
-                </Suspense>
-              </PlannerErrorBoundary>
+              <Planner2D ref={plannerRef} />
             </div>
           </div>
           </div>,
@@ -229,55 +222,6 @@ export default function PlannerModal({
       <style>{CSS}</style>
     </>
   );
-}
-
-function LoadingState() {
-  return (
-    <div style={st.message}>
-      <div style={st.spinner} aria-hidden="true" />
-      <p style={st.messageText}>Loading the 3D planner…</p>
-    </div>
-  );
-}
-
-function FallbackState({ onRequestEstimate }: { onRequestEstimate: () => void }) {
-  return (
-    <div style={st.message} role="status">
-      <div style={st.fallbackMark} aria-hidden="true">
-        ▦
-      </div>
-      <p style={st.fallbackHeading}>
-        Planner is being prepared. Please request a consultation.
-      </p>
-      <button
-        type="button"
-        onClick={onRequestEstimate}
-        style={{ ...st.estimateBtn, marginTop: 6 }}
-        className="cta-prim"
-      >
-        Request Estimate →
-      </button>
-    </div>
-  );
-}
-
-// Catches lazy-load/runtime failures in the editor and shows the fallback.
-class PlannerErrorBoundary extends Component<
-  { onRequestEstimate: () => void; children: ReactNode },
-  { hasError: boolean }
-> {
-  state = { hasError: false };
-
-  static getDerivedStateFromError() {
-    return { hasError: true };
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return <FallbackState onRequestEstimate={this.props.onRequestEstimate} />;
-    }
-    return this.props.children;
-  }
 }
 
 const st: Record<string, React.CSSProperties> = {
