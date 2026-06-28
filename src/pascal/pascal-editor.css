@@ -1,0 +1,106 @@
+/*
+ * Tailwind utilities + shadcn design tokens for @pascal-app/editor.
+ *
+ * Tailwind `base`/preflight is intentionally NOT included here (it's disabled
+ * in tailwind.config.js) so the inline-styled JR site is untouched. We only
+ * emit `components` + `utilities`, define the design tokens the editor reads,
+ * and re-apply a reset scoped to `.pascal-editor-root`.
+ *
+ * This file is imported by PlannerModal, so it only ships in the editor chunk.
+ */
+@tailwind components;
+@tailwind utilities;
+
+/* shadcn dark palette — values are space-separated HSL channels consumed via
+   hsl(var(--token) / <alpha-value>) in tailwind.config.js. */
+:root {
+  --background: 0 0% 4.5%;
+  --foreground: 0 0% 98%;
+  --card: 0 0% 6%;
+  --card-foreground: 0 0% 98%;
+  --popover: 0 0% 7%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 43 53% 54%; /* JR gold accent */
+  --primary-foreground: 0 0% 8%;
+  --secondary: 0 0% 14.9%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 0 0% 14.9%;
+  --muted-foreground: 0 0% 63.9%;
+  --accent: 0 0% 16%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 72% 45%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 18%;
+  --input: 0 0% 18%;
+  --ring: 43 53% 54%;
+  --radius: 0.5rem;
+
+  --sidebar-background: 0 0% 7%;
+  --sidebar-foreground: 0 0% 92%;
+  --sidebar-primary: 43 53% 54%;
+  --sidebar-primary-foreground: 0 0% 8%;
+  --sidebar-accent: 0 0% 15%;
+  --sidebar-accent-foreground: 0 0% 98%;
+  --sidebar-border: 0 0% 18%;
+  --sidebar-ring: 43 53% 54%;
+}
+
+/* Scoped reset — replaces the disabled global preflight for the editor only,
+   so Tailwind utilities and Radix primitives behave as the editor expects. */
+.pascal-editor-root,
+.pascal-editor-root *,
+.pascal-editor-root *::before,
+.pascal-editor-root *::after {
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: hsl(var(--border));
+}
+.pascal-editor-root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  color: hsl(var(--foreground));
+  background: hsl(var(--background));
+  font-family: Inter, system-ui, sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+.pascal-editor-root h1,
+.pascal-editor-root h2,
+.pascal-editor-root h3,
+.pascal-editor-root h4,
+.pascal-editor-root p,
+.pascal-editor-root figure,
+.pascal-editor-root blockquote {
+  margin: 0;
+  font-size: inherit;
+  font-weight: inherit;
+}
+.pascal-editor-root ul,
+.pascal-editor-root ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pascal-editor-root button,
+.pascal-editor-root input,
+.pascal-editor-root select,
+.pascal-editor-root textarea {
+  font: inherit;
+  color: inherit;
+  margin: 0;
+}
+.pascal-editor-root button {
+  background: none;
+  cursor: pointer;
+}
+.pascal-editor-root img,
+.pascal-editor-root svg,
+.pascal-editor-root canvas {
+  display: block;
+}
+.pascal-editor-root img {
+  max-width: 100%;
+  height: auto;
+}

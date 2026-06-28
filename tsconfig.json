@@ -21,9 +21,9 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
 
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["./src/*"],
+      "@pascal-app/editor": ["./src/pascal/editor-stub.d.ts"]
     }
   },
   "include": ["src"],

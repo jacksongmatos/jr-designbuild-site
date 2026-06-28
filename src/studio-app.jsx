@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import PlannerModal from "./PlannerModal";
 
 /*
  * Studio (client) — upload a photo of your space, mark a region, apply a
@@ -76,7 +77,7 @@ function LayerView({ layer }) {
 /* ----------------------------------------------------------------------------
  * Studio
  * ------------------------------------------------------------------------- */
-export default function StudioApp() {
+export default function StudioApp({ go }) {
   const [img, setImg] = useState(null);          // { url, path, uploading }
   const [catalog, setCatalog] = useState([]);    // [{id,name,slug,items:[...]}]
   const [apps, setApps] = useState([]);          // [{id, item, region, opacity, blend, layer}]
@@ -166,6 +167,11 @@ export default function StudioApp() {
           Upload a photo of your room, outline a surface, and drop JR &amp; partner finishes
           right onto it. Love a combination? Request a quote and our team prices it for you.
         </p>
+
+        {/* Free 3D floor-planner MVP — opens a fullscreen modal (PlannerModal). */}
+        <div style={{ marginTop: 18 }}>
+          <PlannerModal go={go} />
+        </div>
 
         <div style={s.layout}>
           {/* canvas */}
