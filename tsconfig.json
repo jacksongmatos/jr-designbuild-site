@@ -22,8 +22,7 @@
     "noFallthroughCasesInSwitch": true,
 
     "paths": {
-      "@/*": ["./src/*"],
-      "@pascal-app/editor": ["./src/pascal/editor-stub.d.ts"]
+      "@/*": ["./src/*"]
     }
   },
   "include": ["src"],
