@@ -9,6 +9,7 @@ import React, {
   useState,
   type ReactNode,
 } from "react";
+import { createPortal } from "react-dom";
 
 /*
  * PlannerModal — free 3D floor-planner for JR Design Build.
@@ -157,17 +158,22 @@ export default function PlannerModal({
         ) : null}
       </button>
 
-      {open && (
-        <div
-          style={st.overlay}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby={titleId}
-          onMouseDown={(e) => {
-            // Click on the dark backdrop (outside the panel) closes the modal.
-            if (e.target === e.currentTarget) closeModal();
-          }}
-        >
+      {/* Render the modal through a portal on <body> so it escapes the nav's
+          stacking/size context (it was being clipped inside the nav) and covers
+          the whole viewport above all site chrome. */}
+      {open &&
+        typeof document !== "undefined" &&
+        createPortal(
+          <div
+            style={st.overlay}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={titleId}
+            onMouseDown={(e) => {
+              // Click on the dark backdrop (outside the panel) closes the modal.
+              if (e.target === e.currentTarget) closeModal();
+            }}
+          >
           <div style={st.panel}>
             {/* JR branding bar above the planner. */}
             <header style={st.header}>
@@ -216,8 +222,9 @@ export default function PlannerModal({
               </PlannerErrorBoundary>
             </div>
           </div>
-        </div>
-      )}
+          </div>,
+          document.body,
+        )}
 
       <style>{CSS}</style>
     </>
@@ -277,7 +284,8 @@ const st: Record<string, React.CSSProperties> = {
   overlay: {
     position: "fixed",
     inset: 0,
-    zIndex: 1000,
+    // Above all site chrome (custom cursor / AI assistant sit at z-index 9999).
+    zIndex: 2147483647,
     background: "#000000e6",
     backdropFilter: "blur(4px)",
     display: "flex",
