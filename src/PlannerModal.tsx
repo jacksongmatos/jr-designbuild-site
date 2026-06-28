@@ -6,19 +6,21 @@ import React, {
   useState,
 } from "react";
 import { createPortal } from "react-dom";
-import Planner2D, { type PlannerHandle } from "./Planner2D";
 
 /*
- * PlannerModal — free, white-label 2D floor-planner for JR Design Build.
+ * PlannerModal — full 3D floor-planner for JR Design Build.
  *
  * Opens a fullscreen modal (via a body portal) from the "Design Your Space" CTA
- * and renders our own Planner2D — a self-contained SVG sketch tool, no iframe,
- * no external dependencies. On "Request Estimate" the current sketch summary is
- * attached to the lead handoff and the user is sent to /contact?source=planner.
+ * and embeds a real 3D planner in an <iframe> — the same experience as the
+ * hosted Pascal editor (draw walls, place furniture, 3D view). A guaranteed
+ * "Open in new tab" link is always present in case the embedded site refuses
+ * framing (X-Frame-Options / CSP), so it's never a dead end.
  *
- * To swap the planner later, change what's rendered in the stage below — the
- * modal shell (branding, a11y, Request Estimate) stays the same.
+ * ── CHANGE THE PLANNER HERE ──────────────────────────────────────────────
+ * To self-host or swap the planner later, edit PLANNER_URL. Anything that
+ * renders in an iframe works; nothing else in this component needs to change.
  */
+const PLANNER_URL = "https://editor.pascal.app/";
 
 // Where "Request Estimate" sends people. The ?source=planner tag lets the
 // contact form / lead pipeline attribute the lead to the planner.
@@ -61,7 +63,6 @@ export default function PlannerModal({
 
   const closeBtnRef = useRef<HTMLButtonElement | null>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
-  const plannerRef = useRef<PlannerHandle>(null);
   const titleId = useId();
 
   const openModal = useCallback(() => {
@@ -93,13 +94,9 @@ export default function PlannerModal({
   }, [open, closeModal]);
 
   const requestEstimate = useCallback(() => {
-    // Tag the lead source + attach the sketch summary (mirrors the Studio's
-    // sessionStorage handoff; the contact form reads jr_planner_summary).
+    // Tag the lead source (mirrors the Studio's sessionStorage handoff).
     try {
       sessionStorage.setItem("jr_lead_source", "planner");
-      const summary = plannerRef.current?.getSummary();
-      if (summary) sessionStorage.setItem("jr_planner_summary", summary);
-      else sessionStorage.removeItem("jr_planner_summary");
     } catch {
       /* ignore storage failures (private mode, etc.) */
     }
@@ -184,11 +181,20 @@ export default function PlannerModal({
                   <span id={titleId} style={st.brandTitle}>
                     Design Your Space
                   </span>
-                  <span style={st.brandSub}>2D Floor Planner · JR Design Build</span>
+                  <span style={st.brandSub}>3D Floor Planner · JR Design Build</span>
                 </div>
               </div>
 
               <div style={st.headerActions}>
+                {/* Guaranteed fallback if the embedded site refuses framing. */}
+                <a
+                  href={PLANNER_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  style={st.newTabLink}
+                >
+                  Open in new tab ↗
+                </a>
                 <button
                   type="button"
                   onClick={requestEstimate}
@@ -210,9 +216,24 @@ export default function PlannerModal({
               </div>
             </header>
 
-            {/* Planner surface — our self-contained 2D sketch tool. */}
+            {/* Planner surface — real 3D planner embedded in an iframe. The
+                fallback message sits behind it; if the iframe loads it covers
+                the message, if framing is blocked the user sees it + the
+                "Open in new tab" link above. */}
             <div style={st.stage}>
-              <Planner2D ref={plannerRef} />
+              <div style={st.fallback} aria-hidden="true">
+                <p style={st.fallbackText}>
+                  Loading the 3D planner… if it doesn't appear, use “Open in new
+                  tab ↗” above.
+                </p>
+              </div>
+              <iframe
+                src={PLANNER_URL}
+                title="JR Design Build 3D Floor Planner"
+                style={st.iframe}
+                allow="fullscreen; xr-spatial-tracking; accelerometer; gyroscope"
+                allowFullScreen
+              />
             </div>
           </div>
           </div>,
@@ -309,45 +330,41 @@ const st: Record<string, React.CSSProperties> = {
     lineHeight: 1,
     cursor: "pointer",
   },
-  stage: { position: "relative", flex: 1, minHeight: 0, background: "#000" },
-  message: {
+  stage: { position: "relative", flex: 1, minHeight: 0, background: "#0e0c0a" },
+  iframe: {
+    position: "relative",
+    zIndex: 1,
+    width: "100%",
+    height: "100%",
+    border: "none",
+    display: "block",
+    background: "transparent",
+  },
+  fallback: {
     position: "absolute",
     inset: 0,
     display: "flex",
-    flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    gap: 14,
+    padding: 24,
     textAlign: "center",
-    padding: "24px",
   },
-  messageText: { color: "#9c927f", fontSize: 14 },
-  fallbackMark: { fontSize: 40, color: GOLD, opacity: 0.7 },
-  fallbackHeading: {
-    color: "#efe8da",
-    fontSize: 17,
-    lineHeight: 1.6,
-    maxWidth: 460,
-    fontFamily: DISPLAY,
-  },
-  spinner: {
-    width: 34,
-    height: 34,
-    borderRadius: "50%",
-    border: `3px solid ${GOLD}33`,
-    borderTopColor: GOLD,
-    animation: "jr-planner-spin 0.8s linear infinite",
+  fallbackText: { color: "#9c927f", fontSize: 14, maxWidth: 420, lineHeight: 1.6 },
+  newTabLink: {
+    color: GOLD,
+    fontSize: 11.5,
+    letterSpacing: 0.5,
+    textDecoration: "none",
+    border: `1px solid ${GOLD}55`,
+    borderRadius: 30,
+    padding: "9px 14px",
+    whiteSpace: "nowrap",
   },
 };
 
 const CSS = `
-@keyframes jr-planner-spin { to { transform: rotate(360deg); } }
-
 /* Mobile-friendly: stack the brand and actions. */
 @media (max-width: 560px) {
   [role="dialog"] header { flex-direction: column; align-items: stretch; }
-}
-@media (prefers-reduced-motion: reduce) {
-  [style*="jr-planner-spin"] { animation: none !important; }
 }
 `;
