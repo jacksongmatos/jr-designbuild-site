@@ -8,12 +8,12 @@
  *
  * Pascal references icons by root-absolute paths (e.g. "/icons/wall.png").
  * Some are rendered with <Image> (this shim), others with a plain <img> in
- * Pascal's source — which this shim can't touch. So instead of rewriting paths
- * here, we pass "/"-absolute paths through unchanged and let a single
- * public/_redirects rule route "/icons/*" to Pascal's CDN (so BOTH <Image> and
- * plain <img> resolve identically, and self-hosting later just means dropping
- * files in public/icons/). Anything else (http(s), data:, blob:, asset:) is
- * used as-is.
+ * Pascal's source — which this shim can't touch. So we pass "/"-absolute paths
+ * through unchanged and SELF-HOST the icons at public/icons/ (copied from the
+ * pascalorg/editor v0.9.1 tag — Pascal's live CDN serves a newer webp set that
+ * 404s for the .png names this package version requests). Both <Image> and
+ * plain <img> then resolve to our own origin identically. Anything else
+ * (http(s), data:, blob:, asset:) is used as-is.
  */
 import React from "react";
 

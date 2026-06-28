@@ -1,9 +1,2 @@
-# Pascal 3D editor UI icons. Pascal references "/icons/*.png" (via next/image
-# AND plain <img>), which would otherwise 404 on this origin. Route them to
-# Pascal's CDN. To self-host instead, drop the PNGs in public/icons/ (static
-# files take precedence over this redirect) or repoint the host below.
-# Keep this BEFORE the SPA catch-all so it matches first.
-/icons/*    https://editor.pascal.app/icons/:splat    302
-
 # Cloudflare Pages / Netlify SPA fallback
 /*    /index.html   200
