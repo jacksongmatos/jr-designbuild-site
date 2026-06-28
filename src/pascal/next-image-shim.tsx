@@ -6,12 +6,16 @@
  * "next/image" to this module. It renders a plain <img> and drops Next-only
  * props that aren't valid DOM attributes.
  *
- * Pascal references some icons by root-absolute paths (e.g. "/icons/wall.png").
- * Those assets live on Pascal's CDN, not on this site, so we resolve "/"-paths
- * against PASCAL_ASSET_BASE. Anything else (http(s), data:, blob:) is used as-is.
+ * Pascal references icons by root-absolute paths (e.g. "/icons/wall.png").
+ * Some are rendered with <Image> (this shim), others with a plain <img> in
+ * Pascal's source — which this shim can't touch. So instead of rewriting paths
+ * here, we pass "/"-absolute paths through unchanged and let a single
+ * public/_redirects rule route "/icons/*" to Pascal's CDN (so BOTH <Image> and
+ * plain <img> resolve identically, and self-hosting later just means dropping
+ * files in public/icons/). Anything else (http(s), data:, blob:, asset:) is
+ * used as-is.
  */
 import React from "react";
-import { PASCAL_ASSET_BASE } from "./config";
 
 type StaticImport = { src: string; height?: number; width?: number };
 
@@ -40,11 +44,8 @@ type NextImageProps = {
 };
 
 function resolveSrc(src: string | StaticImport): string {
-  const raw = typeof src === "string" ? src : src?.src || "";
-  if (!raw) return raw;
-  if (/^(https?:|data:|blob:|asset:)/.test(raw)) return raw;
-  // Root-absolute Pascal asset → resolve against the Pascal CDN.
-  return `${PASCAL_ASSET_BASE}${raw.startsWith("/") ? raw : `/${raw}`}`;
+  // Pass paths through unchanged; "/icons/*" is handled by public/_redirects.
+  return typeof src === "string" ? src : src?.src || "";
 }
 
 const NextImage = React.forwardRef<HTMLImageElement, NextImageProps>(function NextImage(
