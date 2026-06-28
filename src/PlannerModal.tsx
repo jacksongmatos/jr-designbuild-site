@@ -50,6 +50,8 @@ type PlannerModalProps = {
   /** Style/class hooks so the trigger can match surrounding CTAs. */
   buttonStyle?: React.CSSProperties;
   buttonClassName?: string;
+  /** Fires when the modal opens (e.g. to close a containing nav menu). */
+  onOpen?: () => void;
 };
 
 export default function PlannerModal({
@@ -60,6 +62,7 @@ export default function PlannerModal({
   subtext = "Sketch your idea and request an estimate",
   buttonStyle,
   buttonClassName,
+  onOpen,
 }: PlannerModalProps) {
   const [open, setOpen] = useState(false);
 
@@ -67,7 +70,10 @@ export default function PlannerModal({
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const titleId = useId();
 
-  const openModal = useCallback(() => setOpen(true), []);
+  const openModal = useCallback(() => {
+    onOpen?.();
+    setOpen(true);
+  }, [onOpen]);
   const closeModal = useCallback(() => setOpen(false), []);
 
   // When open: lock background scroll, wire ESC, move focus into the modal,
@@ -134,8 +140,21 @@ export default function PlannerModal({
           ...buttonStyle,
         }}
       >
-        <span style={{ fontSize: 14, fontWeight: 700, letterSpacing: 0.4 }}>{label} →</span>
-        <span style={{ fontSize: 11, fontWeight: 500, opacity: 0.78 }}>{subtext}</span>
+        <span
+          style={
+            subtext
+              ? { fontSize: 14, fontWeight: 700, letterSpacing: 0.4 }
+              : { font: "inherit", letterSpacing: "inherit" }
+          }
+        >
+          {label}
+          {subtext ? " →" : ""}
+        </span>
+        {/* Subtext only shows in the big-CTA variant; nav/compact usages pass an
+            empty subtext so the trigger renders as a single-line link. */}
+        {subtext ? (
+          <span style={{ fontSize: 11, fontWeight: 500, opacity: 0.78 }}>{subtext}</span>
+        ) : null}
       </button>
 
       {open && (
