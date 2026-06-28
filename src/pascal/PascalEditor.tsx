@@ -10,6 +10,7 @@
  */
 import "./pascal-editor.css";
 import { Editor } from "@pascal-app/editor";
+import { JR_BUILD_PANELS } from "./jr-build-panels";
 
 export default function PascalEditor() {
   return (
@@ -17,7 +18,10 @@ export default function PascalEditor() {
     // (global preflight is disabled to protect the rest of the site).
     // `.dark` selects the editor's dark shadcn theme.
     <div className="pascal-editor-root dark">
-      <Editor />
+      {/* extraSidebarPanels adds our Build (structure tools) + Furnish
+          (item catalog) panels to the left rail — the package doesn't ship a
+          build palette of its own. See src/pascal/jr-build-panels.tsx. */}
+      <Editor extraSidebarPanels={JR_BUILD_PANELS} />
     </div>
   );
 }
