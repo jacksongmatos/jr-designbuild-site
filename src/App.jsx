@@ -1557,16 +1557,8 @@ export default function App() {
         </div>
         <div style={S.navLinks} className="desktop-nav">
           {ROUTES.map((r) => (
-            <React.Fragment key={r.id}>
-              <a href={`/${r.id}`} onClick={(e) => { e.preventDefault(); go(r.id); }}
-                style={{ ...S.navLink, color: route === r.id ? GOLD : "#ece6db" }} className="navlink">{r.label}</a>
-              {/* Floor Planner — sits right after Studio and opens the PlannerModal. */}
-              {r.id === "studio" && (
-                <PlannerModal go={go} logo={LOGO} label="Floor Planner" subtext=""
-                  buttonClassName="navlink"
-                  buttonStyle={{ ...S.navLink, background: "transparent", color: GOLD, border: `1px solid ${GOLD}66`, borderRadius: 30, padding: "8px 16px", flexDirection: "row" }} />
-              )}
-            </React.Fragment>
+            <a key={r.id} href={`/${r.id}`} onClick={(e) => { e.preventDefault(); go(r.id); }}
+              style={{ ...S.navLink, color: route === r.id ? GOLD : "#ece6db" }} className="navlink">{r.label}</a>
           ))}
           <a href={LINKS.phone} style={{ ...S.navLink, color: "#ece6db", fontWeight: 600 }} className="navlink">✆ {LINKS.phoneText}</a>
           <a href={LINKS.erp} target="_blank" rel="noreferrer"
@@ -1579,20 +1571,11 @@ export default function App() {
         <div style={S.mobileMenu} className="mobile-menu">
           <div style={S.mobileMenuInner}>
             {ROUTES.map((r, i) => (
-              <React.Fragment key={r.id}>
-                <a href={`/${r.id}`} onClick={(e) => { e.preventDefault(); go(r.id); }}
-                  className="mobile-link"
-                  style={{ ...S.mobileLink, color: route === r.id ? GOLD : "#fff", animationDelay: `${0.05 + i * 0.06}s` }}>
-                  <span style={S.mobileNum}>{String(i + 1).padStart(2, "0")}</span>{r.label}
-                </a>
-                {/* Floor Planner — opens the PlannerModal from the mobile menu, next to Studio. */}
-                {r.id === "studio" && (
-                  <PlannerModal go={go} logo={LOGO} label="▦  Floor Planner" subtext=""
-                    onOpen={() => setMenu(false)}
-                    buttonClassName="mobile-link"
-                    buttonStyle={{ ...S.mobileLink, color: GOLD, opacity: 1, background: "transparent", border: "none", flexDirection: "row", width: "100%", textAlign: "left" }} />
-                )}
-              </React.Fragment>
+              <a key={r.id} href={`/${r.id}`} onClick={(e) => { e.preventDefault(); go(r.id); }}
+                className="mobile-link"
+                style={{ ...S.mobileLink, color: route === r.id ? GOLD : "#fff", animationDelay: `${0.05 + i * 0.06}s` }}>
+                <span style={S.mobileNum}>{String(i + 1).padStart(2, "0")}</span>{r.label}
+              </a>
             ))}
             <a href={LINKS.phone} className="mobile-link" style={{ ...S.mobileLink, color: "#fff", opacity: 1 }}>
               <span style={S.mobileNum}>✆</span>{LINKS.phoneText}
