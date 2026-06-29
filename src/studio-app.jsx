@@ -168,9 +168,14 @@ export default function StudioApp({ go }) {
           right onto it. Love a combination? Request a quote and our team prices it for you.
         </p>
 
-        {/* Free 3D floor-planner MVP — opens a fullscreen modal (PlannerModal). */}
+        {/* Floor Planner — opens the 3D planner modal. Lives here under the
+            Studio intro (instead of in the top nav). */}
         <div style={{ marginTop: 18 }}>
-          <PlannerModal go={go} />
+          <PlannerModal
+            go={go}
+            label="Floor Planner"
+            subtext="Draw your layout in 3D, then request an estimate"
+          />
         </div>
 
         <div style={s.layout}>
