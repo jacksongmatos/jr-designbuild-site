@@ -180,6 +180,54 @@ function Fallback({ err }) {
 const normTxt = (s) =>
   String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
+// Shared look for the custom dropdowns (city / project / finish)
+const ddBox = {
+  position: "absolute", top: "100%", left: 0, right: 0, zIndex: 6,
+  marginTop: 4, maxHeight: 230, overflowY: "auto",
+  background: "#17120c", border: "1px solid #c9a25e44", borderRadius: 8,
+  boxShadow: "0 18px 40px #000000aa",
+};
+const ddOpt = (selected, hovered) => ({
+  padding: "9px 12px", fontSize: 14, cursor: "pointer",
+  color: selected ? GOLD : "#f2ece0",
+  background: hovered ? "#c9a25e22" : "transparent",
+});
+
+/* Simple styled dropdown for short option lists (Project / Finish) —
+   same menu look as the city picker, no search box. */
+function StyledSelect({ value, options, onChange, ariaLabel }) {
+  const [open, setOpen] = useState(false);
+  const [hover, setHover] = useState(-1);
+  return (
+    <div style={{ position: "relative", marginBottom: 12 }}>
+      <button type="button" aria-label={ariaLabel}
+        onClick={() => setOpen((o) => !o)}
+        onBlur={() => setOpen(false)}
+        onKeyDown={(e) => { if (e.key === "Escape") setOpen(false); }}
+        style={{
+          ...st.input, marginBottom: 0, textAlign: "left", cursor: "pointer",
+          fontFamily: "inherit", display: "flex", alignItems: "center",
+          justifyContent: "space-between", gap: 8,
+        }}>
+        <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{value}</span>
+        <span style={{ color: GOLD, fontSize: 10, transform: open ? "rotate(180deg)" : "none", transition: "transform .15s" }}>▼</span>
+      </button>
+      {open && (
+        <div style={ddBox}>
+          {options.map((o, k) => (
+            <div key={o}
+              onMouseDown={(e) => { e.preventDefault(); onChange(o); setOpen(false); }}
+              onMouseEnter={() => setHover(k)}
+              style={ddOpt(o === value, hover === k)}>
+              {o}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 /* Searchable city picker — type to filter, or pick from the grouped list.
    Free-typed cities are accepted (the estimate API takes any Bay Area city). */
 function CityPicker({ value, onChange }) {
@@ -210,11 +258,7 @@ function CityPicker({ value, onChange }) {
     <div key={c}
       onMouseDown={(e) => { e.preventDefault(); commit(c); }}
       onMouseEnter={() => setHover(k)}
-      style={{
-        padding: "9px 12px", fontSize: 14, cursor: "pointer",
-        color: c === value ? GOLD : "#f2ece0",
-        background: hover === k ? "#c9a25e22" : "transparent",
-      }}>
+      style={ddOpt(c === value, hover === k)}>
       {c}
     </div>
   );
@@ -239,12 +283,7 @@ function CityPicker({ value, onChange }) {
         }}
       />
       {open && (
-        <div style={{
-          position: "absolute", top: "100%", left: 0, right: 0, zIndex: 6,
-          marginTop: 4, maxHeight: 230, overflowY: "auto",
-          background: "#17120c", border: "1px solid #c9a25e44", borderRadius: 8,
-          boxShadow: "0 18px 40px #000000aa",
-        }}>
+        <div style={ddBox}>
           {matches ? (
             matches.length ? (
               matches.map((c) => { i++; return opt(c, i); })
@@ -324,15 +363,11 @@ function EstimateTab({ prefill }) {
         Add a few photos of the space — we read scope & condition and return a preliminary Bay Area range.
       </p>
       <span style={st.label}>Project</span>
-      <select style={st.input} value={type} onChange={(e) => pickType(e.target.value)}>
-        {TYPES.map((t) => <option key={t}>{t}</option>)}
-      </select>
+      <StyledSelect ariaLabel="Project" value={type} options={TYPES} onChange={pickType} />
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
         <div>
           <span style={st.label}>Finish</span>
-          <select style={st.input} value={finish} onChange={(e) => setFinish(e.target.value)}>
-            {FINISHES.map((f) => <option key={f}>{f}</option>)}
-          </select>
+          <StyledSelect ariaLabel="Finish" value={finish} options={FINISHES} onChange={setFinish} />
         </div>
         <div>
           <span style={st.label}>City</span>
