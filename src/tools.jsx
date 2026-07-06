@@ -414,7 +414,7 @@ function EstimateBuilder() {
               )
             }
           >
-            Refine with photos (AI) ✨
+            Refine with photos (preliminary) ✨
           </button>
         </div>
       </div>
