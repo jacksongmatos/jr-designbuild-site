@@ -177,6 +177,98 @@ function Fallback({ err }) {
   );
 }
 
+const normTxt = (s) =>
+  String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+/* Searchable city picker — type to filter, or pick from the grouped list.
+   Free-typed cities are accepted (the estimate API takes any Bay Area city). */
+function CityPicker({ value, onChange }) {
+  const [q, setQ] = useState(value);
+  const [open, setOpen] = useState(false);
+  const [hover, setHover] = useState(-1);
+  useEffect(() => { setQ(value); }, [value]);
+
+  const searching = open && q.trim() && normTxt(q) !== normTxt(value);
+  const matches = searching
+    ? CITIES.filter((c) => normTxt(c).includes(normTxt(q.trim())))
+    : null;
+
+  const commit = (c) => { onChange(c); setQ(c); setOpen(false); };
+  const onBlur = () => {
+    const t = q.trim();
+    if (t && normTxt(t) !== normTxt(value)) {
+      const exact = CITIES.find((c) => normTxt(c) === normTxt(t));
+      onChange(exact || t);
+    } else if (!t) {
+      setQ(value);
+    }
+    setOpen(false);
+  };
+
+  let i = -1;
+  const opt = (c, k) => (
+    <div key={c}
+      onMouseDown={(e) => { e.preventDefault(); commit(c); }}
+      onMouseEnter={() => setHover(k)}
+      style={{
+        padding: "9px 12px", fontSize: 14, cursor: "pointer",
+        color: c === value ? GOLD : "#f2ece0",
+        background: hover === k ? "#c9a25e22" : "transparent",
+      }}>
+      {c}
+    </div>
+  );
+
+  return (
+    <div style={{ position: "relative", marginBottom: 12 }}>
+      <input
+        style={{ ...st.input, marginBottom: 0 }}
+        value={q}
+        placeholder="Type to search…"
+        aria-label="City"
+        onFocus={(e) => { setOpen(true); e.target.select(); }}
+        onBlur={onBlur}
+        onChange={(e) => { setQ(e.target.value); setOpen(true); setHover(-1); }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            if (matches && matches.length) commit(matches[0]);
+            else e.target.blur();
+          }
+          if (e.key === "Escape") { setQ(value); setOpen(false); }
+        }}
+      />
+      {open && (
+        <div style={{
+          position: "absolute", top: "100%", left: 0, right: 0, zIndex: 6,
+          marginTop: 4, maxHeight: 230, overflowY: "auto",
+          background: "#17120c", border: "1px solid #c9a25e44", borderRadius: 8,
+          boxShadow: "0 18px 40px #000000aa",
+        }}>
+          {matches ? (
+            matches.length ? (
+              matches.map((c) => { i++; return opt(c, i); })
+            ) : (
+              <div style={{ padding: "10px 12px", fontSize: 13, color: "#c9b48a", lineHeight: 1.5 }}>
+                Not on the list? No problem — we serve the whole Bay Area. Just finish typing your city.
+              </div>
+            )
+          ) : (
+            CITY_GROUPS.map((g) => (
+              <div key={g.label}>
+                <div style={{ padding: "9px 12px 3px", fontSize: 9.5, letterSpacing: 1.4, textTransform: "uppercase", color: "#c9b48a" }}>
+                  {g.label}
+                </div>
+                {g.cities.map((c) => { i++; return opt(c, i); })}
+              </div>
+            ))
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function EstimateTab({ prefill }) {
   // Prefill may send a short label (e.g. "Whole-Home") — match it to a known type.
   const initialType =
@@ -244,13 +336,7 @@ function EstimateTab({ prefill }) {
         </div>
         <div>
           <span style={st.label}>City</span>
-          <select style={st.input} value={city} onChange={(e) => setCity(e.target.value)}>
-            {CITY_GROUPS.map((g) => (
-              <optgroup key={g.label} label={g.label}>
-                {g.cities.map((c) => <option key={c}>{c}</option>)}
-              </optgroup>
-            ))}
-          </select>
+          <CityPicker value={city} onChange={setCity} />
         </div>
       </div>
       <span style={st.label}>Approx. size — {size} sqft</span>
