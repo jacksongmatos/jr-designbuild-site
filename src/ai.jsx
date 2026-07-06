@@ -173,7 +173,7 @@ function EstimateTab({ prefill }) {
   return (
     <div>
       <p style={{ ...st.note, marginTop: 0 }}>
-        Add a few photos of the space — our AI reads scope & condition and returns a Bay Area range.
+        Add a few photos of the space — we read scope & condition and return a preliminary Bay Area range.
       </p>
       <span style={st.label}>Project</span>
       <select style={st.input} value={type} onChange={(e) => setType(e.target.value)}>
@@ -213,7 +213,7 @@ function EstimateTab({ prefill }) {
         placeholder="Anything specific about scope, timeline, budget…"
         value={notes} onChange={(e) => setNotes(e.target.value)} />
       <button style={{ ...st.btn, opacity: loading ? 0.6 : 1 }} disabled={loading} onClick={run}>
-        {loading ? "Analyzing…" : "Get AI estimate ✨"}
+        {loading ? "Analyzing…" : "Get preliminary estimate ✨"}
       </button>
 
       {res && (
