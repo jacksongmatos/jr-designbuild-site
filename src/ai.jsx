@@ -16,11 +16,61 @@ import { navigate } from "./nav";
 
 const GOLD = "#c9a25e";
 const INK = "#0c0a08";
-const CITIES = [
-  "South San Francisco", "San Mateo", "Daly City", "San Bruno", "Pacifica",
-  "Burlingame", "Millbrae", "Redwood City", "San Francisco",
+const CITY_GROUPS = [
+  {
+    label: "Peninsula — San Mateo County",
+    cities: [
+      "South San Francisco", "Daly City", "Colma", "Brisbane", "San Bruno",
+      "Millbrae", "Burlingame", "Hillsborough", "San Mateo", "Foster City",
+      "Belmont", "San Carlos", "Redwood City", "Emerald Hills", "Menlo Park",
+      "Atherton", "Woodside", "Portola Valley", "East Palo Alto", "Pacifica",
+      "Half Moon Bay", "El Granada", "Moss Beach", "Montara",
+    ],
+  },
+  { label: "San Francisco", cities: ["San Francisco"] },
+  {
+    label: "South Bay — Santa Clara County",
+    cities: [
+      "Palo Alto", "Mountain View", "Los Altos", "Los Altos Hills", "Sunnyvale",
+      "Cupertino", "Santa Clara", "San Jose", "Campbell", "Saratoga",
+      "Los Gatos", "Milpitas",
+    ],
+  },
+  {
+    label: "East Bay",
+    cities: [
+      "Oakland", "Berkeley", "Alameda", "Emeryville", "Piedmont", "San Leandro",
+      "Castro Valley", "Hayward", "Union City", "Newark", "Fremont",
+      "Richmond", "El Cerrito", "Walnut Creek", "Concord", "Lafayette",
+      "Orinda", "Moraga", "Danville", "San Ramon", "Dublin", "Pleasanton",
+      "Livermore",
+    ],
+  },
+  {
+    label: "North Bay",
+    cities: [
+      "Sausalito", "Mill Valley", "Tiburon", "Corte Madera", "Larkspur",
+      "San Rafael", "Novato", "Petaluma", "Santa Rosa", "Napa", "Vallejo",
+      "Fairfield",
+    ],
+  },
+  { label: "Elsewhere", cities: ["Other Bay Area"] },
 ];
+const CITIES = CITY_GROUPS.flatMap((g) => g.cities);
 const TYPES = ["ADU", "Kitchen", "Bathroom", "Addition", "Whole-Home Remodel"];
+// Slider range + sensible default size (sqft) per project type
+const SIZE_BY_TYPE = {
+  "ADU": { min: 150, max: 1200, step: 10, def: 600 },
+  "Kitchen": { min: 40, max: 500, step: 5, def: 180 },
+  "Bathroom": { min: 20, max: 200, step: 5, def: 60 },
+  "Addition": { min: 100, max: 1500, step: 10, def: 400 },
+  "Whole-Home Remodel": { min: 500, max: 5000, step: 50, def: 1800 },
+};
+const sizeRange = (t) => SIZE_BY_TYPE[t] || { min: 20, max: 4000, step: 10, def: 400 };
+const clampSize = (n, t) => {
+  const r = sizeRange(t);
+  return Math.min(r.max, Math.max(r.min, Number(n) || r.def));
+};
 const FINISHES = ["Standard", "Premium", "Luxury"];
 const usd = (n) => "$" + Math.round(Number(n) || 0).toLocaleString();
 
@@ -128,10 +178,16 @@ function Fallback({ err }) {
 }
 
 function EstimateTab({ prefill }) {
-  const [type, setType] = useState(prefill.projectType || "ADU");
+  // Prefill may send a short label (e.g. "Whole-Home") — match it to a known type.
+  const initialType =
+    TYPES.find((t) => t === prefill.projectType) ||
+    TYPES.find((t) => prefill.projectType && t.startsWith(prefill.projectType)) ||
+    "ADU";
+  const [type, setType] = useState(initialType);
   const [finish, setFinish] = useState(prefill.finish ? cap(prefill.finish) : "Premium");
   const [city, setCity] = useState(prefill.city || CITIES[0]);
-  const [size, setSize] = useState(prefill.size || 600);
+  const [size, setSize] = useState(clampSize(prefill.size || sizeRange(initialType).def, initialType));
+  const pickType = (t) => { setType(t); setSize(sizeRange(t).def); };
   const [notes, setNotes] = useState("");
   const [imgs, setImgs] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -176,7 +232,7 @@ function EstimateTab({ prefill }) {
         Add a few photos of the space — we read scope & condition and return a preliminary Bay Area range.
       </p>
       <span style={st.label}>Project</span>
-      <select style={st.input} value={type} onChange={(e) => setType(e.target.value)}>
+      <select style={st.input} value={type} onChange={(e) => pickType(e.target.value)}>
         {TYPES.map((t) => <option key={t}>{t}</option>)}
       </select>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
@@ -189,12 +245,17 @@ function EstimateTab({ prefill }) {
         <div>
           <span style={st.label}>City</span>
           <select style={st.input} value={city} onChange={(e) => setCity(e.target.value)}>
-            {CITIES.map((c) => <option key={c}>{c}</option>)}
+            {CITY_GROUPS.map((g) => (
+              <optgroup key={g.label} label={g.label}>
+                {g.cities.map((c) => <option key={c}>{c}</option>)}
+              </optgroup>
+            ))}
           </select>
         </div>
       </div>
       <span style={st.label}>Approx. size — {size} sqft</span>
-      <input type="range" min={30} max={4000} value={size}
+      <input type="range" min={sizeRange(type).min} max={sizeRange(type).max}
+        step={sizeRange(type).step} value={size}
         onChange={(e) => setSize(Number(e.target.value))}
         style={{ width: "100%", accentColor: GOLD, marginBottom: 12 }} />
       <span style={st.label}>Photos (up to 4)</span>
