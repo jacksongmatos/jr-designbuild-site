@@ -177,7 +177,7 @@ const PARTNERSHIP = [
   },
   {
     role: "JR Design Build", sub: "The Builder",
-    brings: ["Execution & craft", "Cost & schedule control", "533+ projects of proof"],
+    brings: ["Execution & craft", "Cost & schedule control", "567+ projects of proof"],
     gains: ["Build pipeline", "Performance-based reward", "Reputation on the line"],
   },
 ];
