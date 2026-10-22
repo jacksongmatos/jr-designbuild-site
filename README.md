@@ -1,7 +1,7 @@
 # JR Design Build
 
 Marketing site for **JR Design Build** — a CSLB licensed design-build firm in
-Los Angeles, CA, delivering luxury custom homes, whole-home remodels, and ADUs.
+San Mateo, CA (Bay Area), delivering luxury custom homes, whole-home remodels, and ADUs.
 
 ## Stack
 

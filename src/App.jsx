@@ -119,7 +119,7 @@ const JR_CAPITAL = [
     ],
   },
   {
-    address: "833 3rd Lane", city: "South San Francisco", status: "In construction",
+    address: "828 Baden Avenue", city: "South San Francisco", status: "In construction",
     headline: "$1.5M", headlineLabel: "ARV",
     rows: [
       ["Lot purchase", "$350k"],
@@ -177,7 +177,7 @@ const PARTNERSHIP = [
   },
   {
     role: "JR Design Build", sub: "The Builder",
-    brings: ["Execution & craft", "Cost & schedule control", "533+ projects of proof"],
+    brings: ["Execution & craft", "Cost & schedule control", "598+ projects of proof"],
     gains: ["Build pipeline", "Performance-based reward", "Reputation on the line"],
   },
 ];
@@ -818,7 +818,7 @@ function DnaPage({ go }) {
 
       <Reveal>
       <div style={S.statRow}>
-        {[["50+", "Team at peak"], ["20+", "Concurrent projects"], ["#1083248", "CSLB licensed"], ["Bay Area", "Service region"]].map(([a, b]) => (
+        {[["60+", "Team at peak"], ["20+", "Concurrent projects"], ["#1083248", "CSLB licensed"], ["Bay Area", "Service region"]].map(([a, b]) => (
           <div key={b} style={S.stat}><div style={S.statNum}><CountUp value={a} /></div><div style={S.statLabel}>{b}</div></div>
         ))}
       </div>

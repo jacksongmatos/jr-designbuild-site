@@ -9,7 +9,7 @@
 //
 // HONESTY RULE: per-city project counts are REAL (from the JR ERP). Cities
 // without a known count get no fabricated number — they lean on the real
-// company-wide credentials (533+ projects, 147 permits, CSLB). Wire Supabase
+// company-wide credentials (598+ projects, 147 permits, CSLB). Wire Supabase
 // here at build time to make every count live.
 
 import { mkdirSync, writeFileSync, existsSync } from "node:fs";
@@ -20,61 +20,60 @@ const ORIGIN = "https://jrdesignbuilds.com";
 const YEAR = new Date().getFullYear();
 const LASTMOD = new Date().toISOString().slice(0, 10); // YYYY-MM-DD, build date
 
-// Cities with REAL project counts (from the JR ERP / QuickBooks, 2026-06-11).
+// Cities with REAL project counts (from the JR ERP database, refreshed 2026-10-21).
 // permits = real permits filed where known.
 const CITIES_REAL = [
-  { name: "San Mateo", projects: 83 },
-  { name: "San Francisco", projects: 55 },
-  { name: "Burlingame", projects: 49 },
-  { name: "South San Francisco", projects: 34 },
-  { name: "Millbrae", projects: 32, permits: 11 },
-  { name: "Hillsborough", projects: 31 },
-  { name: "Pacifica", projects: 23 },
-  { name: "Foster City", projects: 18 },
-  { name: "San Carlos", projects: 17 },
-  { name: "San Bruno", projects: 17 },
-  { name: "San Jose", projects: 16, permits: 118 },
-  { name: "Redwood City", projects: 15 },
-  { name: "Daly City", projects: 14 },
-  { name: "Sunnyvale", projects: 9 },
-  { name: "Palo Alto", projects: 9 },
+  { name: "San Mateo", projects: 105 },
+  { name: "San Francisco", projects: 63 },
+  { name: "Burlingame", projects: 55 },
+  { name: "Hillsborough", projects: 40 },
+  { name: "South San Francisco", projects: 38 },
+  { name: "Millbrae", projects: 37, permits: 11 },
+  { name: "Pacifica", projects: 24 },
+  { name: "San Bruno", projects: 21 },
+  { name: "San Jose", projects: 21, permits: 118 },
+  { name: "Foster City", projects: 21 },
+  { name: "San Carlos", projects: 19 },
+  { name: "Daly City", projects: 18 },
+  { name: "Redwood City", projects: 18 },
+  { name: "Palo Alto", projects: 11 },
+  { name: "Sunnyvale", projects: 10 },
   { name: "Hayward", projects: 7 },
+  { name: "Menlo Park", projects: 7 },
   { name: "Belmont", projects: 7 },
   { name: "Santa Clara", projects: 6 },
-  { name: "Menlo Park", projects: 5 },
+  { name: "Berkeley", projects: 6 },
   { name: "Oakland", projects: 5 },
-  { name: "Brisbane", projects: 4, permits: 18 },
-  { name: "Half Moon Bay", projects: 4 },
   { name: "Milpitas", projects: 4 },
-  { name: "Berkeley", projects: 4 },
+  { name: "Half Moon Bay", projects: 4 },
+  { name: "Brisbane", projects: 4, permits: 18 },
   { name: "Mountain View", projects: 4 },
   { name: "Cupertino", projects: 3 },
+  { name: "Castro Valley", projects: 3 },
   { name: "Danville", projects: 3 },
   { name: "Fremont", projects: 3 },
-  { name: "Mill Valley", projects: 2 },
   { name: "Los Altos", projects: 2 },
   { name: "Campbell", projects: 2 },
   { name: "Woodside", projects: 2 },
   { name: "Saratoga", projects: 2 },
+  { name: "Portola Valley", projects: 2 },
+  { name: "Mill Valley", projects: 2 },
   { name: "Pleasanton", projects: 2 },
-  { name: "Martinez", projects: 1 },
-  { name: "Hercules", projects: 1 },
-  { name: "Monte Sereno", projects: 1 },
-  { name: "Castro Valley", projects: 1 },
-  { name: "Sausalito", projects: 1 },
   { name: "Walnut Creek", projects: 1 },
+  { name: "Atherton", projects: 1 },
+  { name: "Moss Beach", projects: 1 },
+  { name: "Hercules", projects: 1 },
+  { name: "San Rafael", projects: 1 },
+  { name: "Monte Sereno", projects: 1 },
+  { name: "Livermore", projects: 1 },
+  { name: "Martinez", projects: 1 },
+  { name: "East Palo Alto", projects: 1 },
   { name: "San Ramon", projects: 1 },
   { name: "Richmond", projects: 1 },
-  { name: "East Palo Alto", projects: 1 },
-  { name: "Antioch", projects: 1 },
-  { name: "Moss Beach", projects: 1 },
-  { name: "Emeryville", projects: 1 },
-  { name: "San Rafael", projects: 1 },
-  { name: "Portola Valley", projects: 1 },
-  { name: "Atherton", projects: 1 },
-  { name: "Colma", projects: 1 },
-  { name: "Livermore", projects: 1 },
   { name: "Dublin", projects: 1 },
+  { name: "Antioch", projects: 1 },
+  { name: "Sausalito", projects: 1 },
+  { name: "Emeryville", projects: 1 },
 ];
 
 // Service pages are generated only for cities with a meaningful track record,
@@ -161,7 +160,7 @@ const FOOT = (extra = "") =>
 const statBand = (c) => `<div class="stats">
   ${c.projects ? `<div class="stat"><b>${c.projects}+</b><span>Projects in ${esc(c.name)}</span></div>` : ``}
   ${c.permits ? `<div class="stat"><b>${c.permits}</b><span>Permits filed</span></div>` : ``}
-  <div class="stat"><b>533+</b><span>Projects total</span></div>
+  <div class="stat"><b>598+</b><span>Projects total</span></div>
   <div class="stat"><b>147</b><span>Permits managed</span></div>
   <div class="stat"><b>CSLB</b><span>Licensed &amp; insured</span></div>
 </div>`;
@@ -175,7 +174,7 @@ function cityPage(c) {
   const title = `${c.name} Remodels, ADUs & Additions | JR Design Build`;
   const desc = c.projects
     ? `JR Design Build has completed ${c.projects}+ projects in ${c.name}. CSLB-licensed design-build for ADUs, additions, kitchens, baths and whole-home remodels in ${c.name}, CA.`
-    : `CSLB-licensed design-build in ${c.name}, CA — ADUs, additions, kitchens, baths and whole-home remodels. 533+ projects and 147 permits across the Bay Area.`;
+    : `CSLB-licensed design-build in ${c.name}, CA — ADUs, additions, kitchens, baths and whole-home remodels. 598+ projects and 147 permits across the Bay Area.`;
   const faqs = [
     [`Does JR Design Build work in ${c.name}?`, `Yes. We're a CSLB-licensed design-build general contractor serving ${c.name} and the greater Bay Area${c.projects ? `, with ${c.projects}+ completed projects here` : ""}.`],
     [`Can I build an ADU in ${c.name}?`, `In most cases yes — California ADU law allows accessory dwelling units on most single-family lots, subject to local rules. Run your address through our free Property Intelligence Report to see your options.`],
@@ -250,11 +249,11 @@ function hubPage() {
   const real = CITIES_REAL.filter((c) => c.projects >= SERVICE_MIN).sort((a, b) => b.projects - a.projects);
   const more = ALL.filter((c) => c.projects < SERVICE_MIN).sort((a, b) => a.name.localeCompare(b.name));
   return (
-    HEAD("Bay Area Cities We Serve | JR Design Build", "JR Design Build serves 52 Bay Area cities with ADUs, additions and remodels — 533+ projects, 147 permits, CSLB licensed.", canonical, jsonld) +
+    HEAD("Bay Area Cities We Serve | JR Design Build", "JR Design Build serves 51 Bay Area cities with ADUs, additions and remodels — 598+ projects, 147 permits, CSLB licensed.", canonical, jsonld) +
     `<nav><a href="/">JR Design Build</a> · Cities</nav>
 <span class="eyebrow">Neighborhood Intelligence</span>
 <h1>Cities we build in.</h1>
-<p>533+ projects and 147 permits across 52 Bay Area cities. Explore where we work and what we've built.</p>
+<p>598+ projects and 147 permits across 51 Bay Area cities. Explore where we work and what we've built.</p>
 <h2>Most active cities</h2>
 <div class="chips">${real.map((c) => `<a href="/cities/${slugify(c.name)}/">${esc(c.name)} (${c.projects}+)</a>`).join("")}</div>
 <h2>Also serving</h2>

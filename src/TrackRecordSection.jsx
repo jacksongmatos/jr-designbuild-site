@@ -5,7 +5,8 @@
 // Palette: Black + Gold | Type: Bodoni Moda (display) + Archivo (body)
 // Aesthetic: "blueprint vivo" — survey markers, hairline grids, gold ink.
 //
-// DATA SOURCE: QuickBooks Online, extracted 2026-06-11.
+// DATA SOURCE: QuickBooks Online, extracted 2026-06-11; counts refreshed
+// from the JR ERP database (fin_invoices / projects) on 2026-10-21.
 // Public-safety rules applied:
 //   • No client names or street addresses (city-level only)
 //   • No AR/receivables, margins, or internal financials
@@ -15,10 +16,10 @@
 //   1  ProjectTimelines   — multi-year project lifespans (anonymized Gantt)
 //   2  EstimateFunnel     — real win rate, published openly
 //   3  TicketTrend        — average project value by year
-//   4  CityMap            — 52 cities, pin size = projects
+//   4  CityMap            — 51 cities, pin size = projects
 //   5  TrustGrid card     — milestone billing (AR reframed as pay-as-we-build)
 //   6  TrustGrid card     — longest engagements (repeat/longevity)
-//   7  TrustGrid card     — 56 consecutive months on job sites
+//   7  TrustGrid card     — 60 consecutive months on job sites
 //   8  TrustGrid card     — diversification (concentration reframed)
 //   9  ServiceMix         — what we build, by billing-line scope
 //   10 LivePulseBar       — live operation badge (Supabase-ready)
@@ -46,25 +47,25 @@ const SANS = "'Archivo', system-ui, sans-serif";
 
 // ------------------------------------------------------------------ data ----
 const LIVE = {
-  activeProjects: 36,
-  spanningYears: 31, // projects that crossed 2025 → 2026
-  lastUpdated: "June 2026",
+  activeProjects: 26,
+  spanningYears: 35, // projects that crossed 2025 → 2026
+  lastUpdated: "October 2026",
 };
 
 const STATS = [
-  { key: "projects", end: 533, suffix: "+", label: "Projects Completed", sub: "Unique job sites since 2021" },
-  { key: "cities", end: 52, suffix: "", label: "Bay Area Cities", sub: "From Half Moon Bay to Danville" },
+  { key: "projects", end: 598, suffix: "+", label: "Projects Completed", sub: "Unique job sites since 2021" },
+  { key: "cities", end: 51, suffix: "", label: "Bay Area Cities", sub: "From Half Moon Bay to Danville" },
   { key: "delivered", end: 18, prefix: "$", suffix: "M+", label: "Work Delivered", sub: "Invoiced & built — not promised" },
-  { key: "months", end: 56, suffix: "", label: "Months Without a Pause", sub: "Active job sites every single month" },
+  { key: "months", end: 60, suffix: "", label: "Months Without a Pause", sub: "Active job sites every single month" },
 ];
 
 const GROWTH = [
   { year: "2021", value: 9 },
-  { year: "2022", value: 98 },
-  { year: "2023", value: 259 },
-  { year: "2024", value: 424 },
-  { year: "2025", value: 517 },
-  { year: "2026", value: 533, ytd: true },
+  { year: "2022", value: 105 },
+  { year: "2023", value: 282 },
+  { year: "2024", value: 469 },
+  { year: "2025", value: 568 },
+  { year: "2026", value: 598, ytd: true },
 ];
 
 // (1) Anonymized lifespans — city + duration + scale band. No addresses.
@@ -89,7 +90,7 @@ const FUNNEL = {
   estimatedValue: 49.5, // $M
   won: 416, // converted + accepted
   winRate: 42, // %
-  built: 533,
+  built: 598,
 };
 
 // (3) Average project value by start year
@@ -118,44 +119,45 @@ const SERVICES = [
 
 // (4) City pins — aggregated, no client addresses
 const CITIES = [
-  { city: "San Mateo", lat: 37.563, lng: -122.3255, projects: 83 },
-  { city: "San Francisco", lat: 37.7749, lng: -122.4194, projects: 55 },
-  { city: "Burlingame", lat: 37.5841, lng: -122.3661, projects: 49 },
-  { city: "South San Francisco", lat: 37.6547, lng: -122.4077, projects: 34 },
-  { city: "Millbrae", lat: 37.5985, lng: -122.3872, projects: 32 },
-  { city: "Hillsborough", lat: 37.5741, lng: -122.3794, projects: 31 },
-  { city: "Pacifica", lat: 37.6138, lng: -122.4869, projects: 23 },
-  { city: "Foster City", lat: 37.5585, lng: -122.2711, projects: 18 },
-  { city: "San Carlos", lat: 37.5072, lng: -122.2605, projects: 17 },
-  { city: "San Bruno", lat: 37.6305, lng: -122.4111, projects: 17 },
-  { city: "San Jose", lat: 37.3382, lng: -121.8863, projects: 16 },
-  { city: "Redwood City", lat: 37.4852, lng: -122.2364, projects: 15 },
-  { city: "Daly City", lat: 37.6879, lng: -122.4702, projects: 14 },
-  { city: "Sunnyvale", lat: 37.3688, lng: -122.0363, projects: 9 },
-  { city: "Palo Alto", lat: 37.4419, lng: -122.143, projects: 9 },
+  { city: "San Mateo", lat: 37.563, lng: -122.3255, projects: 105 },
+  { city: "San Francisco", lat: 37.7749, lng: -122.4194, projects: 63 },
+  { city: "Burlingame", lat: 37.5841, lng: -122.3661, projects: 55 },
+  { city: "Hillsborough", lat: 37.5741, lng: -122.3794, projects: 40 },
+  { city: "South San Francisco", lat: 37.6547, lng: -122.4077, projects: 38 },
+  { city: "Millbrae", lat: 37.5985, lng: -122.3872, projects: 37 },
+  { city: "Pacifica", lat: 37.6138, lng: -122.4869, projects: 24 },
+  { city: "Foster City", lat: 37.5585, lng: -122.2711, projects: 21 },
+  { city: "San Bruno", lat: 37.6305, lng: -122.4111, projects: 21 },
+  { city: "San Jose", lat: 37.3382, lng: -121.8863, projects: 21 },
+  { city: "San Carlos", lat: 37.5072, lng: -122.2605, projects: 19 },
+  { city: "Redwood City", lat: 37.4852, lng: -122.2364, projects: 18 },
+  { city: "Daly City", lat: 37.6879, lng: -122.4702, projects: 18 },
+  { city: "Palo Alto", lat: 37.4419, lng: -122.143, projects: 11 },
+  { city: "Sunnyvale", lat: 37.3688, lng: -122.0363, projects: 10 },
   { city: "Hayward", lat: 37.6688, lng: -122.0808, projects: 7 },
   { city: "Belmont", lat: 37.5202, lng: -122.2758, projects: 7 },
+  { city: "Menlo Park", lat: 37.453, lng: -122.1817, projects: 7 },
   { city: "Santa Clara", lat: 37.3541, lng: -121.9552, projects: 6 },
-  { city: "Menlo Park", lat: 37.453, lng: -122.1817, projects: 5 },
+  { city: "Berkeley", lat: 37.8715, lng: -122.273, projects: 6 },
   { city: "Oakland", lat: 37.8044, lng: -122.2712, projects: 5 },
   { city: "Brisbane", lat: 37.6808, lng: -122.3999, projects: 4 },
   { city: "Half Moon Bay", lat: 37.4636, lng: -122.4286, projects: 4 },
   { city: "Milpitas", lat: 37.4323, lng: -121.8996, projects: 4 },
-  { city: "Berkeley", lat: 37.8715, lng: -122.273, projects: 4 },
   { city: "Mountain View", lat: 37.3861, lng: -122.0839, projects: 4 },
   { city: "Cupertino", lat: 37.323, lng: -122.0322, projects: 3 },
   { city: "Danville", lat: 37.8216, lng: -122.0, projects: 3 },
   { city: "Fremont", lat: 37.5485, lng: -121.9886, projects: 3 },
+  { city: "Castro Valley", lat: 37.6941, lng: -122.0864, projects: 3 },
   { city: "Mill Valley", lat: 37.906, lng: -122.545, projects: 2 },
   { city: "Los Altos", lat: 37.3852, lng: -122.1141, projects: 2 },
   { city: "Campbell", lat: 37.2872, lng: -121.95, projects: 2 },
   { city: "Woodside", lat: 37.4299, lng: -122.2539, projects: 2 },
   { city: "Saratoga", lat: 37.2638, lng: -122.023, projects: 2 },
   { city: "Pleasanton", lat: 37.6624, lng: -121.8747, projects: 2 },
+  { city: "Portola Valley", lat: 37.3841, lng: -122.2352, projects: 2 },
   { city: "Martinez", lat: 38.0194, lng: -122.1341, projects: 1 },
   { city: "Hercules", lat: 38.0171, lng: -122.2886, projects: 1 },
   { city: "Monte Sereno", lat: 37.2363, lng: -121.9925, projects: 1 },
-  { city: "Castro Valley", lat: 37.6941, lng: -122.0864, projects: 1 },
   { city: "Sausalito", lat: 37.8591, lng: -122.4853, projects: 1 },
   { city: "Walnut Creek", lat: 37.9101, lng: -122.0652, projects: 1 },
   { city: "San Ramon", lat: 37.7799, lng: -121.978, projects: 1 },
@@ -165,9 +167,7 @@ const CITIES = [
   { city: "Moss Beach", lat: 37.5275, lng: -122.5136, projects: 1 },
   { city: "Emeryville", lat: 37.8313, lng: -122.2852, projects: 1 },
   { city: "San Rafael", lat: 37.9735, lng: -122.5311, projects: 1 },
-  { city: "Portola Valley", lat: 37.3841, lng: -122.2352, projects: 1 },
   { city: "Atherton", lat: 37.4613, lng: -122.1977, projects: 1 },
-  { city: "Colma", lat: 37.6769, lng: -122.4597, projects: 1 },
   { city: "Livermore", lat: 37.6819, lng: -121.768, projects: 1 },
   { city: "Dublin", lat: 37.7022, lng: -121.9358, projects: 1 },
 ];
@@ -183,19 +183,19 @@ const TRUST = [
   {
     icon: "∞",
     title: "Relationships measured in years",
-    big: "46 months",
+    big: "47 months",
     body: "Our longest client engagement spans nearly 4 years across multiple phases. When the first project ends well, the second one usually follows.",
   },
   {
     icon: "▦",
     title: "Never an idle month",
-    big: "56 / 56",
+    big: "60 / 60",
     body: "Every single month since November 2021 has had active job sites. Through winters, rate hikes, and slow seasons — the crews never stopped.",
   },
   {
     icon: "◈",
     title: "No single project carries us",
-    big: "533 projects",
+    big: "598 projects",
     body: "Our revenue is spread across hundreds of jobs — no client is ever 'too small' and no single project decides whether we survive. That stability protects yours.",
   },
 ];
@@ -396,12 +396,12 @@ function CityPin({ c, active, onEnter, onLeave }) {
 function GrowthChart({ run }) {
   const W = 560, H = 230;
   const PAD = { l: 44, r: 16, t: 18, b: 30 };
-  const max = 560;
+  const max = 640;
   const innerW = W - PAD.l - PAD.r;
   const innerH = H - PAD.t - PAD.b;
   const step = innerW / GROWTH.length;
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label="Cumulative projects completed, 2021 to 2026: 9 to 533" style={{ display: "block" }}>
+    <svg viewBox={`0 0 ${W} ${H}`} width="100%" role="img" aria-label="Cumulative projects completed, 2021 to 2026: 9 to 598" style={{ display: "block" }}>
       {[0, 0.25, 0.5, 0.75, 1].map((t) => {
         const y = PAD.t + innerH * (1 - t);
         return (
@@ -454,7 +454,7 @@ function MapAndGrowth() {
     <SectionShell id="tr-map" alt>
       <div className="jrtr-cols">
         <div style={{ position: "relative" }}>
-          <Eyebrow>Where we've built — 52 cities</Eyebrow>
+          <Eyebrow>Where we've built — 51 cities</Eyebrow>
           <div style={{ position: "relative", border: `1px solid ${GOLD_SOFT}`, padding: 8 }}>
             <svg viewBox={`0 0 ${MAP_W} ${MAP_H}`} width="100%" style={{ display: "block" }}>
               <defs>
@@ -504,7 +504,7 @@ function MapAndGrowth() {
             <GrowthChart run={chartInView} />
           </div>
           <p style={{ color: MUTED, fontSize: 14.5, lineHeight: 1.7, marginTop: 22, maxWidth: 460, fontFamily: SANS }}>
-            From 9 job sites in our first season to 533 today. The market is full of good salespeople —
+            From 9 job sites in our first season to 598 today. The market is full of good salespeople —
             what's rare is consistent execution, project after project, city after city.
           </p>
         </div>

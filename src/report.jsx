@@ -91,7 +91,7 @@ export default function ReportPage({ go }) {
           </button>
         </form>
         <p style={{ ...s.note, marginTop: 12 }}>
-          533 projects · 147 permits · 52 Bay Area cities · CSLB licensed
+          598 projects · 147 permits · 51 Bay Area cities · CSLB licensed
         </p>
 
         {err && (
